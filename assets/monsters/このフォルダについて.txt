@@ -1,0 +1,14 @@
+monsters フォルダについて
+
+アプリ内に出るモンスター画像を置く場所です。
+src/game/assets/monsterImageAssets.ts などから参照されます。
+
+直下のファイル
+
+- *.png
+  モンスター本番画像です。ファイル名はモンスターIDに対応し、monsterImageAssets.ts から読み込まれます。
+  例: achichin.png、ganpiro.png、nokopon.png、sagarun.png、zerogard.png。
+
+直下のフォルダ
+
+- ありません。
