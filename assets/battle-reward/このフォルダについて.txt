@@ -1,0 +1,18 @@
+battle-reward フォルダについて
+
+ボスしょうぶに勝った時の、ごほうび箱演出で使う画像を置く場所です。
+背景は透過済みのPNGです。
+
+直下のファイル
+
+- reward-box-closed.png
+  閉じたごほうび箱の通常画像です。
+
+- reward-box-closed-white.png
+  閉じたごほうび箱を真っ白にした、発光演出用の画像です。
+
+- reward-box-open.png
+  開いたごほうび箱の通常画像です。
+
+- reward-box-open-white.png
+  開いたごほうび箱を真っ白にした、発光から通常画像へ戻す演出用の画像です。
