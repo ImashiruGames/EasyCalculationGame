@@ -1,0 +1,8 @@
+public/assets/story フォルダについて
+
+ストーリー作成・確認画面で使う素材を置く場所です。
+
+直下のファイル
+
+- story-se-*.mp3
+  ストーリーの1シーンに1つだけ付けられる効果音です。src/data/storySoundEffects.ts の id と対応します。
