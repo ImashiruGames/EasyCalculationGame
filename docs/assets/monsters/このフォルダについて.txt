@@ -1,0 +1,17 @@
+monsters フォルダについて
+
+アプリ内に出るモンスター画像を置く場所です。
+src/game/assets/monsterImageAssets.ts などから参照されます。
+
+直下のファイル
+
+- *.png
+  モンスター本番画像です。ファイル名を src/data/csv/monsters.csv の imageFileName に書くと読み込まれます。
+  例: achichin.png、ganpiro.png、zubagiri.png、sagarun.png、zerogardx.png。
+
+- placeholder-question.svg
+  monsters.csv の imageFileName が空欄、または画像がまだない時に出す仮画像です。
+
+直下のフォルダ
+
+- ありません。

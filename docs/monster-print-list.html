@@ -1,0 +1,1134 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>モンスターひょう</title>
+  <style>
+    @page {
+      size: A4 portrait;
+      margin: 10mm;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      background: #ffffff;
+      color: #111111;
+      font-family: "Yu Gothic", "Meiryo", sans-serif;
+      letter-spacing: 0;
+    }
+
+    body {
+      padding: 0;
+    }
+
+    .sheet {
+      width: 190mm;
+      min-height: 277mm;
+      break-after: page;
+      page-break-after: always;
+      overflow: hidden;
+    }
+
+    .sheet:last-child {
+      break-after: auto;
+      page-break-after: auto;
+    }
+
+    .titlebar {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8mm;
+      margin-bottom: 4mm;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 16pt;
+      line-height: 1.1;
+      letter-spacing: 0;
+    }
+
+    .count {
+      flex: 0 0 auto;
+      font-size: 9pt;
+      color: #333333;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 9pt;
+    }
+
+    thead {
+      display: table-header-group;
+    }
+
+    tr {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    th,
+    td {
+      border: 0.25mm solid #555555;
+      padding: 1.5mm 2mm;
+      vertical-align: middle;
+    }
+
+    th {
+      height: 7mm;
+      background: #f2f2f2;
+      text-align: left;
+      font-weight: 700;
+    }
+
+    td {
+      height: 17mm;
+    }
+
+    img {
+      display: block;
+      width: 16mm;
+      height: 16mm;
+      object-fit: contain;
+      margin: 0 auto;
+    }
+
+    .col-art {
+      width: 22mm;
+    }
+
+    .col-id {
+      width: 38mm;
+    }
+
+    .col-name {
+      width: 34mm;
+    }
+
+    .art {
+      padding: 0.5mm;
+      text-align: center;
+    }
+
+    .id {
+      font-family: "Consolas", "Courier New", monospace;
+      font-size: 7.5pt;
+      line-height: 1.2;
+      overflow-wrap: anywhere;
+    }
+
+    .name {
+      font-size: 10pt;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .memo {
+      background-image:
+        linear-gradient(to bottom, transparent calc(100% - 0.2mm), #d9d9d9 calc(100% - 0.2mm));
+      background-size: 100% 5.5mm;
+      background-position: left 2mm;
+    }
+
+    @media screen {
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12mm;
+        padding: 10mm 0;
+        background: #e8e8e8;
+      }
+
+      .sheet {
+        padding: 0;
+        background: #ffffff;
+        box-shadow: 0 0 18px rgb(0 0 0 / 18%);
+      }
+    }
+  </style>
+</head>
+<body>
+  <section class="sheet">
+    <div class="titlebar">
+      <h1>モンスターひょう</h1>
+      <div class="count">1 / 9　ぜんぶ 126 たい</div>
+    </div>
+    <table>
+      <colgroup>
+        <col class="col-art">
+        <col class="col-id">
+        <col class="col-name">
+        <col>
+      </colgroup>
+      <thead>
+        <tr>
+          <th>イラスト</th>
+          <th>id</th>
+          <th>なまえ</th>
+          <th>メモ</th>
+        </tr>
+      </thead>
+      <tbody>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/picoleaf.webp" alt="ピコリーフ picoleaf"></td>
+  <td class="id">picoleaf</td>
+  <td class="name">ピコリーフ</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/futaleaf.webp" alt="フタリーフ futaleaf"></td>
+  <td class="id">futaleaf</td>
+  <td class="name">フタリーフ</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/morileaf.webp" alt="モリリーフ morileaf"></td>
+  <td class="id">morileaf</td>
+  <td class="name">モリリーフ</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/mokotane.webp" alt="モコタネ mokotane"></td>
+  <td class="id">mokotane</td>
+  <td class="name">モコタネ</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/mokoleaf.webp" alt="モコリーフ mokoleaf"></td>
+  <td class="id">mokoleaf</td>
+  <td class="name">モコリーフ</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/haneppu.webp" alt="ハネップ haneppu"></td>
+  <td class="id">haneppu</td>
+  <td class="name">ハネップ</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/hanahana.webp" alt="ハナハナ hanahana"></td>
+  <td class="id">hanahana</td>
+  <td class="name">ハナハナ</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/hanabell.webp" alt="ハナベル hanabell"></td>
+  <td class="id">hanabell</td>
+  <td class="name">ハナベル</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/hanalord.webp" alt="ハナロード hanalord"></td>
+  <td class="id">hanalord</td>
+  <td class="name">ハナロード</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/kororin.webp" alt="コロリン kororin"></td>
+  <td class="id">kororin</td>
+  <td class="name">コロリン</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/midorin.webp" alt="ミドリン midorin"></td>
+  <td class="id">midorin</td>
+  <td class="name">ミドリン</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/midorian.webp" alt="ミドリアン midorian"></td>
+  <td class="id">midorian</td>
+  <td class="name">ミドリアン</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/yukipon.webp" alt="ユキポン yukipon"></td>
+  <td class="id">yukipon</td>
+  <td class="name">ユキポン</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/yukiron.webp" alt="ユキロン yukiron"></td>
+  <td class="id">yukiron</td>
+  <td class="name">ユキロン</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/yukigran.webp" alt="ユキグラン yukigran"></td>
+  <td class="id">yukigran</td>
+  <td class="name">ユキグラン</td>
+  <td class="memo"></td>
+</tr>
+      </tbody>
+    </table>
+  </section>
+  <section class="sheet">
+    <div class="titlebar">
+      <h1>モンスターひょう</h1>
+      <div class="count">2 / 9　ぜんぶ 126 たい</div>
+    </div>
+    <table>
+      <colgroup>
+        <col class="col-art">
+        <col class="col-id">
+        <col class="col-name">
+        <col>
+      </colgroup>
+      <thead>
+        <tr>
+          <th>イラスト</th>
+          <th>id</th>
+          <th>なまえ</th>
+          <th>メモ</th>
+        </tr>
+      </thead>
+      <tbody>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/koorin.webp" alt="コオリン koorin"></td>
+  <td class="id">koorin</td>
+  <td class="name">コオリン</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/koorion.webp" alt="コオリオン koorion"></td>
+  <td class="id">koorion</td>
+  <td class="name">コオリオン</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/kirapon.webp" alt="キラポン kirapon"></td>
+  <td class="id">kirapon</td>
+  <td class="name">キラポン</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/hyokoro.webp" alt="ヒョコロ hyokoro"></td>
+  <td class="id">hyokoro</td>
+  <td class="name">ヒョコロ</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/hyokuru.webp" alt="ヒョクル hyokuru"></td>
+  <td class="id">hyokuru</td>
+  <td class="name">ヒョクル</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/hyogan.webp" alt="ヒョウガン hyogan"></td>
+  <td class="id">hyogan</td>
+  <td class="name">ヒョウガン</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/tsururin.webp" alt="ツルリン tsururin"></td>
+  <td class="id">tsururin</td>
+  <td class="name">ツルリン</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/sunomaru.webp" alt="スノマル sunomaru"></td>
+  <td class="id">sunomaru</td>
+  <td class="name">スノマル</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/hinokoro.webp" alt="ヒノコロ hinokoro"></td>
+  <td class="id">hinokoro</td>
+  <td class="name">ヒノコロ</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/hinobou.webp" alt="ヒノボウ hinobou"></td>
+  <td class="id">hinobou</td>
+  <td class="name">ヒノボウ</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/hinogard.webp" alt="ヒノガルド hinogard"></td>
+  <td class="id">hinogard</td>
+  <td class="name">ヒノガルド</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/merarun.webp" alt="メラルン merarun"></td>
+  <td class="id">merarun</td>
+  <td class="name">メラルン</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/merarion.webp" alt="メラリオン merarion"></td>
+  <td class="id">merarion</td>
+  <td class="name">メラリオン</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/pokkuma.webp" alt="ポックマ pokkuma"></td>
+  <td class="id">pokkuma</td>
+  <td class="name">ポックマ</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/yakorin.webp" alt="ヤコリン yakorin"></td>
+  <td class="id">yakorin</td>
+  <td class="name">ヤコリン</td>
+  <td class="memo"></td>
+</tr>
+      </tbody>
+    </table>
+  </section>
+  <section class="sheet">
+    <div class="titlebar">
+      <h1>モンスターひょう</h1>
+      <div class="count">3 / 9　ぜんぶ 126 たい</div>
+    </div>
+    <table>
+      <colgroup>
+        <col class="col-art">
+        <col class="col-id">
+        <col class="col-name">
+        <col>
+      </colgroup>
+      <thead>
+        <tr>
+          <th>イラスト</th>
+          <th>id</th>
+          <th>なまえ</th>
+          <th>メモ</th>
+        </tr>
+      </thead>
+      <tbody>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/yakibunny.webp" alt="ヤキバニー yakibunny"></td>
+  <td class="id">yakibunny</td>
+  <td class="name">ヤキバニー</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/yakibanigon.webp" alt="ヤキバニゴン yakibanigon"></td>
+  <td class="id">yakibanigon</td>
+  <td class="name">ヤキバニゴン</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/kogemaru.webp" alt="コゲマル kogemaru"></td>
+  <td class="id">kogemaru</td>
+  <td class="name">コゲマル</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/achichin.webp" alt="アチチン achichin"></td>
+  <td class="id">achichin</td>
+  <td class="name">アチチン</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/biricoro.webp" alt="ビリコロ biricoro"></td>
+  <td class="id">biricoro</td>
+  <td class="name">ビリコロ</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/biriran.webp" alt="ビリラン biriran"></td>
+  <td class="id">biriran</td>
+  <td class="name">ビリラン</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/biribiriman.webp" alt="ビリビリマン biribiriman"></td>
+  <td class="id">biribiriman</td>
+  <td class="name">ビリビリマン</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/raimaru.webp" alt="ライマル raimaru"></td>
+  <td class="id">raimaru</td>
+  <td class="name">ライマル</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/raijinmaru.webp" alt="ライジンマル raijinmaru"></td>
+  <td class="id">raijinmaru</td>
+  <td class="name">ライジンマル</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/kumorin.webp" alt="クモリン kumorin"></td>
+  <td class="id">kumorin</td>
+  <td class="name">クモリン</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/chirip.webp" alt="チリチリ chirip"></td>
+  <td class="id">chirip</td>
+  <td class="name">チリチリ</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/chirichiri.webp" alt="チリコード chirichiri"></td>
+  <td class="id">chirichiri</td>
+  <td class="name">チリコード</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/godchiri.webp" alt="ゴッド・チリ godchiri"></td>
+  <td class="id">godchiri</td>
+  <td class="name">ゴッド・チリ</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/pikopiko.webp" alt="ピコピコ pikopiko"></td>
+  <td class="id">pikopiko</td>
+  <td class="name">ピコピコ</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/goropeka.webp" alt="ゴロペカ goropeka"></td>
+  <td class="id">goropeka</td>
+  <td class="name">ゴロペカ</td>
+  <td class="memo"></td>
+</tr>
+      </tbody>
+    </table>
+  </section>
+  <section class="sheet">
+    <div class="titlebar">
+      <h1>モンスターひょう</h1>
+      <div class="count">4 / 9　ぜんぶ 126 たい</div>
+    </div>
+    <table>
+      <colgroup>
+        <col class="col-art">
+        <col class="col-id">
+        <col class="col-name">
+        <col>
+      </colgroup>
+      <thead>
+        <tr>
+          <th>イラスト</th>
+          <th>id</th>
+          <th>なまえ</th>
+          <th>メモ</th>
+        </tr>
+      </thead>
+      <tbody>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/awapon.webp" alt="アワポン awapon"></td>
+  <td class="id">awapon</td>
+  <td class="name">アワポン</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/awazarashi.webp" alt="アワザラシ awazarashi"></td>
+  <td class="id">awazarashi</td>
+  <td class="name">アワザラシ</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/awagran.webp" alt="アワグラン awagran"></td>
+  <td class="id">awagran</td>
+  <td class="name">アワグラン</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/namirin.webp" alt="ナミリン namirin"></td>
+  <td class="id">namirin</td>
+  <td class="name">ナミリン</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/namiou.webp" alt="ナミオウ namiou"></td>
+  <td class="id">namiou</td>
+  <td class="name">ナミオウ</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/pururunrun.webp" alt="プルルンルン pururunrun"></td>
+  <td class="id">pururunrun</td>
+  <td class="name">プルルンルン</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/shizukuchan.webp" alt="シズクチャン shizukuchan"></td>
+  <td class="id">shizukuchan</td>
+  <td class="name">シズクチャン</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/shizurun.webp" alt="シズクネキ shizurun"></td>
+  <td class="id">shizurun</td>
+  <td class="name">シズクネキ</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/shizuroad.webp" alt="シズロード shizuroad"></td>
+  <td class="id">shizuroad</td>
+  <td class="name">シズロード</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/potapon.webp" alt="ポタポン potapon"></td>
+  <td class="id">potapon</td>
+  <td class="name">ポタポン</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/mizukira.webp" alt="ミズキラ mizukira"></td>
+  <td class="id">mizukira</td>
+  <td class="name">ミズキラ</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/kagemaru.webp" alt="カゲマル kagemaru"></td>
+  <td class="id">kagemaru</td>
+  <td class="name">カゲマル</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/kagebouya.webp" alt="カゲボウヤ kagebouya"></td>
+  <td class="id">kagebouya</td>
+  <td class="name">カゲボウヤ</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/kageou.webp" alt="カゲオウ kageou"></td>
+  <td class="id">kageou</td>
+  <td class="name">カゲオウ</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/tsukinoko.webp" alt="ツキノコ tsukinoko"></td>
+  <td class="id">tsukinoko</td>
+  <td class="name">ツキノコ</td>
+  <td class="memo"></td>
+</tr>
+      </tbody>
+    </table>
+  </section>
+  <section class="sheet">
+    <div class="titlebar">
+      <h1>モンスターひょう</h1>
+      <div class="count">5 / 9　ぜんぶ 126 たい</div>
+    </div>
+    <table>
+      <colgroup>
+        <col class="col-art">
+        <col class="col-id">
+        <col class="col-name">
+        <col>
+      </colgroup>
+      <thead>
+        <tr>
+          <th>イラスト</th>
+          <th>id</th>
+          <th>なまえ</th>
+          <th>メモ</th>
+        </tr>
+      </thead>
+      <tbody>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/ootsukinoko.webp" alt="オオツキノコ ootsukinoko"></td>
+  <td class="id">ootsukinoko</td>
+  <td class="name">オオツキノコ</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/nemuriko.webp" alt="ネムリコ nemuriko"></td>
+  <td class="id">nemuriko</td>
+  <td class="name">ネムリコ</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/lumina.webp" alt="ルミナ lumina"></td>
+  <td class="id">lumina</td>
+  <td class="name">ルミナ</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/lumiel.webp" alt="ルミエル lumiel"></td>
+  <td class="id">lumiel</td>
+  <td class="name">ルミエル</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/lumiroad.webp" alt="ルミロード lumiroad"></td>
+  <td class="id">lumiroad</td>
+  <td class="name">ルミロード</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/yoru.webp" alt="ヨル yoru"></td>
+  <td class="id">yoru</td>
+  <td class="name">ヨル</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/hoshimimi.webp" alt="ホシミミ hoshimimi"></td>
+  <td class="id">hoshimimi</td>
+  <td class="name">ホシミミ</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/mokousagi.webp" alt="モコウサギ mokousagi"></td>
+  <td class="id">mokousagi</td>
+  <td class="name">モコウサギ</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/mokokousagi.webp" alt="モココウサギ mokokousagi"></td>
+  <td class="id">mokokousagi</td>
+  <td class="name">モココウサギ</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/rabimajo.webp" alt="ラビマジョ rabimajo"></td>
+  <td class="id">rabimajo</td>
+  <td class="name">ラビマジョ</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/tsubutako.webp" alt="ツブタコ tsubutako"></td>
+  <td class="id">tsubutako</td>
+  <td class="name">ツブタコ</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/tsuruttako.webp" alt="ツルッタコ tsuruttako"></td>
+  <td class="id">tsuruttako</td>
+  <td class="name">ツルッタコ</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/tokekokko.webp" alt="トケコッコ tokekokko"></td>
+  <td class="id">tokekokko</td>
+  <td class="name">トケコッコ</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/pironos.webp" alt="ピロノス pironos"></td>
+  <td class="id">pironos</td>
+  <td class="name">ピロノス</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/tsukuyomi.webp" alt="ツクヨミ tsukuyomi"></td>
+  <td class="id">tsukuyomi</td>
+  <td class="name">ツクヨミ</td>
+  <td class="memo"></td>
+</tr>
+      </tbody>
+    </table>
+  </section>
+  <section class="sheet">
+    <div class="titlebar">
+      <h1>モンスターひょう</h1>
+      <div class="count">6 / 9　ぜんぶ 126 たい</div>
+    </div>
+    <table>
+      <colgroup>
+        <col class="col-art">
+        <col class="col-id">
+        <col class="col-name">
+        <col>
+      </colgroup>
+      <thead>
+        <tr>
+          <th>イラスト</th>
+          <th>id</th>
+          <th>なまえ</th>
+          <th>メモ</th>
+        </tr>
+      </thead>
+      <tbody>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/tenpico.webp" alt="テンピコ tenpico"></td>
+  <td class="id">tenpico</td>
+  <td class="name">テンピコ</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/tenril.webp" alt="テンリル tenril"></td>
+  <td class="id">tenril</td>
+  <td class="name">テンリル</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/tenroad.webp" alt="テンロード tenroad"></td>
+  <td class="id">tenroad</td>
+  <td class="name">テンロード</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/maruten.webp" alt="マルテン maruten"></td>
+  <td class="id">maruten</td>
+  <td class="name">マルテン</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/maruteon.webp" alt="マルテオン maruteon"></td>
+  <td class="id">maruteon</td>
+  <td class="name">マルテオン</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/icchoku.webp" alt="イッチョク icchoku"></td>
+  <td class="id">icchoku</td>
+  <td class="name">イッチョク</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/soroban.webp" alt="ソロバン soroban"></td>
+  <td class="id">soroban</td>
+  <td class="name">ソロバン</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/sorobal.webp" alt="ソロバル sorobal"></td>
+  <td class="id">sorobal</td>
+  <td class="name">ソロバル</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/soroking.webp" alt="ソロキング soroking"></td>
+  <td class="id">soroking</td>
+  <td class="name">ソロキング</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/kazumaru.webp" alt="カズマル kazumaru"></td>
+  <td class="id">kazumaru</td>
+  <td class="name">カズマル</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/rainbow.webp" alt="レインボー rainbow"></td>
+  <td class="id">rainbow</td>
+  <td class="name">レインボー</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/sagarun.webp" alt="サガルン sagarun"></td>
+  <td class="id">sagarun</td>
+  <td class="name">サガルン</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/sagarii.webp" alt="サガリィ sagarii"></td>
+  <td class="id">sagarii</td>
+  <td class="name">サガリィ</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/sagalord.webp" alt="サガロード sagalord"></td>
+  <td class="id">sagalord</td>
+  <td class="name">サガロード</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/hikikoma.webp" alt="ヒキコマ hikikoma"></td>
+  <td class="id">hikikoma</td>
+  <td class="name">ヒキコマ</td>
+  <td class="memo"></td>
+</tr>
+      </tbody>
+    </table>
+  </section>
+  <section class="sheet">
+    <div class="titlebar">
+      <h1>モンスターひょう</h1>
+      <div class="count">7 / 9　ぜんぶ 126 たい</div>
+    </div>
+    <table>
+      <colgroup>
+        <col class="col-art">
+        <col class="col-id">
+        <col class="col-name">
+        <col>
+      </colgroup>
+      <thead>
+        <tr>
+          <th>イラスト</th>
+          <th>id</th>
+          <th>なまえ</th>
+          <th>メモ</th>
+        </tr>
+      </thead>
+      <tbody>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/nokobou.webp" alt="ノコボウ nokobou"></td>
+  <td class="id">nokobou</td>
+  <td class="name">ノコボウ</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/nokobolt.webp" alt="ノコボルト nokobolt"></td>
+  <td class="id">nokobolt</td>
+  <td class="name">ノコボルト</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/kurisaru.webp" alt="クリサル kurisaru"></td>
+  <td class="id">kurisaru</td>
+  <td class="name">クリサル</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/kurisage.webp" alt="クリサージ kurisage"></td>
+  <td class="id">kurisage</td>
+  <td class="name">クリサージ</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/kurigaon.webp" alt="クリガオン kurigaon"></td>
+  <td class="id">kurigaon</td>
+  <td class="name">クリガオン</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/zerogardx.webp" alt="ゼロガードX zerogardx"></td>
+  <td class="id">zerogardx</td>
+  <td class="name">ゼロガードX</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/hikine.webp" alt="ヒキネ hikine"></td>
+  <td class="id">hikine</td>
+  <td class="name">ヒキネ</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/hikiron.webp" alt="ヒキロン hikiron"></td>
+  <td class="id">hikiron</td>
+  <td class="name">ヒキロン</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/hikigami.webp" alt="ヒキガミ hikigami"></td>
+  <td class="id">hikigami</td>
+  <td class="name">ヒキガミ</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/nokorin.webp" alt="ノコリン nokorin"></td>
+  <td class="id">nokorin</td>
+  <td class="name">ノコリン</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/nokorion.webp" alt="ノコリオン nokorion"></td>
+  <td class="id">nokorion</td>
+  <td class="name">ノコリオン</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/hikizuru.webp" alt="ヒキズル hikizuru"></td>
+  <td class="id">hikizuru</td>
+  <td class="name">ヒキズル</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/keshipa.webp" alt="ケシパ keshipa"></td>
+  <td class="id">keshipa</td>
+  <td class="name">ケシパ</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/keshipal.webp" alt="ケシパル keshipal"></td>
+  <td class="id">keshipal</td>
+  <td class="name">ケシパル</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/keshidon.webp" alt="ケシドン keshidon"></td>
+  <td class="id">keshidon</td>
+  <td class="name">ケシドン</td>
+  <td class="memo"></td>
+</tr>
+      </tbody>
+    </table>
+  </section>
+  <section class="sheet">
+    <div class="titlebar">
+      <h1>モンスターひょう</h1>
+      <div class="count">8 / 9　ぜんぶ 126 たい</div>
+    </div>
+    <table>
+      <colgroup>
+        <col class="col-art">
+        <col class="col-id">
+        <col class="col-name">
+        <col>
+      </colgroup>
+      <thead>
+        <tr>
+          <th>イラスト</th>
+          <th>id</th>
+          <th>なまえ</th>
+          <th>メモ</th>
+        </tr>
+      </thead>
+      <tbody>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/zubagiri.webp" alt="ズバギリ zubagiri"></td>
+  <td class="id">zubagiri</td>
+  <td class="name">ズバギリ</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/komorebi.webp" alt="コモレビ komorebi"></td>
+  <td class="id">komorebi</td>
+  <td class="name">コモレビ</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/ishikoro.webp" alt="イシコロ ishikoro"></td>
+  <td class="id">ishikoro</td>
+  <td class="name">イシコロ</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/ishigoro.webp" alt="イシゴロ ishigoro"></td>
+  <td class="id">ishigoro</td>
+  <td class="name">イシゴロ</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/ishigaon.webp" alt="イシガオン ishigaon"></td>
+  <td class="id">ishigaon</td>
+  <td class="name">イシガオン</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/sabimaru.webp" alt="サビマル sabimaru"></td>
+  <td class="id">sabimaru</td>
+  <td class="name">サビマル</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/sabigon.webp" alt="サビゴン sabigon"></td>
+  <td class="id">sabigon</td>
+  <td class="name">サビゴン</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/sunasuna.webp" alt="スナスナ sunasuna"></td>
+  <td class="id">sunasuna</td>
+  <td class="name">スナスナ</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/ganpiro.webp" alt="ガンピロ ganpiro"></td>
+  <td class="id">ganpiro</td>
+  <td class="name">ガンピロ</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/ganroku.webp" alt="ガンロク ganroku"></td>
+  <td class="id">ganroku</td>
+  <td class="name">ガンロク</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/gantetsu.webp" alt="ガンテツ gantetsu"></td>
+  <td class="id">gantetsu</td>
+  <td class="name">ガンテツ</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/maruishi.webp" alt="マルイシ maruishi"></td>
+  <td class="id">maruishi</td>
+  <td class="name">マルイシ</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/kiramekisama.webp" alt="キラメキサマ kiramekisama"></td>
+  <td class="id">kiramekisama</td>
+  <td class="name">キラメキサマ</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/ehonchan.webp" alt="えほんちゃん ehonchan"></td>
+  <td class="id">ehonchan</td>
+  <td class="name">えほんちゃん</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/ehonsenshi.webp" alt="えほんせんし ehonsenshi"></td>
+  <td class="id">ehonsenshi</td>
+  <td class="name">えほんせんし</td>
+  <td class="memo"></td>
+</tr>
+      </tbody>
+    </table>
+  </section>
+  <section class="sheet">
+    <div class="titlebar">
+      <h1>モンスターひょう</h1>
+      <div class="count">9 / 9　ぜんぶ 126 たい</div>
+    </div>
+    <table>
+      <colgroup>
+        <col class="col-art">
+        <col class="col-id">
+        <col class="col-name">
+        <col>
+      </colgroup>
+      <thead>
+        <tr>
+          <th>イラスト</th>
+          <th>id</th>
+          <th>なまえ</th>
+          <th>メモ</th>
+        </tr>
+      </thead>
+      <tbody>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/ehonou.webp" alt="えほん王 ehonou"></td>
+  <td class="id">ehonou</td>
+  <td class="name">えほん王</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/kabanban.webp" alt="かばんばん kabanban"></td>
+  <td class="id">kabanban</td>
+  <td class="name">かばんばん</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/keshikeshikun.webp" alt="ケシケシクン keshikeshikun"></td>
+  <td class="id">keshikeshikun</td>
+  <td class="name">ケシケシクン</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/keshirina.webp" alt="ケシリーナ keshirina"></td>
+  <td class="id">keshirina</td>
+  <td class="name">ケシリーナ</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/keshirobot.webp" alt="ケシロボット keshirobot"></td>
+  <td class="id">keshirobot</td>
+  <td class="name">ケシロボット</td>
+  <td class="memo"></td>
+</tr>
+<tr>
+  <td class="art"><img src="../public/assets/monsters/placeholder-question.svg" alt="ツカマラン tukamaran"></td>
+  <td class="id">tukamaran</td>
+  <td class="name">ツカマラン</td>
+  <td class="memo"></td>
+</tr>
+      </tbody>
+    </table>
+  </section>
+</body>
+</html>

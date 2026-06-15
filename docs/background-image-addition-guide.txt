@@ -1,0 +1,84 @@
+背景画像追加手順書
+
+この手順書は、新しい背景画像をアプリに入れるときの流れです。
+作業前に、ルート直下の first-read.txt を読み、置き場所を確認してください。
+
+今回追加した背景
+
+- desertOasis.webp
+  元画像: さばくちたい.png
+  置き場所: public/assets/backgrounds/desertOasis.webp
+
+- classroom.webp
+  元画像: きょうしつ.png
+  置き場所: public/assets/backgrounds/classroom.webp
+
+- iceDemonCastle.webp
+  元画像: こおりのまおうじょう.png
+  置き場所: public/assets/backgrounds/iceDemonCastle.webp
+
+- machineCity.webp
+  元画像: きかいのまち.png
+  置き場所: public/assets/backgrounds/machineCity.webp
+
+- sleepyRoad.webp
+  元画像: おやすみのみち.png
+  置き場所: public/assets/backgrounds/sleepyRoad.webp
+
+- candyRoad.webp
+  元画像: おかしのどうろ.png
+  置き場所: public/assets/backgrounds/candyRoad.webp
+
+- goldenCastle.webp
+  元画像: ごうかなしろ.png
+  置き場所: public/assets/backgrounds/goldenCastle.webp
+
+追加の流れ
+
+1. 元画像を確認する
+   画像は 1024x1024 の PNG などで用意します。
+   透明チャンネルがある場合は、変換後も透明チャンネルを残します。
+
+2. WebP に変換する
+   public/assets/backgrounds に WebP として保存します。
+   ファイル名は英数字の camelCase にすると、コードから扱いやすいです。
+
+   例:
+   public/assets/backgrounds/newBackground.webp
+
+3. タイトル背景として使う
+   src/data/titleBackgrounds.ts を編集します。
+   TITLE_BACKGROUND_IDS に ID を足し、titleBackgrounds 配列に設定を追加します。
+
+   必ず入れる項目:
+   - id
+   - name
+   - description
+   - price
+   - accentColor
+   - skyColor
+   - titleColor
+   - titleStrokeColor
+   - subtitleColor
+   - promptColor
+   - imagePath
+   - defaultMonsterPlacements
+
+   imagePath は次の形にします。
+   assets/backgrounds/newBackground.webp
+
+4. ステージ背景として使う
+   src/data/csv/stages.csv の backgroundPath を変更します。
+
+   例:
+   assets/backgrounds/newBackground.webp
+
+   Excel で CSV を編集する場合は、文字化けを避けるため UTF-8 BOM 付きで保存してください。
+
+5. 説明ファイルを更新する
+   public/assets/backgrounds/このフォルダについて.txt に、新しく入れた背景画像の概要を追記します。
+   新しいフォルダを作った場合は、first-read.txt と、そのフォルダ直下の「このフォルダについて.txt」も更新します。
+
+6. 確認する
+   依頼があるときだけ、型チェックやブラウザ確認を行います。
+   通常は、画像が置かれていることと、参照パスが一致していることを見ます。

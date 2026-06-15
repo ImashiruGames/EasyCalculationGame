@@ -1,0 +1,432 @@
+# コード案内
+
+このファイルは「こういう操作をしたいとき、まずどこを見るか」の地図です。
+細かい関数名までは追いすぎず、広い範囲で入口になるファイルをまとめています。
+
+## 絶対ルール
+
+- 日本語を含むファイルは必ずUTF-8で作成、保存する。
+  PowerShellで中身を確認するときは、必要に応じて `Get-Content -Encoding UTF8` を使う。
+
+- 文字化けして見えた日本語を、そのまま修正したり上書きしたりしない。
+  まずUTF-8として読み直し、ファイル自体が壊れているのか、表示だけが崩れているのかを確認する。
+
+- 既存の日本語文言を変更するときは、意味を変えない。
+  表示調整やレイアウト修正のついでに、文言を別物にしない。
+
+- 画像ファイルは `public/assets/` に置く。
+  コード側のパスは `assets/monsters/...` や `assets/backgrounds/...` のように、`public/` を付けずに書く。
+
+- IDは必ず一致させる。
+  stageId、monsterId、trainerId、itemIdは、データ、画像登録、保存処理、画面遷移で同じ文字列を使う。
+
+- 新しい画像を追加しただけでは画面に出ない。
+  モンスターは `src/data/csv/monsters.csv` と `src/game/assets/monsterImageAssets.ts`、背景は `src/data/stages.ts` の `backgroundPath`、トレーナーは `src/game/trainerImageAssets.ts`、メダルは `src/game/medalAssets.ts` も確認する。
+
+- 保存データの形を変えるときは、`src/game/types.ts` の `AppSaveState` と `src/state/save.ts` の初期値、読み込み時の補正を一緒に見る。
+  古い保存データを持っている人でも壊れないようにする。
+
+- 画面遷移の名前は `src/game/sceneKeys.ts` を使う。
+  文字列を各画面に直接ばらまかない。
+
+- 画面サイズや共通色は、なるべく `src/game/constants.ts` を使う。
+  画面内で必要な一時的な座標はSceneに置いてよいが、全体ルールは分散させない。
+
+- 共通の見た目は、なるべく `src/game/ui/` の部品を使う。
+  ボタン、モンスター表示、トレーナー表示、背景表示を各Sceneで別々に作り直さない。
+
+- 変更後は少なくともTypeScriptの確認をする。
+  目安は `npx tsc --noEmit`。見た目を触った場合は、ブラウザでも実際に画面を確認する。
+
+- 関係ないファイルや、作業者が触っていない変更を勝手に戻さない。
+  目的の変更に必要な範囲だけを触る。
+
+基本の見方は、だいたい次の順番です。
+画面の見た目やボタン位置を変える: src/game/scenes/
+ゲームのデータを変える: src/data/
+保存、解放条件、所持数を変える: src/state/
+共通の見た目部品を変える: src/game/ui/
+画像ファイルを入れる: public/assets/
+
+
+## まず全体をつかむ
+
+- src/main.ts
+  Phaserの起動場所です。ゲームに登録されている画面一覧もここにあります。
+  新しい画面を作ったときは、ここにSceneを追加します。
+
+- src/game/sceneKeys.ts
+  画面遷移で使う名前の一覧です。
+  this.scene.start(...) の行を追うときは、ここを見て画面名を確認します。
+
+- src/game/constants.ts
+  画面サイズ、フォント、基本色です。
+  全体のサイズや共通カラーを変えるときの入口です。
+
+- src/game/types.ts
+  ステージ、モンスター、保存データ、バトルなどの型定義です。
+  データの項目を増やすときは、ここも確認します。
+
+
+## つかまえる画面を操作するなら
+
+- src/game/scenes/StageSelectScene.ts
+  ステージカテゴリ一覧とステージ一覧の画面です。
+  ステージカード、ロック表示、ページ切り替えを変えるならここです。
+
+- src/game/scenes/StageIntroScene.ts
+  ステージ開始前の画面です。
+  出現候補の表示、アイテム使用の案内、開始ボタン周りを変えるならここです。
+
+- src/game/scenes/CaptureGameScene.ts
+  つかまえるゲーム本体です。
+  計算問題、数字入力、ゲージ、ボール投げ、捕獲演出を変えるならここです。
+
+- src/game/scenes/ResultScene.ts
+  つかまえた後の結果画面です。
+  新しく捕まえた表示、進化ボタン、もう一度遊ぶ導線を変えるならここです。
+
+- src/data/stages.ts
+  各ステージの名前、問題ルール、出現モンスター、背景画像、解放条件です。
+  「このステージで何が出るか」「どんな問題が出るか」を変えるならここです。
+
+- src/game/mathProblems.ts
+  問題の作り方そのものです。
+  stage側のproblemRuleだけでは表現できない問題生成を変えるならここです。
+
+- src/state/save.ts
+  捕獲数、かけら、アイテム消費などの保存処理です。
+  捕獲したときに増えるものを変えるならここです。
+
+
+## トロフィー画面を操作するなら
+
+- src/game/scenes/AchievementsScene.ts
+  トロフィー一覧画面です。
+  トロフィーカード、ページ切り替え、ランク表示を変えるならここです。
+
+- src/data/achievements.ts
+  トロフィーの条件一覧です。
+  「何を達成したらトロフィーになるか」を変えるならここです。
+
+- src/data/achievementRanks.ts
+  トロフィー数に応じたランク定義です。
+  ブロンズ、シルバー、ゴールドなどのランク条件を変えるならここです。
+
+- src/game/medalAssets.ts
+  ランクメダル画像の読み込み定義です。
+  メダル画像を追加、差し替えするならここも見ます。
+
+- src/game/ui/rankUpOverlay.ts
+  ランクアップしたときの演出です。
+  トロフィー獲得後のポップアップ演出を変えるならここです。
+
+- src/state/save.ts
+  トロフィー条件で使う捕獲数、バトル勝利数、連勝数などの保存元です。
+  条件に使う数値が正しく増えているかを見る場所です。
+
+
+## バトル画面を操作するなら
+
+- src/game/scenes/BattleSelectScene.ts
+  対戦相手選択と手持ちモンスター選択の画面です。
+  トレーナーカード、パーティ選択、ソート、連続対戦の入口を変えるならここです。
+
+- src/game/scenes/BattleGameScene.ts
+  バトル本体です。
+  HP、攻撃、相手の計算ゲージ、勝敗演出、連戦報酬を変えるならここです。
+
+- src/data/trainers.ts
+  トレーナーのデータです。
+  相手の名前、難しさ、使う問題、相棒モンスター、報酬を変えるならここです。
+
+- src/game/battleRules.ts
+  属性相性やダメージ計算です。
+  「とくい」「にがて」やダメージ量のルールを変えるならここです。
+
+- src/game/mathProblems.ts
+  バトル中に出す問題の生成にも使われています。
+
+- src/state/save.ts
+  バトル勝利数、連勝記録、報酬の保存に使われます。
+
+
+## 図鑑、ショップ、メニューを操作するなら
+
+- src/game/scenes/MainMenuScene.ts
+  最初のメニュー画面です。
+  メニューのボタン、全体の入口、最初に読み込む画像を変えるならここです。
+
+- src/game/scenes/BgmPreviewScenes.ts
+  ファイル名はBgmPreviewですが、この中に図鑑画面とショップ画面も入っています。
+  DexPreviewSceneが図鑑、ShopPreviewSceneがショップです。
+
+- src/data/shopItems.ts
+  ショップアイテムの定義です。
+  アイテム名、価格、効果の種類を変えるならここです。
+
+- src/state/save.ts
+  コイン、アイテム所持数、かけら交換、アメ交換に使われます。
+
+
+## 進化まわりを操作するなら
+
+- src/game/scenes/ResultScene.ts
+  捕獲後に進化できるかを見せる入口です。
+
+- src/game/scenes/EvolutionScene.ts
+  進化演出の画面です。
+
+- src/state/evolution.ts
+  進化できるかどうか、進化までの進み具合を計算します。
+
+- src/state/save.ts
+  かけら進化、アメ進化、進化後の保存処理があります。
+
+- src/data/csv/monsters.csv
+  モンスターの名前、ID、属性、画像ファイル名などの元データです。
+
+- src/data/monsterCsvLoader.ts
+  monsters.csvを読み、進化関係、必要かけら数、能力値などを組み立てます。
+
+- src/data/monsters.ts
+  monsters.csvから作ったモンスター定義を使いやすくする取得関数があります。
+
+
+## 画像を挿入、差し替えするなら
+
+- public/assets/monsters/
+  モンスター画像の置き場所です。
+
+- src/game/assets/monsterImageAssets.ts
+  monsters.csvの画像ファイル名から、モンスターIDと画像ファイルの対応を作ります。
+  新しいモンスター画像を表示したいときは、画像を置いたあとmonsters.csvにファイル名を書きます。
+
+- src/game/ui/monsterVisual.ts
+  モンスターを実際に画面へ描く共通部品です。
+  画像がある場合は画像を使い、ない場合はデータから簡易ビジュアルを生成します。
+
+- public/assets/backgrounds/
+  ステージ背景画像の置き場所です。
+
+- src/data/stages.ts
+  ステージごとのbackgroundPathを指定します。
+  背景を表示したいステージでは、ここに assets/backgrounds/xxx.png を書きます。
+
+- src/game/stageBackgroundAssets.ts
+  ステージ背景画像を読み込むための対応表です。
+  stages.tsのbackgroundPathから自動で作られます。
+
+- src/game/ui/stageBackdrop.ts
+  ステージ背景を実際に画面へ描く共通部品です。
+
+- public/assets/trainers/
+  トレーナー画像の置き場所です。
+
+- src/game/trainerImageAssets.ts
+  トレーナーIDと画像ファイルの対応表です。
+
+- src/game/ui/trainerVisual.ts
+  トレーナーを実際に画面へ描く共通部品です。
+
+- public/assets/medals/
+  トロフィーランク用メダル画像の置き場所です。
+
+- src/game/medalAssets.ts
+  メダル画像の読み込み定義です。
+
+
+## ステージを追加、調整するなら
+
+- src/data/stages.ts
+  まずここです。
+  ステージID、カテゴリ、表示名、問題ルール、出現モンスター、背景、解放条件を定義します。
+
+- src/game/types.ts
+  ステージ定義に新しい項目を増やすときは、StageDefinitionを更新します。
+
+- src/state/progression.ts
+  ステージ解放条件の判定です。
+  新しい種類の解放条件を作るならここです。
+
+- src/game/mathProblems.ts
+  新しい問題ルールが必要ならここです。
+
+- src/game/scenes/StageSelectScene.ts
+  ステージカードの表示を変えたいときに見ます。
+
+- src/game/scenes/StageIntroScene.ts
+  ステージ開始前の見せ方を変えたいときに見ます。
+
+
+## モンスターを追加、調整するなら
+
+- src/data/csv/monsters.csv
+  モンスターの本体データです。
+  名前、ID、属性、説明、画像ファイル名などを定義します。
+
+- src/data/monsterCsvLoader.ts
+  monsters.csvから進化、能力値、出現用の定義を組み立てます。
+
+- src/data/monsters.ts
+  モンスター取得や出現抽選の補助関数があります。
+
+- src/data/stages.ts
+  ステージのmonsterIdsにモンスターIDを入れると、そのステージに出ます。
+
+- src/game/assets/monsterImageAssets.ts
+  画像を使う場合はmonsters.csvのimageFileNameにファイル名を書きます。
+
+- src/game/ui/monsterVisual.ts
+  見た目の共通描画を変えるならここです。
+
+- src/state/save.ts
+  捕獲数、かけら、進化保存に関わります。
+
+
+## 保存、所持品、解放条件を操作するなら
+
+- src/state/save.ts
+  保存データの中心です。
+  捕獲、かけら、アメ、コイン、アイテム、バトル勝利数を扱います。
+
+- src/game/types.ts
+  AppSaveStateに保存データの形があります。
+  保存項目を増やすときは、ここも更新します。
+
+- src/state/progression.ts
+  ステージ解放条件を判定します。
+
+- src/state/evolution.ts
+  進化できるかどうかを判定します。
+
+- src/data/shopItems.ts
+  アイテムの定義です。
+
+
+## 共通UIを操作するなら
+
+- src/game/ui/button.ts
+  共通ボタンです。
+  多くの画面のボタン見た目をまとめて変えたいならここです。
+
+- src/game/ui/rubyText.ts
+  ふりがな付きテキストの共通処理です。
+
+- src/game/ui/captureBall.ts
+  捕獲ボールの見た目です。
+
+- src/game/ui/numberKeypad.ts
+  捕獲画面と対戦画面で使う数字キーパッドです。数字入力、けす、きめるの共通挙動を変えるならここです。
+
+- src/game/ui/monsterVisual.ts
+  モンスター表示の共通処理です。
+
+- src/game/ui/trainerVisual.ts
+  トレーナー表示の共通処理です。
+
+- src/game/ui/stageBackdrop.ts
+  ステージ背景の共通処理です。
+
+- src/game/ui/textureCache.ts
+  角丸四角など、使い回すテクスチャのキャッシュです。
+
+
+## 音を操作するなら
+
+- src/game/bgm.ts
+  BGMの生成と再生です。
+  ホーム、捕獲、バトル、図鑑、ショップ、ステージ別BGMを変えるならここです。
+
+- src/game/audio.ts
+  正解音、捕獲音、進化音、ランクアップ音などの効果音です。
+
+- src/game/scenes/BgmPreviewScenes.ts
+  一部のプレビュー画面からBGMを開始しています。
+
+
+## よくある変更と入口
+
+- 画面上の位置や文言を変えたい
+  まず該当する src/game/scenes/ のSceneファイルを見ます。
+
+- 新しい画面を追加したい
+  src/game/scenes/ にSceneを作り、src/game/sceneKeys.ts と src/main.ts に追加します。
+  その画面へ行くボタンを、移動元のSceneに追加します。
+
+- 問題の出し方を変えたい
+  特定ステージだけなら src/data/stages.ts のproblemRuleを見ます。
+  ルールそのものを増やすなら src/game/mathProblems.ts を見ます。
+
+- ステージ背景を追加したい
+  public/assets/backgrounds/ に画像を置き、src/data/stages.ts のbackgroundPathに書きます。
+
+- モンスター画像を追加したい
+  public/assets/monsters/ に画像を置き、src/data/csv/monsters.csv の imageFileName に登録します。
+
+- トレーナー画像を追加したい
+  public/assets/trainers/ に画像を置き、src/game/trainerImageAssets.ts に登録します。
+
+- ボタンの見た目をまとめて変えたい
+  src/game/ui/button.ts を見ます。
+
+- 捕獲数、コイン、アイテムなどが増えない
+  src/state/save.ts を見ます。
+
+- ステージが解放されない
+  src/data/stages.ts のunlockConditionsと、src/state/progression.ts を見ます。
+
+- トロフィーが達成されない
+  src/data/achievements.ts の条件と、src/state/save.ts の保存値を見ます。
+
+- どの画面からどこへ行くかを追いたい
+  src/game/sceneKeys.ts で画面名を確認し、src/game/scenes/ 内で this.scene.start を検索します。
+
+
+## 画面の大きな流れ
+
+- メニュー:
+  MainMenuScene
+
+- つかまえる:
+  MainMenuScene -> StageSelectScene -> StageIntroScene -> CaptureGameScene -> ResultScene
+
+- 進化:
+  ResultScene -> EvolutionScene -> ResultScene
+
+- バトル:
+  MainMenuScene -> BattlePreviewScene -> BattleSelectScene -> BattleGameScene
+
+- 図鑑:
+  MainMenuScene -> DexPreviewScene
+
+- ショップ:
+  MainMenuScene -> ShopPreviewScene
+
+- トロフィー:
+  MainMenuScene -> AchievementsScene
+
+
+## ビルド・開発サーバーでよくある権限エラー
+
+- `npm run build-nolog` や `npm run dev-nolog -- --host 127.0.0.1` が、サンドボックス内で `Cannot read directory "../.."` / `Access is denied` / `Could not resolve vite/config.*.mjs` で失敗することがある。
+- この失敗はコードやVite設定の壊れではなく、Codexのファイルアクセス制限でVite設定を読めない時の症状であることが多い。
+- この場合は別の確認方法でごまかさず、同じコマンドを `sandbox_permissions: "require_escalated"` で再実行する。
+- ビルド確認の定番:
+  - まず `npx tsc --noEmit`
+  - 次に `npm run build-nolog`
+  - `Access is denied` で落ちたら、同じ `npm run build-nolog` を権限付きで再実行する。
+- 開発サーバー確認の定番:
+  - `npm run dev-nolog -- --host 127.0.0.1`
+  - サンドボックスで失敗したら、`C:\Program Files\nodejs\npm.cmd run dev-nolog -- --host 127.0.0.1` を権限付きで起動する。
+  - `Start-Process npm` はWindows環境で失敗することがあるため、サーバーをバックグラウンド起動する時は `npm.cmd` を使う。
+- 画面確認でChromeヘッドレスを使った場合、一時スクリーンショットや一時プロファイルは最後に削除する。
+
+
+## 迷ったときの短い判断
+
+- 見た目ならSceneかsrc/game/ui/
+- 数値や一覧ならsrc/data/
+- 増えた、減った、保存された、解放されたならsrc/state/
+- 画像ならpublic/assets/と対応するAsset定義ファイル
+- 画面遷移ならsrc/game/sceneKeys.tsとthis.scene.start

@@ -1,0 +1,23 @@
+medals フォルダについて
+
+実績や結果画面で使うメダル画像を置く場所です。
+bronze、silver、gold の画像があります。
+collection-medal-frame は、キャラクターを集めた証などに使う予定のメダル枠です。
+
+直下のファイル
+
+- bronze.png
+  銅メダル画像です。
+
+- silver.png
+  銀メダル画像です。
+
+- gold.png
+  金メダル画像です。
+
+- collection-medal-frame.png
+  中央にキャラクターを重ねるための、透過済みコレクション用メダル枠です。
+
+直下のフォルダ
+
+- ありません。

@@ -1,0 +1,25 @@
+trainers フォルダについて
+
+アプリ内に出るトレーナー画像を置く場所です。
+src/game/assets/trainerImageAssets.ts などから参照されます。
+
+直下のファイル
+
+- dark-boy.png、dark-girl.png
+  ダーク系トレーナー画像です。
+
+- green-boy.png、green-girl.png
+  グリーン系トレーナー画像です。
+
+- icy-boy.png、icy-girl.png
+  氷系トレーナー画像です。
+
+- red-boy.png、red-girl.png
+  赤系トレーナー画像です。
+
+- yellow-boy.png、yellow-girl.png
+  黄色系トレーナー画像です。
+
+直下のフォルダ
+
+- ありません。
