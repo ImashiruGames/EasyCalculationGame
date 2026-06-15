@@ -1,0 +1,19 @@
+stories フォルダについて
+
+エクスポートしたストーリーJSONを置く場所です。
+ここに置いたJSONは src/data/stories/index.ts から読み出されます。
+
+使い方
+- ストーリー一覧の「だす」で作ったJSONファイルを、このフォルダに置きます。
+- コード側では getEmbeddedStoryDraftById(id) を使って、JSON内の story.id から呼び出します。
+- ずかんやステージ開始前に出したい時は、index.ts の embeddedStoryTriggers に kind、targetId、storyId を追加します。
+- ずかん用は story-dex-モンスターID.json という名前で置き、monsters.csv の dexStoryEnabled を TRUE、dexStoryRequiredFragments を必要数にすると、そのモンスターの結果画面から解放できます。
+- kind は monsterDex ならモンスターずかん、stageIntro ならステージ開始前です。
+- ファイル名と story.id は、story-機能-管理名 の形にそろえるのがおすすめです。
+- 例: story-dex-picoleaf、story-dex-godchiri、story-stage-grasslands
+
+直下のファイル
+- index.ts
+  このフォルダのJSONをまとめて読み、IDで探す関数を出します。
+- *.json
+  エクスポートしたストーリーJSONです。story-dex-○○.json は、○○ のモンスターずかんで読む個別ストーリーです。

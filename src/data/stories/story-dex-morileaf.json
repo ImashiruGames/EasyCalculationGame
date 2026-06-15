@@ -1,0 +1,473 @@
+{
+  "version": 1,
+  "story": {
+    "id": "story-dex-morileaf",
+    "name": "モリッ！",
+    "pages": [
+      {
+        "text": "あ！フタリーフがひかってる！",
+        "speaker": {
+          "kind": "left"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 104,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          },
+          {
+            "kind": "actor",
+            "actorId": "futaleaf",
+            "side": "right",
+            "x": 286,
+            "y": 430,
+            "scale": 0.94,
+            "flipX": false,
+            "motion": "none",
+            "effect": "glow"
+          }
+        ],
+        "soundEffectId": "jan"
+      },
+      {
+        "text": "これは…しんかするのかな？？？",
+        "speaker": {
+          "kind": "left"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 104,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          },
+          {
+            "kind": "actor",
+            "actorId": "futaleaf",
+            "side": "right",
+            "x": 286,
+            "y": 430,
+            "scale": 0.94,
+            "flipX": false,
+            "motion": "none",
+            "effect": "glow"
+          }
+        ]
+      },
+      {
+        "text": "ﾌﾀﾌﾀ~(そうかもフタ～）",
+        "speaker": {
+          "kind": "actor",
+          "actorId": "futaleaf"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 104,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          },
+          {
+            "kind": "actor",
+            "actorId": "futaleaf",
+            "side": "right",
+            "x": 286,
+            "y": 430,
+            "scale": 0.94,
+            "flipX": false,
+            "motion": "none",
+            "effect": "glow"
+          }
+        ]
+      },
+      {
+        "text": "フタ～~",
+        "speaker": {
+          "kind": "actor",
+          "actorId": "futaleaf"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 104,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          },
+          {
+            "kind": "actor",
+            "actorId": "futaleaf",
+            "side": "right",
+            "x": 286,
+            "y": 430,
+            "scale": 0.94,
+            "flipX": false,
+            "motion": "none",
+            "effect": "shrink"
+          }
+        ]
+      },
+      {
+        "text": "ｼﾞｬｰﾝ\n",
+        "speaker": {
+          "kind": "narration"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 104,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          },
+          {
+            "kind": "actor",
+            "actorId": "morileaf",
+            "side": "right",
+            "x": 286,
+            "y": 430,
+            "scale": 0.94,
+            "flipX": false,
+            "motion": "none",
+            "effect": "glow"
+          }
+        ],
+        "soundEffectId": "level-up"
+      },
+      {
+        "text": "やっぱりしんかした！",
+        "speaker": {
+          "kind": "left"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 104,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "bounce",
+            "effect": "none"
+          },
+          {
+            "kind": "actor",
+            "actorId": "morileaf",
+            "side": "right",
+            "x": 286,
+            "y": 430,
+            "scale": 0.94,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          }
+        ]
+      },
+      {
+        "text": "しんかしてもかわいいんだね～",
+        "speaker": {
+          "kind": "left"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 104,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "sway",
+            "effect": "none"
+          },
+          {
+            "kind": "actor",
+            "actorId": "morileaf",
+            "side": "right",
+            "x": 286,
+            "y": 430,
+            "scale": 0.94,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          }
+        ],
+        "soundEffectId": "puyon"
+      },
+      {
+        "text": "イマシルちゃん！\nいつもかわいがってくれてありがとモリッ！",
+        "speaker": {
+          "kind": "actor",
+          "actorId": "morileaf"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 104,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          },
+          {
+            "kind": "actor",
+            "actorId": "morileaf",
+            "side": "right",
+            "x": 286,
+            "y": 430,
+            "scale": 0.94,
+            "flipX": false,
+            "motion": "bounce",
+            "effect": "none"
+          }
+        ]
+      },
+      {
+        "text": "うわ！！？しゃべった！？",
+        "speaker": {
+          "kind": "actor",
+          "actorId": "imashiru"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 104,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          },
+          {
+            "kind": "actor",
+            "actorId": "morileaf",
+            "side": "right",
+            "x": 286,
+            "y": 430,
+            "scale": 0.94,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          }
+        ],
+        "soundEffectId": "women-ou"
+      },
+      {
+        "text": "いままでは\nﾋﾟｺﾋﾟｺ～とかﾌﾀﾌﾀ～だったのに！",
+        "speaker": {
+          "kind": "actor",
+          "actorId": "imashiru"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 104,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          },
+          {
+            "kind": "actor",
+            "actorId": "morileaf",
+            "side": "right",
+            "x": 286,
+            "y": 430,
+            "scale": 0.94,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          }
+        ]
+      },
+      {
+        "text": "しんかしてはなせるようになったモリッ！",
+        "speaker": {
+          "kind": "actor",
+          "actorId": "morileaf"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 104,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          },
+          {
+            "kind": "actor",
+            "actorId": "morileaf",
+            "side": "right",
+            "x": 286,
+            "y": 430,
+            "scale": 0.94,
+            "flipX": false,
+            "motion": "bounce",
+            "effect": "none"
+          }
+        ]
+      },
+      {
+        "text": "へぇ、しゃべれるモンスターもいるんだねぇ\nかしこいね",
+        "speaker": {
+          "kind": "actor",
+          "actorId": "imashiru"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 104,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "bounce",
+            "effect": "none"
+          },
+          {
+            "kind": "actor",
+            "actorId": "morileaf",
+            "side": "right",
+            "x": 286,
+            "y": 430,
+            "scale": 0.94,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          }
+        ]
+      },
+      {
+        "text": "なにはともあれ\nこれからもよろしくね！",
+        "speaker": {
+          "kind": "actor",
+          "actorId": "imashiru"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 104,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "bounce",
+            "effect": "none"
+          },
+          {
+            "kind": "actor",
+            "actorId": "morileaf",
+            "side": "right",
+            "x": 286,
+            "y": 430,
+            "scale": 0.94,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          }
+        ]
+      },
+      {
+        "text": "こちらこそ、けいさんモンスターをこれからもよろしくモリッ！",
+        "speaker": {
+          "kind": "actor",
+          "actorId": "morileaf"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 104,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          },
+          {
+            "kind": "actor",
+            "actorId": "morileaf",
+            "side": "right",
+            "x": 286,
+            "y": 430,
+            "scale": 0.94,
+            "flipX": false,
+            "motion": "bounce",
+            "effect": "none"
+          }
+        ]
+      },
+      {
+        "text": "おしまい",
+        "speaker": {
+          "kind": "narration"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 104,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          },
+          {
+            "kind": "actor",
+            "actorId": "morileaf",
+            "side": "right",
+            "x": 286,
+            "y": 430,
+            "scale": 0.94,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          }
+        ]
+      }
+    ],
+    "updatedAt": 1780847117778
+  }
+}

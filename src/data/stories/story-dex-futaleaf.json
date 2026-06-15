@@ -1,0 +1,381 @@
+{
+  "version": 1,
+  "story": {
+    "id": "story-dex-futaleaf",
+    "name": "ペットのしんか",
+    "pages": [
+      {
+        "text": "今日もピコリーフはかわいいね～",
+        "speaker": {
+          "kind": "left"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 104,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          },
+          {
+            "kind": "actor",
+            "actorId": "picoleaf",
+            "side": "right",
+            "x": 286,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          }
+        ]
+      },
+      {
+        "text": "よしよし～",
+        "speaker": {
+          "kind": "left"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 104,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "sway",
+            "effect": "none"
+          },
+          {
+            "kind": "actor",
+            "actorId": "picoleaf",
+            "side": "right",
+            "x": 286,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          }
+        ]
+      },
+      {
+        "text": "ｷｭｷｭｰ(もうすぐしんかしそう！）",
+        "speaker": {
+          "kind": "actor",
+          "actorId": "picoleaf"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 104,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          },
+          {
+            "kind": "actor",
+            "actorId": "picoleaf",
+            "side": "right",
+            "x": 286,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "sway",
+            "effect": "none"
+          }
+        ]
+      },
+      {
+        "text": "ん～ピコちゃんどうしたの～？",
+        "speaker": {
+          "kind": "actor",
+          "actorId": "picoleaf"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 104,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "sway",
+            "effect": "none"
+          },
+          {
+            "kind": "actor",
+            "actorId": "picoleaf",
+            "side": "right",
+            "x": 286,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          }
+        ]
+      },
+      {
+        "text": "わっ！",
+        "speaker": {
+          "kind": "actor",
+          "actorId": "imashiru"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 104,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          },
+          {
+            "kind": "actor",
+            "actorId": "picoleaf",
+            "side": "right",
+            "x": 286,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "shrink"
+          }
+        ],
+        "soundEffectId": "puyon"
+      },
+      {
+        "text": "わわっ！！",
+        "speaker": {
+          "kind": "actor",
+          "actorId": "imashiru"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 104,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          },
+          {
+            "kind": "actor",
+            "actorId": "futaleaf",
+            "side": "right",
+            "x": 286,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "glow"
+          }
+        ]
+      },
+      {
+        "text": "あ、あれ、わたしのピコちゃんは？？？",
+        "speaker": {
+          "kind": "actor",
+          "actorId": "imashiru"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 104,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          },
+          {
+            "kind": "actor",
+            "actorId": "futaleaf",
+            "side": "right",
+            "x": 286,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "glow"
+          }
+        ]
+      },
+      {
+        "text": "ﾌﾀﾌﾀ~(しんかできたフタ～）",
+        "speaker": {
+          "kind": "actor",
+          "actorId": "futaleaf"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 104,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          },
+          {
+            "kind": "actor",
+            "actorId": "futaleaf",
+            "side": "right",
+            "x": 286,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "bounce",
+            "effect": "glow"
+          }
+        ]
+      },
+      {
+        "text": "ん～これはこれでかわいい！",
+        "speaker": {
+          "kind": "actor",
+          "actorId": "imashiru"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 104,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          },
+          {
+            "kind": "actor",
+            "actorId": "futaleaf",
+            "side": "right",
+            "x": 286,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "glow"
+          }
+        ]
+      },
+      {
+        "text": "「ふたば」だからフタリーフって名前にしよ！",
+        "speaker": {
+          "kind": "actor",
+          "actorId": "imashiru"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 104,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          },
+          {
+            "kind": "actor",
+            "actorId": "futaleaf",
+            "side": "right",
+            "x": 286,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "glow"
+          }
+        ]
+      },
+      {
+        "text": "よろしくね、フタちゃん！",
+        "speaker": {
+          "kind": "actor",
+          "actorId": "imashiru"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 104,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          },
+          {
+            "kind": "actor",
+            "actorId": "futaleaf",
+            "side": "right",
+            "x": 286,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "glow"
+          }
+        ]
+      },
+      {
+        "text": "フタフタ～（よろしくフタ～）",
+        "speaker": {
+          "kind": "actor",
+          "actorId": "futaleaf"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 104,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          },
+          {
+            "kind": "actor",
+            "actorId": "futaleaf",
+            "side": "right",
+            "x": 286,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "bounce",
+            "effect": "none"
+          }
+        ]
+      }
+    ],
+    "updatedAt": 1780624095565
+  }
+}

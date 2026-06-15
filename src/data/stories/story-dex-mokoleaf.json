@@ -1,0 +1,523 @@
+{
+  "version": 1,
+  "story": {
+    "id": "story-dex-mokoleaf",
+    "name": "もこもこの野望",
+    "pages": [
+      {
+        "text": "モコリーフも\n光を[ruby:あ]浴[ruby]びて大きくなるよ",
+        "speaker": {
+          "kind": "narration"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "mokoleaf",
+            "side": "right",
+            "x": 191,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "grow"
+          }
+        ]
+      },
+      {
+        "text": "今日もお外で\n[ruby:にっ,こう,よく]日光浴[ruby]",
+        "speaker": {
+          "kind": "narration"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "mokoleaf",
+            "side": "right",
+            "x": 191,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          }
+        ]
+      },
+      {
+        "text": "………[ruby:にっ,こう,よく]日光浴[ruby]は\n[ruby:ひなた]日向[ruby]ぼっこのことだよ",
+        "speaker": {
+          "kind": "narration"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "mokoleaf",
+            "side": "right",
+            "x": 191,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          }
+        ]
+      },
+      {
+        "text": "ふわふわもこもこ\n　　ふわふわもこもこ…",
+        "speaker": {
+          "kind": "narration"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "mokoleaf",
+            "side": "right",
+            "x": 191,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "sway",
+            "effect": "none"
+          }
+        ]
+      },
+      {
+        "text": "30分後",
+        "speaker": {
+          "kind": "narration"
+        },
+        "placements": [
+          {
+            "kind": "textBox",
+            "side": "right",
+            "x": 197.23181377303587,
+            "y": 343.948013146101,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none",
+            "textBox": {
+              "width": 273,
+              "height": 122,
+              "fillColor": "#ffffff",
+              "strokeColor": "#47647d",
+              "lines": [
+                {
+                  "text": "[clock:12,0,12,30]",
+                  "x": 0,
+                  "y": 15,
+                  "fontSize": 42,
+                  "bold": true,
+                  "color": "#263143",
+                  "align": "center"
+                },
+                {
+                  "text": "",
+                  "x": 0,
+                  "y": 46,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "left"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "text": "もこもこっ！！",
+        "speaker": {
+          "kind": "narration"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "mokoleaf",
+            "side": "right",
+            "x": 191,
+            "y": 430,
+            "scale": 1.6,
+            "flipX": false,
+            "motion": "sway",
+            "effect": "none"
+          }
+        ],
+        "soundEffectId": "jajaan"
+      },
+      {
+        "text": "ふわふわが[ruby:ふく]膨[ruby]らんで大きくなったね",
+        "speaker": {
+          "kind": "narration"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "mokoleaf",
+            "side": "right",
+            "x": 191,
+            "y": 430,
+            "scale": 1.6,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          }
+        ]
+      },
+      {
+        "text": "あっ",
+        "speaker": {
+          "kind": "narration"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "mokotane",
+            "side": "left",
+            "x": 299,
+            "y": 465,
+            "scale": 0.5,
+            "flipX": true,
+            "motion": "slide",
+            "effect": "grow"
+          },
+          {
+            "kind": "actor",
+            "actorId": "mokoleaf",
+            "side": "right",
+            "x": 191,
+            "y": 430,
+            "scale": 1.6,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          }
+        ]
+      },
+      {
+        "text": "ふわふわがわかれて\n[ruby:あたら]新[ruby]しい[color:green]モコタネ[color]が生まれたよ！",
+        "speaker": {
+          "kind": "narration"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "mokotane",
+            "side": "left",
+            "x": 299,
+            "y": 465,
+            "scale": 0.5,
+            "flipX": false,
+            "motion": "bounce",
+            "effect": "glow"
+          },
+          {
+            "kind": "actor",
+            "actorId": "mokoleaf",
+            "side": "right",
+            "x": 116,
+            "y": 430,
+            "scale": 1.6,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          }
+        ]
+      },
+      {
+        "text": "モコタネは\nこんな[ruby:ふう]風[ruby]に[ruby:ふ]増[ruby]えるんだね",
+        "speaker": {
+          "kind": "narration"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "mokotane",
+            "side": "left",
+            "x": 299,
+            "y": 465,
+            "scale": 0.5,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          },
+          {
+            "kind": "actor",
+            "actorId": "mokoleaf",
+            "side": "right",
+            "x": 116,
+            "y": 430,
+            "scale": 1.6,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          }
+        ]
+      },
+      {
+        "text": "一時間後…",
+        "speaker": {
+          "kind": "narration"
+        },
+        "placements": [
+          {
+            "kind": "textBox",
+            "side": "right",
+            "x": 197.23181377303587,
+            "y": 343.948013146101,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none",
+            "textBox": {
+              "width": 273,
+              "height": 122,
+              "fillColor": "#ffffff",
+              "strokeColor": "#47647d",
+              "lines": [
+                {
+                  "text": "[clock:12,30,13,30]",
+                  "x": 0,
+                  "y": 15,
+                  "fontSize": 42,
+                  "bold": true,
+                  "color": "#263143",
+                  "align": "center"
+                },
+                {
+                  "text": "",
+                  "x": 0,
+                  "y": 46,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "left"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "text": "モコ　　モコ　モコ\n　モコ　　　モコ",
+        "speaker": {
+          "kind": "narration"
+        },
+        "placements": [
+          {
+            "kind": "textBox",
+            "side": "left",
+            "x": 198.82056256062074,
+            "y": 347.17836868837765,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none",
+            "textBox": {
+              "width": 300,
+              "height": 320.86644756498356,
+              "fillColor": "#ffffff",
+              "strokeColor": "#47647d",
+              "lines": [
+                {
+                  "text": "[name:モコタネ]　　　[name:モコリーフ]",
+                  "x": 25,
+                  "y": 51,
+                  "fontSize": 30,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "center"
+                },
+                {
+                  "text": "[name:モコタネ]",
+                  "x": 0,
+                  "y": 76,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "left"
+                },
+                {
+                  "text": "[name:モコタネ]",
+                  "x": 30,
+                  "y": 111,
+                  "fontSize": 32,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "left"
+                },
+                {
+                  "text": "[name:モコタネ]",
+                  "x": 0,
+                  "y": 136,
+                  "fontSize": 42,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "right"
+                }
+              ]
+            }
+          },
+          {
+            "kind": "actor",
+            "actorId": "mokoleaf",
+            "side": "right",
+            "x": 196,
+            "y": 430,
+            "scale": 1.6,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          }
+        ]
+      },
+      {
+        "text": "モコモコで[ruby:せ,かい,せい,ふく]世界征服[ruby]するぞー！",
+        "speaker": {
+          "kind": "actor",
+          "actorId": "mokoleaf"
+        },
+        "placements": [
+          {
+            "kind": "textBox",
+            "side": "left",
+            "x": 198.82056256062074,
+            "y": 347.17836868837765,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none",
+            "textBox": {
+              "width": 300,
+              "height": 320.86644756498356,
+              "fillColor": "#ffffff",
+              "strokeColor": "#47647d",
+              "lines": [
+                {
+                  "text": "[name:モコタネ]　　　[name:モコリーフ]",
+                  "x": 25,
+                  "y": 51,
+                  "fontSize": 30,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "center"
+                },
+                {
+                  "text": "[name:モコタネ]",
+                  "x": 0,
+                  "y": 76,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "left"
+                },
+                {
+                  "text": "[name:モコタネ]",
+                  "x": 30,
+                  "y": 111,
+                  "fontSize": 32,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "left"
+                },
+                {
+                  "text": "[name:モコタネ]",
+                  "x": 0,
+                  "y": 136,
+                  "fontSize": 42,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "right"
+                }
+              ]
+            }
+          },
+          {
+            "kind": "actor",
+            "actorId": "mokoleaf",
+            "side": "right",
+            "x": 196,
+            "y": 430,
+            "scale": 1.6,
+            "flipX": false,
+            "motion": "bounce",
+            "effect": "none"
+          }
+        ]
+      },
+      {
+        "text": "大きなもこもこの中には\n大きな[ruby:やぼう]野望[ruby]が[ruby:つ]詰[ruby]まっているのでした",
+        "speaker": {
+          "kind": "narration"
+        },
+        "placements": [
+          {
+            "kind": "textBox",
+            "side": "left",
+            "x": 198.82056256062074,
+            "y": 347.17836868837765,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none",
+            "textBox": {
+              "width": 300,
+              "height": 320.86644756498356,
+              "fillColor": "#ffffff",
+              "strokeColor": "#47647d",
+              "lines": [
+                {
+                  "text": "[name:モコタネ]　　　[name:モコリーフ]",
+                  "x": 25,
+                  "y": 51,
+                  "fontSize": 30,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "center"
+                },
+                {
+                  "text": "[name:モコタネ]",
+                  "x": 0,
+                  "y": 76,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "left"
+                },
+                {
+                  "text": "[name:モコタネ]",
+                  "x": 30,
+                  "y": 111,
+                  "fontSize": 32,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "left"
+                },
+                {
+                  "text": "[name:モコタネ]",
+                  "x": 0,
+                  "y": 136,
+                  "fontSize": 42,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "right"
+                }
+              ]
+            }
+          },
+          {
+            "kind": "actor",
+            "actorId": "mokoleaf",
+            "side": "right",
+            "x": 196,
+            "y": 430,
+            "scale": 1.6,
+            "flipX": false,
+            "motion": "bounce",
+            "effect": "none"
+          }
+        ]
+      }
+    ],
+    "updatedAt": 1780983169646
+  }
+}

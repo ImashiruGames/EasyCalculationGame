@@ -1,0 +1,206 @@
+{
+  "version": 1,
+  "story": {
+    "id": "story-dex-hyogan",
+    "name": "ヒョウガンの足元道",
+    "pages": [
+      {
+        "text": "ヒョウガンが止まると\n足元が白くなった",
+        "speaker": {
+          "kind": "left"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 104,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          },
+          {
+            "kind": "actor",
+            "actorId": "hyogan",
+            "side": "right",
+            "x": 286,
+            "y": 430,
+            "scale": 0.9,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          }
+        ]
+      },
+      {
+        "text": "ヒョウガンは\nスノーカーブで\n道を作った",
+        "speaker": {
+          "kind": "right"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 104,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          },
+          {
+            "kind": "actor",
+            "actorId": "hyogan",
+            "side": "right",
+            "x": 286,
+            "y": 430,
+            "scale": 0.9,
+            "flipX": false,
+            "motion": "none",
+            "effect": "glow"
+          }
+        ],
+        "soundEffectId": "doon"
+      },
+      {
+        "text": "「ここなら歩ける」\nイマシルはそっと一歩",
+        "speaker": {
+          "kind": "left"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 104,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "bounce",
+            "effect": "none"
+          },
+          {
+            "kind": "actor",
+            "actorId": "hyogan",
+            "side": "right",
+            "x": 286,
+            "y": 430,
+            "scale": 0.9,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          }
+        ]
+      },
+      {
+        "text": "足元メモ",
+        "speaker": {
+          "kind": "narration"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 82,
+            "y": 444,
+            "scale": 0.9,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          },
+          {
+            "kind": "actor",
+            "actorId": "hyogan",
+            "side": "right",
+            "x": 310,
+            "y": 444,
+            "scale": 0.792,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          },
+          {
+            "kind": "textBox",
+            "side": "right",
+            "x": 195,
+            "y": 242,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none",
+            "textBox": {
+              "width": 224,
+              "height": 126,
+              "fillColor": "#ffffff",
+              "strokeColor": "#47647d",
+              "lines": [
+                {
+                  "text": "足元メモ",
+                  "x": 0,
+                  "y": 0,
+                  "fontSize": 19,
+                  "bold": true,
+                  "color": "#263143",
+                  "align": "center"
+                },
+                {
+                  "text": "止まると道",
+                  "x": 0,
+                  "y": 40,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "center"
+                },
+                {
+                  "text": "大きなこおり",
+                  "x": 0,
+                  "y": 70,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "center"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "text": "こおりの道は\n月みたいに光った",
+        "speaker": {
+          "kind": "left"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 104,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "sway",
+            "effect": "none"
+          },
+          {
+            "kind": "actor",
+            "actorId": "hyogan",
+            "side": "right",
+            "x": 286,
+            "y": 430,
+            "scale": 0.9,
+            "flipX": false,
+            "motion": "none",
+            "effect": "glow"
+          }
+        ]
+      }
+    ],
+    "updatedAt": 1780538400000
+  }
+}

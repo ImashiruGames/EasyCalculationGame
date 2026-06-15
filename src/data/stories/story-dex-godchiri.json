@@ -1,0 +1,139 @@
+{
+  "version": 1,
+  "story": {
+    "id": "story-dex-godchiri",
+    "name": "我は神なり",
+    "pages": [
+      {
+        "text": "私は神なり…",
+        "speaker": {
+          "kind": "narration"
+        },
+        "placements": [
+          {
+            "actorId": "godchiri",
+            "side": "left",
+            "x": 104,
+            "y": 370,
+            "scale": 1.4,
+            "flipX": false,
+            "motion": "none"
+          }
+        ]
+      },
+      {
+        "text": "雷の権化、\nゴッド・チリなり！！",
+        "speaker": {
+          "kind": "narration"
+        },
+        "placements": [
+          {
+            "actorId": "godchiri",
+            "side": "left",
+            "x": 104,
+            "y": 370,
+            "scale": 1.4,
+            "flipX": false,
+            "motion": "none"
+          }
+        ]
+      },
+      {
+        "text": "ｺﾞﾛｺﾞﾛﾋﾟｶｰﾝ！！！",
+        "speaker": {
+          "kind": "narration"
+        },
+        "placements": [
+          {
+            "actorId": "godchiri",
+            "side": "left",
+            "x": 104,
+            "y": 370,
+            "scale": 1.4,
+            "flipX": false,
+            "motion": "bounce"
+          }
+        ]
+      },
+      {
+        "text": "やば！",
+        "speaker": {
+          "kind": "narration"
+        },
+        "placements": [
+          {
+            "actorId": "godchiri",
+            "side": "left",
+            "x": 104,
+            "y": 370,
+            "scale": 1.4,
+            "flipX": false,
+            "motion": "none"
+          },
+          {
+            "actorId": "imashiru",
+            "side": "right",
+            "x": 286,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none"
+          }
+        ]
+      },
+      {
+        "text": "作画違いすぎでしょ！笑",
+        "speaker": {
+          "kind": "narration"
+        },
+        "placements": [
+          {
+            "actorId": "godchiri",
+            "side": "left",
+            "x": 104,
+            "y": 370,
+            "scale": 1.4,
+            "flipX": false,
+            "motion": "none"
+          },
+          {
+            "actorId": "imashiru",
+            "side": "right",
+            "x": 286,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none"
+          }
+        ]
+      },
+      {
+        "text": "おしまい",
+        "speaker": {
+          "kind": "narration"
+        },
+        "placements": [
+          {
+            "actorId": "godchiri",
+            "side": "left",
+            "x": 104,
+            "y": 370,
+            "scale": 1.4,
+            "flipX": false,
+            "motion": "none"
+          },
+          {
+            "actorId": "imashiru",
+            "side": "right",
+            "x": 286,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none"
+          }
+        ]
+      }
+    ],
+    "updatedAt": 1780381387800
+  }
+}

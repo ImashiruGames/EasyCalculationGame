@@ -1,0 +1,16 @@
+vite フォルダについて
+
+Viteの設定ファイルを置く場所です。
+config.dev.mjs は開発用、config.prod.mjs はビルド用です。
+
+直下のファイル
+
+- config.dev.mjs
+  開発サーバー用のVite設定です。
+
+- config.prod.mjs
+  本番ビルド用のVite設定です。
+
+直下のフォルダ
+
+- ありません。

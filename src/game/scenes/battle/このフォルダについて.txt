@@ -1,0 +1,16 @@
+battle フォルダについて
+
+バトルの選択画面とプレイ画面のSceneを置く場所です。
+ルールの中心は src/game/battle にあります。
+
+直下のファイル
+
+- BattleSelectScene.ts
+  バトル相手や開始前の選択画面です。
+
+- BattleGameScene.ts
+  バトル本編の画面です。
+
+直下のフォルダ
+
+- ありません。

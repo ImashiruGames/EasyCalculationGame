@@ -1,0 +1,206 @@
+{
+  "version": 1,
+  "story": {
+    "id": "story-dex-haneppu",
+    "name": "ハネップと風読み",
+    "pages": [
+      {
+        "text": "草が右へなびいて\nハネップの耳も右をむいた",
+        "speaker": {
+          "kind": "left"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 104,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          },
+          {
+            "kind": "actor",
+            "actorId": "haneppu",
+            "side": "right",
+            "x": 286,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          }
+        ]
+      },
+      {
+        "text": "ハネップは\n風を読んで\nはねキック！",
+        "speaker": {
+          "kind": "right"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 104,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          },
+          {
+            "kind": "actor",
+            "actorId": "haneppu",
+            "side": "right",
+            "x": 286,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "sway",
+            "effect": "none"
+          }
+        ],
+        "soundEffectId": "transition-1"
+      },
+      {
+        "text": "「風の先生みたい」\nイマシルは耳をまねした",
+        "speaker": {
+          "kind": "left"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 104,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "bounce",
+            "effect": "none"
+          },
+          {
+            "kind": "actor",
+            "actorId": "haneppu",
+            "side": "right",
+            "x": 286,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          }
+        ]
+      },
+      {
+        "text": "耳メモ",
+        "speaker": {
+          "kind": "narration"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 82,
+            "y": 444,
+            "scale": 0.9,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          },
+          {
+            "kind": "actor",
+            "actorId": "haneppu",
+            "side": "right",
+            "x": 310,
+            "y": 444,
+            "scale": 0.88,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          },
+          {
+            "kind": "textBox",
+            "side": "right",
+            "x": 195,
+            "y": 242,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none",
+            "textBox": {
+              "width": 224,
+              "height": 126,
+              "fillColor": "#ffffff",
+              "strokeColor": "#47647d",
+              "lines": [
+                {
+                  "text": "耳メモ",
+                  "x": 0,
+                  "y": 0,
+                  "fontSize": 19,
+                  "bold": true,
+                  "color": "#263143",
+                  "align": "center"
+                },
+                {
+                  "text": "長い耳",
+                  "x": 0,
+                  "y": 40,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "center"
+                },
+                {
+                  "text": "風を読む",
+                  "x": 0,
+                  "y": 70,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "center"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "text": "風といっしょに\n草の道をぬけたよ",
+        "speaker": {
+          "kind": "left"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 104,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "sway",
+            "effect": "none"
+          },
+          {
+            "kind": "actor",
+            "actorId": "haneppu",
+            "side": "right",
+            "x": 286,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "sway",
+            "effect": "none"
+          }
+        ]
+      }
+    ],
+    "updatedAt": 1780538400000
+  }
+}

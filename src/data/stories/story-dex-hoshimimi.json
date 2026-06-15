@@ -1,0 +1,206 @@
+{
+  "version": 1,
+  "story": {
+    "id": "story-dex-hoshimimi",
+    "name": "ホシミミの星の夜",
+    "pages": [
+      {
+        "text": "星が多い夜だけ\n耳がきらっと見えた",
+        "speaker": {
+          "kind": "left"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 104,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          },
+          {
+            "kind": "actor",
+            "actorId": "hoshimimi",
+            "side": "right",
+            "x": 286,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          }
+        ]
+      },
+      {
+        "text": "ホシミミは\nほしキックで\n空へ合図",
+        "speaker": {
+          "kind": "right"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 104,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          },
+          {
+            "kind": "actor",
+            "actorId": "hoshimimi",
+            "side": "right",
+            "x": 286,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "bounce",
+            "effect": "glow"
+          }
+        ],
+        "soundEffectId": "jajaan"
+      },
+      {
+        "text": "レアな子だね\nイマシルは声を小さくした",
+        "speaker": {
+          "kind": "left"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 104,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "bounce",
+            "effect": "none"
+          },
+          {
+            "kind": "actor",
+            "actorId": "hoshimimi",
+            "side": "right",
+            "x": 286,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          }
+        ]
+      },
+      {
+        "text": "星耳メモ",
+        "speaker": {
+          "kind": "narration"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 82,
+            "y": 444,
+            "scale": 0.9,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          },
+          {
+            "kind": "actor",
+            "actorId": "hoshimimi",
+            "side": "right",
+            "x": 310,
+            "y": 444,
+            "scale": 0.88,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          },
+          {
+            "kind": "textBox",
+            "side": "right",
+            "x": 195,
+            "y": 242,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none",
+            "textBox": {
+              "width": 224,
+              "height": 126,
+              "fillColor": "#ffffff",
+              "strokeColor": "#47647d",
+              "lines": [
+                {
+                  "text": "星耳メモ",
+                  "x": 0,
+                  "y": 0,
+                  "fontSize": 19,
+                  "bold": true,
+                  "color": "#263143",
+                  "align": "center"
+                },
+                {
+                  "text": "星の夜に出る",
+                  "x": 0,
+                  "y": 40,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "center"
+                },
+                {
+                  "text": "耳が光る",
+                  "x": 0,
+                  "y": 70,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "center"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "text": "星が一つ\nホシミミの近くでまたたいた",
+        "speaker": {
+          "kind": "left"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 104,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "sway",
+            "effect": "none"
+          },
+          {
+            "kind": "actor",
+            "actorId": "hoshimimi",
+            "side": "right",
+            "x": 286,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "bounce",
+            "effect": "glow"
+          }
+        ]
+      }
+    ],
+    "updatedAt": 1780538400000
+  }
+}

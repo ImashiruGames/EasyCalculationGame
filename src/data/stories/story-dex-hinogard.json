@@ -1,0 +1,206 @@
+{
+  "version": 1,
+  "story": {
+    "id": "story-dex-hinogard",
+    "name": "ヒノガルドの火のわ",
+    "pages": [
+      {
+        "text": "山の前に\n火のわがゆっくり回った",
+        "speaker": {
+          "kind": "left"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 104,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          },
+          {
+            "kind": "actor",
+            "actorId": "hinogard",
+            "side": "right",
+            "x": 286,
+            "y": 430,
+            "scale": 0.9,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          }
+        ]
+      },
+      {
+        "text": "ヒノガルドは\nあつあつパンチで\n火のわを作る",
+        "speaker": {
+          "kind": "right"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 104,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          },
+          {
+            "kind": "actor",
+            "actorId": "hinogard",
+            "side": "right",
+            "x": 286,
+            "y": 430,
+            "scale": 0.9,
+            "flipX": false,
+            "motion": "bounce",
+            "effect": "glow"
+          }
+        ],
+        "soundEffectId": "jajaan"
+      },
+      {
+        "text": "イマシルは\n「番人みたい」って\nせすじをのばした",
+        "speaker": {
+          "kind": "left"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 104,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "bounce",
+            "effect": "none"
+          },
+          {
+            "kind": "actor",
+            "actorId": "hinogard",
+            "side": "right",
+            "x": 286,
+            "y": 430,
+            "scale": 0.9,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          }
+        ]
+      },
+      {
+        "text": "火のわメモ",
+        "speaker": {
+          "kind": "narration"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 82,
+            "y": 444,
+            "scale": 0.9,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          },
+          {
+            "kind": "actor",
+            "actorId": "hinogard",
+            "side": "right",
+            "x": 310,
+            "y": 444,
+            "scale": 0.792,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          },
+          {
+            "kind": "textBox",
+            "side": "right",
+            "x": 195,
+            "y": 242,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none",
+            "textBox": {
+              "width": 224,
+              "height": 126,
+              "fillColor": "#ffffff",
+              "strokeColor": "#47647d",
+              "lines": [
+                {
+                  "text": "火のわメモ",
+                  "x": 0,
+                  "y": 0,
+                  "fontSize": 19,
+                  "bold": true,
+                  "color": "#263143",
+                  "align": "center"
+                },
+                {
+                  "text": "なかまをまもる",
+                  "x": 0,
+                  "y": 40,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "center"
+                },
+                {
+                  "text": "大きな番人",
+                  "x": 0,
+                  "y": 70,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "center"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "text": "火のわの中は\nあたたかい広場だった",
+        "speaker": {
+          "kind": "left"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 104,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "sway",
+            "effect": "none"
+          },
+          {
+            "kind": "actor",
+            "actorId": "hinogard",
+            "side": "right",
+            "x": 286,
+            "y": 430,
+            "scale": 0.9,
+            "flipX": false,
+            "motion": "bounce",
+            "effect": "glow"
+          }
+        ]
+      }
+    ],
+    "updatedAt": 1780538400000
+  }
+}

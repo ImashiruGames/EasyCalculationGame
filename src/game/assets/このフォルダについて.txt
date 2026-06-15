@@ -1,0 +1,28 @@
+assets フォルダについて
+
+public/assets にある画像を、ゲーム内で読み込むためのキーや一覧にまとめる場所です。
+素材ファイルそのものは public/assets にあります。
+
+直下のファイル
+
+- assetWarmup.ts
+  使う画像を先に読み込む準備処理です。
+
+- battleRewardAssets.ts
+  ボス勝利のごほうび箱演出で使う画像のキーとパスをまとめています。
+
+- medalAssets.ts
+  メダル画像のキーとパスをまとめています。
+
+- monsterImageAssets.ts
+  monsters.csv の画像ファイル名から、モンスター画像のキーとパスを作ります。画像がない時は仮画像を使います。
+
+- stageBackgroundAssets.ts
+  ステージ背景画像のキーとパスをまとめています。
+
+- trainerImageAssets.ts
+  トレーナー画像のキーとパスをまとめています。
+
+直下のフォルダ
+
+- ありません。

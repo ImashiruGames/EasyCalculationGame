@@ -1,0 +1,11 @@
+﻿id,name,title,stageId,difficultyLevel,hp,problemRule,partnerMonsterId,partnerMonsterIds,rewardCoins,rewardCandyAttribute,rewardCandyAmount,accentColor,paletteCap,paletteShirt,paletteShadow,paletteBackground
+trainer-haru,ハル,くさむら たんけん,g1-tashizan-hazimarinosougen,1,80,plusOne,haneppu,haneppu|picoleaf,10,くさ,0,#80d889,#7fd77b,#fff2a8,#2f9f61,#edfff0
+trainer-rin,リン,こおりの れんしゅう,g1-tashizan-koorinodoukutsu,2,100,plusTwo,yukipon,yukipon|koorin|kirapon,18,こおり,1,#9bdcf8,#9bdcf8,#ffffff,#4e9ff8,#eefaff
+trainer-akari,アカリ,ほのおのやま,g1-tashizan-honoonoyama,3,120,plusThree,hinokoro,hinokoro|merarun|pokkuma,28,ほのお,1,#ffb15e,#ffb15e,#ffe0a3,#d46a37,#fff2e3
+trainer-raito,ライト,かみなりのたかだい,g1-tashizan-kaminarinotakadai,4,135,noCarryAdd,biricoro,biricoro|raimaru|goropeka,42,かみなり,1,#f6d74f,#f6d74f,#ffffff,#b8941e,#fff8d7
+trainer-minato,ミナト,みずべのにわ,g1-tashizan-mizubenoniwa,5,150,noCarryAdd,awapon,awapon|namirin|mizukira,58,みず,2,#70c7ff,#70c7ff,#e9fbff,#359dcc,#e9fbff
+trainer-tsukino,ツキノ,よるのいせき,g1-tashizan-yorunoiseki,6,165,noCarryAdd,kagemaru,kagemaru|tsukinoko|hoshimimi,75,よる,2,#b9a7ff,#b9a7ff,#f5f1ff,#6254b0,#f3f0ff
+trainer-towa,トワ,10のとう,g1-junoyama-tenberunotou,7,180,makeTen,tenpico,tenpico|maruten|rainbow,95,10,2,#ffd766,#ffd766,#fff8da,#b98d25,#fff9df
+trainer-noko,ノコ,ひきざんのもり,g1-hikizan-nokorinokomichi,8,198,noBorrowSubtract,hikine,hikine|nokorin|komorebi,120,もり,3,#80d889,#80d889,#efffea,#2d8d52,#efffea
+trainer-sabi,サビ,いしのたに,g2-hikizan-nokoriishinotani,9,216,noBorrowSubtract,ishikoro,ishikoro|sabimaru|kiramekisama,150,いし,3,#ffb15e,#b8aca1,#fff0e6,#74695e,#f8f1ea
+trainer-kageto,カゲト,やみの いたずらっこ,g1-tashizan-yorunoiseki,10,238,"[{""operator"":""minus"",""left"":[10,19],""right"":[1,9],""result"":[0,99]},{""operator"":""plus"",""left"":[1,9],""right"":[1,9],""result"":[10,10]}]",kageou,kageou|lumiroad|yoru,180,よる,3,#b9a7ff,#6b3b9a,#f05ba6,#2a173f,#f1e9ff

@@ -1,0 +1,19 @@
+creatures フォルダについて
+
+モンスターやトレーナーの表示を作るUIコードを置く場所です。
+画像素材は public/assets/monsters と public/assets/trainers にあります。
+
+直下のファイル
+
+- monsterVisual.ts
+  モンスターの表示を作ります。
+
+- rareSecretFrame.ts
+  レアやひみつ表示用の特別な枠を作ります。
+
+- trainerVisual.ts
+  トレーナーの表示を作ります。
+
+直下のフォルダ
+
+- ありません。

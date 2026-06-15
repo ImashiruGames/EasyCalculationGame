@@ -1,0 +1,343 @@
+{
+  "version": 1,
+  "story": {
+    "id": "story-dex-mokotane",
+    "name": "もこもこモコタネ",
+    "pages": [
+      {
+        "text": "モコタネは\n[ruby:ひかり]光[ruby]をあびて大きくなるよ",
+        "speaker": {
+          "kind": "narration"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "mokotane",
+            "side": "right",
+            "x": 196,
+            "y": 430,
+            "scale": 0.7,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          }
+        ]
+      },
+      {
+        "text": "今日もお外で\n[ruby:ひなた]日向[ruby]ぼっこ",
+        "speaker": {
+          "kind": "narration"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "mokotane",
+            "side": "right",
+            "x": 196,
+            "y": 430,
+            "scale": 0.7,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          }
+        ]
+      },
+      {
+        "text": "ふわふわしていてかわいいね",
+        "speaker": {
+          "kind": "narration"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "mokotane",
+            "side": "right",
+            "x": 196,
+            "y": 430,
+            "scale": 0.7,
+            "flipX": false,
+            "motion": "bounce",
+            "effect": "none"
+          }
+        ]
+      },
+      {
+        "text": "ふわふわもこもこ…\n　　ふわふわもこもこ…",
+        "speaker": {
+          "kind": "narration"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "mokotane",
+            "side": "right",
+            "x": 196,
+            "y": 430,
+            "scale": 0.7,
+            "flipX": false,
+            "motion": "bounce",
+            "effect": "none"
+          }
+        ]
+      },
+      {
+        "text": "5分後",
+        "speaker": {
+          "kind": "narration"
+        },
+        "placements": [
+          {
+            "kind": "textBox",
+            "side": "right",
+            "x": 197.23181377303587,
+            "y": 343.948013146101,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none",
+            "textBox": {
+              "width": 273,
+              "height": 115,
+              "fillColor": "#ffffff",
+              "strokeColor": "#47647d",
+              "lines": [
+                {
+                  "text": "5分後",
+                  "x": 0,
+                  "y": 25,
+                  "fontSize": 34,
+                  "bold": true,
+                  "color": "#263143",
+                  "align": "center"
+                },
+                {
+                  "text": "",
+                  "x": 0,
+                  "y": 46,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "left"
+                }
+              ]
+            }
+          }
+        ],
+        "soundEffectId": "transition-1"
+      },
+      {
+        "text": "まだ日向ぼっこしてるみたい！",
+        "speaker": {
+          "kind": "narration"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "mokotane",
+            "side": "right",
+            "x": 196,
+            "y": 430,
+            "scale": 0.9,
+            "flipX": false,
+            "motion": "bounce",
+            "effect": "none"
+          }
+        ]
+      },
+      {
+        "text": "少し大きくなったかな？",
+        "speaker": {
+          "kind": "narration"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "mokotane",
+            "side": "right",
+            "x": 196,
+            "y": 430,
+            "scale": 0.9,
+            "flipX": false,
+            "motion": "bounce",
+            "effect": "none"
+          }
+        ]
+      },
+      {
+        "text": "ふわふわもこもこ…\n　　ふわふわもこもこ…",
+        "speaker": {
+          "kind": "narration"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "mokotane",
+            "side": "right",
+            "x": 196,
+            "y": 430,
+            "scale": 0.9,
+            "flipX": false,
+            "motion": "bounce",
+            "effect": "none"
+          }
+        ]
+      },
+      {
+        "text": "一時間後",
+        "speaker": {
+          "kind": "narration"
+        },
+        "placements": [
+          {
+            "kind": "textBox",
+            "side": "right",
+            "x": 197.23181377303587,
+            "y": 343.948013146101,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none",
+            "textBox": {
+              "width": 273,
+              "height": 115,
+              "fillColor": "#ffffff",
+              "strokeColor": "#47647d",
+              "lines": [
+                {
+                  "text": "一時間後",
+                  "x": 0,
+                  "y": 25,
+                  "fontSize": 34,
+                  "bold": true,
+                  "color": "#263143",
+                  "align": "center"
+                },
+                {
+                  "text": "",
+                  "x": 0,
+                  "y": 46,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "left"
+                }
+              ]
+            }
+          }
+        ],
+        "soundEffectId": "transition-1"
+      },
+      {
+        "text": "もこもこもこぉ！！！！",
+        "speaker": {
+          "kind": "narration"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "mokotane",
+            "side": "right",
+            "x": 196,
+            "y": 430,
+            "scale": 1.6,
+            "flipX": false,
+            "motion": "bounce",
+            "effect": "none"
+          }
+        ],
+        "soundEffectId": "wadaiko-dodon"
+      },
+      {
+        "text": "うわ！！？でっか！？",
+        "speaker": {
+          "kind": "left"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 104,
+            "y": 450,
+            "scale": 0.9,
+            "flipX": true,
+            "motion": "twitch",
+            "effect": "none"
+          },
+          {
+            "kind": "actor",
+            "actorId": "mokotane",
+            "side": "right",
+            "x": 316,
+            "y": 430,
+            "scale": 1.6,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          }
+        ]
+      },
+      {
+        "text": "お[ruby:ひ,さま]日様[ruby]に当たりすぎたか…",
+        "speaker": {
+          "kind": "left"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 104,
+            "y": 450,
+            "scale": 0.9,
+            "flipX": true,
+            "motion": "none",
+            "effect": "none"
+          },
+          {
+            "kind": "actor",
+            "actorId": "mokotane",
+            "side": "right",
+            "x": 316,
+            "y": 430,
+            "scale": 1.6,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          }
+        ]
+      },
+      {
+        "text": "みんなも[ruby:ひなた]日向[ruby]ぼっこのさせすぎには\n気をつけよう",
+        "speaker": {
+          "kind": "left"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 104,
+            "y": 450,
+            "scale": 0.9,
+            "flipX": true,
+            "motion": "none",
+            "effect": "none"
+          },
+          {
+            "kind": "actor",
+            "actorId": "mokotane",
+            "side": "right",
+            "x": 316,
+            "y": 430,
+            "scale": 1.6,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          }
+        ]
+      }
+    ],
+    "updatedAt": 1780968888100
+  }
+}

@@ -1,0 +1,13 @@
+dailyMissions フォルダについて
+
+毎日ミッション画面のSceneを置く場所です。
+ミッション定義は src/data/dailyMissions.ts にあります。
+
+直下のファイル
+
+- DailyMissionsScene.ts
+  毎日ミッションの進み具合と報酬を表示する画面です。
+
+直下のフォルダ
+
+- ありません。

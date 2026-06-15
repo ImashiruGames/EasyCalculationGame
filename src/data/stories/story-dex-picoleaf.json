@@ -1,0 +1,165 @@
+{
+  "version": 1,
+  "story": {
+    "id": "story-dex-picoleaf",
+    "name": "サンプルストーリー",
+    "pages": [
+      {
+        "text": "やあ\nイマシルっていいます",
+        "speaker": {
+          "kind": "left"
+        },
+        "placements": [
+          {
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 104,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none"
+          }
+        ]
+      },
+      {
+        "text": "ここではキャラクターの\nストーリーがよめるよ！",
+        "speaker": {
+          "kind": "left"
+        },
+        "placements": [
+          {
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 104,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none"
+          }
+        ]
+      },
+      {
+        "text": "キュー！（こんにちは！）\nｷｭｰｷｭｰ!!（ピコリーフだよ!!）",
+        "speaker": {
+          "kind": "right"
+        },
+        "placements": [
+          {
+            "actorId": "picoleaf",
+            "side": "right",
+            "x": 286,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none"
+          }
+        ]
+      },
+      {
+        "text": "わっ！ピコちゃんじゃん",
+        "speaker": {
+          "kind": "left"
+        },
+        "placements": [
+          {
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 104,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none"
+          },
+          {
+            "actorId": "picoleaf",
+            "side": "right",
+            "x": 286,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none"
+          }
+        ]
+      },
+      {
+        "text": "きょうもかわいいね～",
+        "speaker": {
+          "kind": "left"
+        },
+        "placements": [
+          {
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 104,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none"
+          },
+          {
+            "actorId": "picoleaf",
+            "side": "right",
+            "x": 286,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none"
+          }
+        ]
+      },
+      {
+        "text": "なんて言ってるかは\nわかんないけど！",
+        "speaker": {
+          "kind": "left"
+        },
+        "placements": [
+          {
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 104,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none"
+          },
+          {
+            "actorId": "picoleaf",
+            "side": "right",
+            "x": 286,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none"
+          }
+        ]
+      },
+      {
+        "text": "キュー…",
+        "speaker": {
+          "kind": "right"
+        },
+        "placements": [
+          {
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 104,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none"
+          },
+          {
+            "actorId": "picoleaf",
+            "side": "right",
+            "x": 286,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none"
+          }
+        ]
+      }
+    ],
+    "updatedAt": 1780383957630
+  }
+}

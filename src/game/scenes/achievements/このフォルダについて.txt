@@ -1,0 +1,13 @@
+achievements フォルダについて
+
+実績画面のSceneを置く場所です。
+実績データは src/data/achievements.ts にあります。
+
+直下のファイル
+
+- AchievementsScene.ts
+  実績一覧やランク表示を行う画面です。
+
+直下のフォルダ
+
+- ありません。

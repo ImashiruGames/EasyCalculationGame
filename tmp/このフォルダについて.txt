@@ -1,0 +1,34 @@
+tmp フォルダについて
+
+動作確認で出た一時ファイルを置く場所です。
+スクリーンショット、検証ログなどがあります。
+消してよいか迷うときは、先に必要な画像やログがないか見てください。
+
+ログは tmp/logs にまとめる方針です。
+容量が大きかった chrome-* の一時プロファイルは削除済みです。
+一部の transfer-dev ログは実行中プロセスが使っていたため、今回は tmp 直下に残っています。
+
+直下のファイル
+
+- clock-stage-check.png
+  時計やステージ表示の確認スクリーンショットです。
+
+- login-bonus-reference-style.png、login-bonus-stamp-card.png
+  ログインボーナス画面の参考画像や確認画像です。
+
+- transfer-dev.err.log、transfer-dev.out.log
+  引き継ぎ画面確認時のログです。使用中だったため tmp 直下に残しています。
+
+- transfer-screen.png
+  引き継ぎ画面の確認スクリーンショットです。
+
+- transparent-monsters-preview.png
+  モンスター透明化の確認スクリーンショットです。
+
+直下のフォルダ
+
+- logs
+  開発サーバーや検証作業のログをまとめています。
+
+- monster-alpha
+  モンスター画像の透明部分を確認した一時画像を置いています。

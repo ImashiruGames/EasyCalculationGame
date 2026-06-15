@@ -1,0 +1,56 @@
+game フォルダについて
+
+Phaserで動くゲーム部分を置く場所です。
+画面、出題、バトル、UI、画像アセット、音、共通設定があります。
+
+直下のファイル
+
+- audio.ts
+  効果音の生成や再生を扱います。
+
+- bgm.ts
+  BGMの生成や再生を扱います。
+
+- captureGauge.ts
+  捕獲ゲージの計算を扱います。
+
+- constants.ts
+  ゲーム画面サイズなどの共通定数です。
+
+- flowConfig.ts
+  画面の流れに関係する設定です。
+
+- layoutConfig.ts
+  画面配置や見た目の共通設定です。
+
+- qrCode.ts
+  引き継ぎ用QRコードに関係する処理です。
+
+- sceneKeys.ts
+  Scene名のキーをまとめています。
+
+- sceneNavigation.ts
+  Scene間の移動を助ける処理です。
+
+- textPolicy.ts
+  アプリ内文言の文字ルールを確認する処理です。
+
+- types.ts
+  ゲーム全体で使う型定義です。
+
+直下のフォルダ
+
+- assets
+  画像アセットの読み込み定義を置いています。
+
+- battle
+  バトルルールを置いています。
+
+- problem
+  計算問題の生成処理を置いています。
+
+- scenes
+  Phaserの画面クラスを置いています。
+
+- ui
+  共通UI部品や表示補助を置いています。

@@ -1,0 +1,52 @@
+csv フォルダについて
+
+ステージやトレーナーなど、表で管理しやすいデータをCSVとして置く場所です。
+stageCsvLoader.ts や trainers.ts が読み込んで使います。
+
+直下のファイル
+
+- boss_battles.csv
+  ボスしょうぶの相手、出すカテゴリ、ページ別設定、報酬、ボスモンスターを設定するCSVです。ステージ選たく画面から入るボスは、今のページに見えているステージを元にランダム出題します。pageIndex は空欄なら全ページ共通、0なら1ページ目です。bossMonsterIds に | 区切りで複数IDを書くと、ボス候補として並べて表示します。
+
+- monsters.csv
+  モンスター本体の名前、ID、タイプ、進化系、画像ファイル名などを設定するCSVです。出現ステージは stage_monsters.csv に書きます。dexStoryEnabled を TRUE にし、dexStoryRequiredFragments に必要なかけら数を書くと、対応する図鑑ストーリーJSONを結果画面から解放できます。
+
+- stages.csv
+  ステージ本体の一覧です。
+
+- stage_categories.csv
+  ステージ分類の一覧です。
+
+- stage_monsters.csv
+  ステージごとに出るモンスターの対応表です。
+
+- stage_problem_rules.csv
+  ステージごとの出題ルールです。
+
+- stage_unlock_conditions.csv
+  ステージ解放条件の一覧です。
+
+- trainers.csv
+  トレーナーの一覧です。
+
+- debug_boss_battles.csv
+  URLに debug=1 がある開発中だけ読み足す、デバッグ用ボスしょうぶのCSVです。
+
+- debug_monsters.csv
+  URLに debug=1 がある開発中だけ読み足す、デバッグ用モンスターのCSVです。
+
+- debug_stages.csv
+  URLに debug=1 がある開発中だけ読み足す、デバッグ用ステージのCSVです。
+
+- debug_stage_categories.csv
+  URLに debug=1 がある開発中だけ読み足す、デバッグ用ステージカテゴリのCSVです。
+
+- debug_stage_monsters.csv
+  URLに debug=1 がある開発中だけ読み足す、デバッグ用ステージとモンスターの対応表です。
+
+- debug_stage_problem_rules.csv
+  URLに debug=1 がある開発中だけ読み足す、デバッグ用ステージの出題ルールCSVです。
+
+直下のフォルダ
+
+- ありません。

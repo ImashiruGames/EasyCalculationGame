@@ -1,0 +1,64 @@
+data フォルダについて
+
+ステージ、モンスター、トレーナー、実績、ショップ、毎日ミッションなど、ゲームのデータ定義を置く場所です。
+CSVから読み込むデータもここでTypeScriptから使える形にしています。
+
+直下のファイル
+
+- achievementRanks.ts
+  実績ランクの定義です。
+
+- achievements.ts
+  実績の定義と生成処理です。
+
+- bossBattles.ts
+  ボスしょうぶのCSVを読み、バトルで使える相手データへ変換します。
+
+- csv.ts
+  CSVを読むための共通処理です。
+
+- dailyMissions.ts
+  毎日ミッションの定義です。
+
+- monsterCatalog.d.ts
+  旧モンスター定義ファイルの型定義です。
+
+- monsterCatalog.js
+  CSV移行前の旧モンスター定義です。今の入口は csv/monsters.csv です。
+
+- monsterCsvLoader.ts
+  monsters.csv を読み、ゲーム内のモンスター定義へ変換します。
+
+- monsters.ts
+  モンスターCSVを読み、検索や表示用データを外へ渡します。
+
+- practiceLevels.ts
+  練習レベルの定義です。
+
+- shopItems.ts
+  ショップアイテムの定義です。
+
+- storyCreatorActors.ts
+  お話を作る画面で選べる人とモンスターの定義です。
+
+- storyScripts.ts
+  ストーリー画面で流す仮の会話データです。
+
+- stageCsvLoader.ts
+  ステージCSVを読み、ゲーム内データへ変換する処理です。
+
+- stages.ts
+  ステージ定義を外へ渡す入口です。
+
+- titleBackgrounds.ts
+  タイトル背景の定義です。
+
+- trainers.ts
+  トレーナーCSVを読み、ゲーム内データへ変換する処理です。
+
+直下のフォルダ
+
+- csv
+  CSV形式の元データを置いています。
+- stories
+  エクスポートしたストーリーJSONを置く場所です。index.ts から story.id で探せます。

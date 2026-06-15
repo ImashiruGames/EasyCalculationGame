@@ -1,0 +1,7 @@
+﻿id,name,title,categoryId,pageIndex,stageId,sourceStageIds,difficultyLevel,hp,problemCount,bossMonsterId,bossMonsterIds,rewardCoins,rewardCandyAttribute,rewardCandyAmount,accentColor,paletteBackground,problemRule
+debug-boss-page,おためしボス,たたかいチェック,debug,0,debugAdd,debugAdd|debugMinus,1,80,2,debug-boss,debug-boss|debug-rare,1,おためし,1,#7ed7ff,#e7f5ff,
+debug-boss-mix,ミックスボス,いろいろチェック,debug,1,debugTimes,debugCarry|debugBorrow|debugTimes|debugDivide|debugDecimal,2,160,5,debug-boss,debug-boss|debug-power|debug-tank,999,ほのお,3,#ff8b55,#fff2e8,
+debug-boss-hard,レアボス,むずかしめチェック,debug,2,debugRoot,debugFraction|debugFractionMul|debugClock|debugRoot|debugLong,3,240,5,debug-ultra,debug-ultra|debug-root|debug-frac,999,よる,3,#b9a7ff,#f3efff,
+debug-boss-stats,HPボス,ATKとHPチェック,debug,3,debugBorrow,debugCarry|debugBorrow|debugBlank|debugTimes|debugDivide,3,300,5,debug-heavy-hit,debug-glass-rare|debug-tank-big|debug-four-4|debug-onehp|debug-heavy-hit,999,いし,3,#9b958c,#f6f2ea,
+debug-boss-new-problems,新もんボス,新けいさんチェック,debug,4,debugShapeArea,debugShapeArea|debugVertical|debugMissingDigit|debugCarry|debugBorrow,3,260,5,debug-heavy-hit,debug-heavy-hit|debug-flat|debug-glass|debug-tank-low,999,かみなり,3,#80d889,#eefaf0,
+debug-boss-weakness,弱点ボス,とくいを見る,debug,,debugShapeArea,debugShapeArea|debugVertical|debugMissingDigit|debugCarry|debugBorrow,2,190,5,debug-weak-boss-fire,debug-weak-boss-fire|debug-weak-boss-water|debug-weak-boss-stone,999,みず,3,#4ea8ff,#edf7ff,

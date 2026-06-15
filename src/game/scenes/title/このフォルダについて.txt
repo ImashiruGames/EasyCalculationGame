@@ -1,0 +1,16 @@
+title フォルダについて
+
+タイトル画面とタイトル編集画面のSceneを置く場所です。
+タイトル背景の見た目は src/game/ui/title や src/data/titleBackgrounds.ts と関係します。
+
+直下のファイル
+
+- TitleScene.ts
+  アプリ開始時に表示するタイトル画面です。
+
+- TitleEditScene.ts
+  タイトル背景などを編集する画面です。
+
+直下のフォルダ
+
+- ありません。

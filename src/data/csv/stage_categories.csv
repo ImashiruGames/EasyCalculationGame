@@ -1,0 +1,11 @@
+﻿id,order,name,subtitle,accentColor,minPracticeLevel,maxPracticeLevel
+grade1Arithmetic,0,1ねんせい,たしざん・ひきざんのきほん,#9de39f,1,1
+addition,1,たしざん,＋のきごうになれよう！,#80d889,2,2
+subtraction,2,ひきざん,ーのきごうになれよう！,#ffb15e,2,2
+multiplication,3,かけざん,1のだん から 9のだん,#f6d74f,2,2
+division,4,わり算,九九とあまり,#a7d86e,3,3
+fraction,5,ぶんすう,分数の計算,#b9a7ff,3,6
+clock,6,時計,時計を読む,#70c7ff,2,2
+decimal,7,小数,小数1けた・2けた,#70c7ff,3,4
+makeTen,8,□・10のやま,10にまつわる計算,#ffd766,2,2
+root,9,√,√を瞬時に処理しよう,#c5b7ff,9,9
