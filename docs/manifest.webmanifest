@@ -1,0 +1,27 @@
+{
+  "name": "計算モンスター",
+  "short_name": "けいモン",
+  "description": "一けた計算をれんしゅうするゲーム",
+  "lang": "ja-JP",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fffaf0",
+  "theme_color": "#7bbf5a",
+  "icons": [
+    {
+      "src": "./picoleaf_192x192.webp",
+      "sizes": "192x192",
+      "type": "image/webp",
+      "purpose": "any"
+    },
+    {
+      "src": "./picoleaf_512x512.webp",
+      "sizes": "512x512",
+      "type": "image/webp",
+      "purpose": "any"
+    }
+  ]
+}
