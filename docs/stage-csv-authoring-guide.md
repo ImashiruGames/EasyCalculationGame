@@ -151,7 +151,9 @@ samplePlus,1,stageClearCount,grasslands,,,,,5,
 | `playLimitDisabled` | 任意 | 10分ごとのプレイ制限を外すなら `true`。通常は空欄 |
 | `minPracticeLevel` | 任意 | このステージだけ表示学年を変えたい場合に入れます |
 | `maxPracticeLevel` | 任意 | このステージだけ表示学年を変えたい場合に入れます |
-| `captureGaugeGain` | 任意 | 1問正解したときに増える捕獲ゲージ量。空欄なら20。例: 33なら約3〜4問、70なら約2問で通常モンスターを捕獲しやすくなります |
+| `captureGaugeGain` | 任意 | 1問正解したときに増える捕獲ゲージ量の元値。空欄なら20。実際の増加量は `src/game/captureGauge.ts` の共通倍率も掛かります |
+
+全ステージまとめてたまり方を変えたいときは、`src/game/captureGauge.ts` の `CAPTURE_GAUGE_GAIN_MULTIPLIER` を編集します。今は `0.6` です。ステージごとに変えたいときは、`stages.csv` の `captureGaugeGain` を編集します。
 
 `comingSoon` と `playLimitDisabled` は、`true`, `1`, `yes`, `false`, `0`, `no` が使えます。
 
