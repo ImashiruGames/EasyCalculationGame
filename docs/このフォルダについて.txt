@@ -1,29 +1,18 @@
-docs フォルダについて
+public フォルダについて
 
-仕様メモ、調査メモ、制作メモ、画像確認用ファイルを置く場所です。
-アプリ本体の動作に直接必要なファイルではありませんが、作り方や運用ルールを残します。
+Viteがそのまま配信する静的ファイルを置く場所です。
+画像素材は public/assets にあります。
+style.css と favicon.png もここにあります。
 
-主なファイル
+直下のファイル
 
-- creation-guide.md
-  モンスター、ステージ、問題、画像素材など、何かを作成するときに最初に見る統合ガイドです。
+- favicon.png
+  ブラウザタブなどに出る小さなアイコンです。
 
-- masushiki-authoring-guide.md
-  ますしき問題を作って、JSONとして入れ、ランダム表示させるための手順です。
-
-- stage-csv-authoring-guide.md
-  ステージCSVの作り方です。
-
-- monster-csv-authoring-guide.md
-  モンスターCSVの作り方です。
-
-- boss-battle-csv-authoring-guide.md
-  ボスしょうぶCSVの作り方です。
+- style.css
+  アプリ全体の外側レイアウトを整えるCSSです。
 
 直下のフォルダ
 
 - assets
-  ドキュメント確認用の生成物や静的ファイルを置いています。
-
-- trainer_transparent_png
-  トレーナー画像の透過確認用ファイルを置いています。
+  アプリで使う画像素材を種類ごとに置いています。
