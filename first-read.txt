@@ -5,6 +5,9 @@ first-read
 
 主なフォルダ
 
+- 計算以外の画めんチェックは docs/screen-layout-preview.html です。
+  画めんごとに気になる文字を見るメモは docs/non-calculation-layout-audit.md です。
+
 - src
   アプリのTypeScriptコードです。画面、出題、セーブ、進行などはここにあります。
   

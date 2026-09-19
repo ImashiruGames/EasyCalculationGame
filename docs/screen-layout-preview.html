@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ja">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>画めんごとの文字チェック</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #eaf4ff; color: #243044; font: 14px/1.6 sans-serif; }
+  header { padding: 10px 16px; background: white; border-bottom: 1px solid #c7d7e4; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  button, select { min-height: 36px; font: inherit; max-width: 100%; }
+  button { cursor: pointer; }
+  #screen { width: 280px; }
+  main { display: grid; grid-template-columns: minmax(240px, 430px) minmax(280px, 540px); gap: 24px; justify-content: center; padding: 16px; }
+  #game { width: min(390px, calc((100svh - 120px) * 390 / 844)); max-width: 100%; aspect-ratio: 390 / 844; margin: 0 auto; align-self: start; }
+  aside { background: white; border-radius: 16px; padding: 20px; align-self: start; min-width: 0; }
+  h1 { font-size: 22px; margin: 0 0 12px; } h2 { font-size: 16px; margin: 20px 0 8px; }
+  p { margin: 8px 0; } ul { padding-left: 22px; } li { margin: 6px 0; overflow-wrap: anywhere; }
+  #status { padding: 10px; background: #eff7fc; white-space: pre-wrap; }
+  #source { overflow-wrap: anywhere; font: 12px/1.6 monospace; }
+  #text-list { max-height: 300px; overflow: auto; font: 12px/1.6 monospace; }
+  .note { color: #526277; font-size: 12px; } a { color: #125da2; }
+  @media (max-width: 720px) { main { grid-template-columns: 1fr; } #game { width: min(390px, calc((100svh - 180px) * 390 / 844)); } }
+</style>
+<header>
+  <label>画めん <select id="screen"></select></label>
+  <button id="previous">まえ</button><button id="next">つぎ</button>
+  <label>データ <select id="profile"><option value="standard">サンプル</option><option value="long">長文のサンプル</option><option value="empty">はじめから</option></select></label>
+  <button id="reset">もとにもどす</button>
+  <a href="./capture-layout-preview.html?debug=1">計算画めんへ</a>
+</header>
+<main>
+  <div id="game"></div>
+  <aside>
+    <h1 id="title">よみこみ中…</h1>
+    <p id="status" role="status">よみこみ中…</p>
+    <p class="note">ここではサンプルのセーブだけをつかいます。買う・もらう・お話をなおすこともできます。画めんやデータをえらびなおすと、サンプルはもとにもどります。</p>
+    <h2>チェックするところ</h2><ul id="notes"></ul>
+    <h2>この画めんのひらき方</h2><p id="steps"></p>
+    <label><input type="checkbox" id="guides"> 文字のわくを見る</label>
+    <button id="inspect">今の文字を見る</button><button id="pause">うごきを止める</button>
+    <p class="note">青いわくは文字の大きさ、赤いわくは画めん外です。文字とボタンのかさなり、かげ、ルビ、前のパネルにかくれた文字は、画めんも見てください。文字のわくは上のボタンで今の画めんに合わせます。</p>
+    <details><summary>今の画めんの文字と大きさ</summary><ul id="text-list"></ul></details>
+    <h2>コード</h2><p id="source"></p>
+    <p><a href="./non-calculation-layout-audit.md">画めんごとのメモ</a></p>
+  </aside>
+</main>
+<script type="module" src="/src/game/scenes/previews/screenLayoutPreview.ts"></script>
+</html>

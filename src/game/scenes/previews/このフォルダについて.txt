@@ -4,6 +4,15 @@ previews フォルダについて
 
 直下のファイル
 
+- screenLayoutPreview.ts
+  画めんチェックの入り口です。サンプルのセーブをつかい、文字のわくと大きさを出します。
+
+- screenLayoutCases.ts
+  画めんの番号、ひらくScene、気になる文字、パネルのひらき方をまとめます。
+
+- screenLayoutFixtures.ts
+  画めんチェックでつかう、コイン・モンスター・お話のサンプルを作ります。
+
 - DexPreviewScenes.ts
   既存のimportを保つため、各Sceneを再エクスポートします。
 

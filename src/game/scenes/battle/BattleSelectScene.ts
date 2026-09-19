@@ -687,6 +687,14 @@ export class BattleSelectScene extends Phaser.Scene {
     });
   }
 
+  /** Formats the monster counter with the reading appropriate to its final digit. */
+  private formatMonsterCount(count: number): string {
+    const lastDigit = count % 10;
+    const suffix = [0, 1, 6, 8].includes(lastDigit) ? 'ぴき' : lastDigit === 3 ? 'びき' : 'ひき';
+    return `${count}${suffix}`;
+  }
+
+  /** Keeps the opponent's name, count, HP and first monster within the summary card. */
   private drawSelectedTrainerSummary(trainer: TrainerDefinition): void {
     const partners = getTrainerPartnerMonsterIds(trainer).map((monsterId) => getMonsterById(monsterId));
     const leadPartner = partners[0];
@@ -713,7 +721,7 @@ export class BattleSelectScene extends Phaser.Scene {
       );
     });
     this.add
-      .text(178, 130, trainer.name, {
+      .text(178, 124, trainer.name, {
         fontFamily: FONT_FAMILY,
         fontSize: '22px',
         fontStyle: '900',
@@ -721,13 +729,15 @@ export class BattleSelectScene extends Phaser.Scene {
       })
       .setOrigin(0, 0.5);
     this.add
-      .text(178, 160, `${partners.length}びき / さいしょ ${leadPartner.name} / げんき ${getOpponentMaxHp(trainer, leadPartner)}`, {
+      .text(178, 142, `${this.formatMonsterCount(partners.length)} / げんき ${getOpponentMaxHp(trainer, leadPartner)}\nさいしょ ${leadPartner.name}`, {
         fontFamily: FONT_FAMILY,
         fontSize: '11px',
         fontStyle: '800',
         color: COLORS.muted,
+        lineSpacing: 3,
+        wordWrap: { width: 166, useAdvancedWrap: true },
       })
-      .setOrigin(0, 0.5);
+      .setOrigin(0, 0);
 
     this.add
       .text(GAME_WIDTH / 2, 194, `レベル ${trainer.difficultyLevel}  ごほうび ${this.getRewardLabel(trainer)}`, {

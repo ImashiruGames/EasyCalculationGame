@@ -83,16 +83,19 @@ export class AchievementsScene extends Phaser.Scene {
       .image(86, 146, getRankMedalKey(rank.medal))
       .setDisplaySize(82, 92);
 
+    // Reserve two lines for the rank, with separate rows for totals and the next target.
     this.add
-      .text(138, 112, `${rank.name}のメダリスト`, {
+      .text(138, 98, `${rank.name}\nのメダリスト`, {
         fontFamily: FONT_FAMILY,
         fontSize: '20px',
         fontStyle: '900',
         color: COLORS.ink,
+        lineSpacing: 2,
+        wordWrap: { width: 206, useAdvancedWrap: true },
       })
-      .setOrigin(0, 0.5);
+      .setOrigin(0, 0);
     this.add
-      .text(138, 148, `${unlockedCount} / ${achievements.length} こ あつめた`, {
+      .text(138, 161, `${unlockedCount} / ${achievements.length} こ あつめた`, {
         fontFamily: FONT_FAMILY,
         fontSize: '15px',
         fontStyle: '900',
@@ -100,7 +103,7 @@ export class AchievementsScene extends Phaser.Scene {
       })
       .setOrigin(0, 0.5);
     this.add
-      .text(138, 176, nextRankText, {
+      .text(138, 186, nextRankText, {
         fontFamily: FONT_FAMILY,
         fontSize: '13px',
         fontStyle: '900',

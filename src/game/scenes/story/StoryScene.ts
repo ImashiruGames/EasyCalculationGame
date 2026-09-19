@@ -22,6 +22,8 @@ interface StorySceneData {
 
 const STORY_TRAINER_ID = 'trainer-haru';
 const DIALOG_Y = 626;
+// Leave the log heading and close button outside the scrollable text area.
+const LOG_VIEWPORT = { x: 62, y: 274, width: 266, height: 244 } as const;
 const STORY_SLOT_X: Record<StoryActorSlot, number> = {
   farLeft: 58,
   left: 102,
@@ -473,8 +475,9 @@ export class StoryScene extends Phaser.Scene {
     graphics.fillEllipse(x, y, width, height);
   }
 
+  /** Opens a modal log with a clipped body and fixed heading and close button. */
   private openLog(): void {
-    this.logLayer?.destroy(true);
+    this.closeLog();
 
     const layer = this.add.container(0, 0).setDepth(100);
     this.logLayer = layer;
@@ -499,16 +502,19 @@ export class StoryScene extends Phaser.Scene {
     layer.add(title);
 
     const logText = this.add
-      .text(62, 278, this.getLogLines().join('\n'), {
+      .text(LOG_VIEWPORT.x, LOG_VIEWPORT.y, this.getLogLines().join('\n'), {
         fontFamily: FONT_FAMILY,
         fontSize: '19px',
         fontStyle: '800',
         color: COLORS.ink,
         lineSpacing: 14,
-        wordWrap: { width: GAME_WIDTH - 124, useAdvancedWrap: true },
+        // Crop coordinates and scroll offsets use the same logical pixels.
+        resolution: 1,
+        wordWrap: { width: LOG_VIEWPORT.width - 16, useAdvancedWrap: true },
       })
       .setOrigin(0, 0);
     layer.add(logText);
+    this.addLogScrolling(layer, logText);
 
     const closeButton = createButton(this, {
       x: GAME_WIDTH / 2,
@@ -518,14 +524,92 @@ export class StoryScene extends Phaser.Scene {
       label: 'とじる',
       fillColor: COLORS.yellow,
       fontSize: 20,
-      onClick: () => {
-        this.logLayer?.destroy(true);
-        this.logLayer = undefined;
-      },
+      onClick: () => this.closeLog(),
     });
     layer.add(closeButton);
   }
 
+  /** Clips log text and binds wheel/drag scrolling only for this modal's lifetime. */
+  private addLogScrolling(layer: Phaser.GameObjects.Container, logText: Phaser.GameObjects.Text): void {
+    const viewport = LOG_VIEWPORT;
+    const maxScroll = Math.max(0, logText.height - viewport.height);
+    const canScroll = maxScroll > 0;
+    const thumbHeight = Math.min(viewport.height, Math.max(24, viewport.height * viewport.height / Math.max(1, logText.height)));
+    const track = this.add.rectangle(viewport.x + viewport.width - 4, viewport.y, 4, viewport.height, 0xd6eadf)
+      .setOrigin(0.5, 0).setVisible(canScroll);
+    const thumb = this.add.rectangle(track.x, viewport.y, 4, thumbHeight, 0x47647d)
+      .setOrigin(0.5, 0).setVisible(canScroll);
+    const hint = this.add.text(GAME_WIDTH / 2, 253, '上下に なぞって 読めるよ', {
+      fontFamily: FONT_FAMILY, fontSize: '12px', color: COLORS.muted,
+    }).setOrigin(0.5).setVisible(canScroll);
+    const hitArea = this.add.zone(viewport.x, viewport.y, viewport.width, viewport.height)
+      .setOrigin(0).setInteractive();
+    layer.add([track, thumb, hint, hitArea]);
+
+    let scrollY = 0;
+    let dragPointerId: number | null = null;
+    let previousPointerY = 0;
+
+    /** Moves the text within its measured bounds and updates the position indicator. */
+    const setScroll = (nextY: number): void => {
+      scrollY = Phaser.Math.Clamp(nextY, 0, maxScroll);
+      logText.y = viewport.y - scrollY;
+      // Text cropping works in both Phaser 4 WebGL and Canvas; geometry masks are Canvas-only.
+      logText.setCrop(0, scrollY, Math.min(logText.width, viewport.width - 12), viewport.height);
+      thumb.y = viewport.y + (maxScroll > 0 ? scrollY / maxScroll : 0) * (viewport.height - thumbHeight);
+    };
+    setScroll(0);
+    /** Starts dragging only when the pointer is pressed inside the log body. */
+    const startDrag = (pointer: Phaser.Input.Pointer): void => {
+      if (!canScroll || dragPointerId !== null) return;
+      dragPointerId = pointer.id;
+      previousPointerY = pointer.y;
+    };
+    /** Continues the same drag even if the pointer leaves the text rectangle. */
+    const moveDrag = (pointer: Phaser.Input.Pointer): void => {
+      if (pointer.id !== dragPointerId || !pointer.isDown) return;
+      setScroll(scrollY + previousPointerY - pointer.y);
+      previousPointerY = pointer.y;
+    };
+    /** Releases the active pointer both inside and outside the game canvas. */
+    const endDrag = (pointer: Phaser.Input.Pointer): void => {
+      if (pointer.id === dragPointerId) dragPointerId = null;
+    };
+    /** Scrolls only when the wheel is used over the log body. */
+    const onWheel = (
+      _pointer: Phaser.Input.Pointer, _deltaX: number, deltaY: number, _deltaZ: number,
+      event: Phaser.Types.Input.EventData,
+    ): void => {
+      setScroll(scrollY + deltaY);
+      event.stopPropagation();
+    };
+    hitArea.on('pointerdown', startDrag);
+    hitArea.on('wheel', onWheel);
+    this.input.on('pointermove', moveDrag);
+    this.input.on('pointerup', endDrag);
+    this.input.on('pointerupoutside', endDrag);
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.closeLog, this);
+    this.events.once(Phaser.Scenes.Events.DESTROY, this.closeLog, this);
+
+    /** Removes scene-level listeners when the modal and its child objects are destroyed. */
+    const cleanup = (): void => {
+      this.input.off('pointermove', moveDrag);
+      this.input.off('pointerup', endDrag);
+      this.input.off('pointerupoutside', endDrag);
+      this.events.off(Phaser.Scenes.Events.SHUTDOWN, this.closeLog, this);
+      this.events.off(Phaser.Scenes.Events.DESTROY, this.closeLog, this);
+    };
+    layer.once(Phaser.GameObjects.Events.DESTROY, cleanup);
+  }
+
+  /** Closes the log and triggers disposal of its scroll handlers and child objects. */
+  private closeLog(): void {
+    const layer = this.logLayer;
+    this.logLayer = undefined;
+    layer?.destroy(true);
+  }
+
+  /** Returns all lines the player has reached without dropping older log entries. */
   private getLogLines(): string[] {
     if (this.mode === 'teacher') {
       const teacher = getTrainerById(STORY_TRAINER_ID);

@@ -97,8 +97,8 @@ g1-ichinensei-nijumadenomatome,22,grade1Arithmetic,20までのまとめ,くり�
 g1-ichinensei-niketamatome,23,grade1Arithmetic,2けたまとめ,かんたんな2けた,2けた,assets/backgrounds/thunderHighland.webp,#9de39f,,,1,1,,,
 g1-ichinensei-ichinenseinoshiage,24,grade1Arithmetic,1ねんせいのしあげ,ぜんぶまとめ,1ねんせい,assets/backgrounds/moonRuins.webp,#9de39f,,,1,1,,,
 g2-nagasa-yomikata,63,measurement,1 cm・mmの読み方,読み方を えらぼう,cm / mm,assets/backgrounds/waterGarden.webp,#70c7ff,,FALSE,2,2,,2026-09-19,TRUE
-g2-nagasa-ookiino,64,measurement,2 大きいのは？,長さを くらべよう,cm と mm,assets/backgrounds/waterGarden.webp,#70c7ff,,FALSE,2,2,,2026-09-19,TRUE
-g2-nagasa-henkan,65,measurement,3 cmとmm,たんいを かえよう,cm ⇔ mm,assets/backgrounds/waterGarden.webp,#70c7ff,,FALSE,2,2,,2026-09-19,TRUE
+g2-nagasa-henkan,64,measurement,2 cmとmm,たんいを かえよう,cm ⇔ mm,assets/backgrounds/waterGarden.webp,#70c7ff,,FALSE,2,2,,2026-09-19,TRUE
+g2-nagasa-ookiino,65,measurement,3 大きいのは？,長さを くらべよう,cm と mm,assets/backgrounds/waterGarden.webp,#70c7ff,,FALSE,2,2,,2026-09-19,TRUE
 g2-nagasa-mazeta-henkan,66,measurement,4 二つのたんい,二つのたんいを かえよう,〇cm〇mm ⇔ 〇mm,assets/backgrounds/waterGarden.webp,#70c7ff,,FALSE,2,2,,2026-09-19,TRUE
 g2-nagasa-onaji-tani,67,measurement,5 同じたんい,cmだけ・mmだけの たし算とひき算,〇cm±〇cm / 〇mm±〇mm,assets/backgrounds/waterGarden.webp,#70c7ff,,FALSE,2,2,,2026-09-19,TRUE
 g2-nagasa-hitotsu-tasu-hiku,68,measurement,6 長さにたす・ひく,cmとmmに たしたり ひいたり,〇cm〇mm ± 〇mm（〇cm）,assets/backgrounds/waterGarden.webp,#70c7ff,,FALSE,2,2,,2026-09-19,TRUE

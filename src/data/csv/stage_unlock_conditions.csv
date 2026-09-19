@@ -41,9 +41,9 @@ g2-kakezan-kyunodan,1,stageClearCount,g2-kakezan-hachinodan,,,,,5,
 g1-junoyama-shikakunoitadaki,1,stageClearCount,g1-junoyama-tenberunotou,,,,,5,
 g1-junoyama-shikakunoitadaki,2,achievementUnlocked,,,dex-20,,,,ずかん20のトロフィーを あける
 g1-junoyama-shikakunoitadaki,3,monsterCaptured,,tenpico,,,,,テンピコをゲットする
-g2-nagasa-ookiino,1,stageClearCount,g2-nagasa-yomikata,,,,,5,
-g2-nagasa-henkan,1,stageClearCount,g2-nagasa-ookiino,,,,,5,
-g2-nagasa-mazeta-henkan,1,stageClearCount,g2-nagasa-henkan,,,,,5,
+g2-nagasa-ookiino,1,stageClearCount,g2-nagasa-henkan,,,,,5,
+g2-nagasa-henkan,1,stageClearCount,g2-nagasa-yomikata,,,,,5,
+g2-nagasa-mazeta-henkan,1,stageClearCount,g2-nagasa-ookiino,,,,,5,
 g2-nagasa-onaji-tani,1,stageClearCount,g2-nagasa-mazeta-henkan,,,,,5,
 g2-nagasa-hitotsu-tasu-hiku,1,stageClearCount,g2-nagasa-onaji-tani,,,,,5,
 g2-nagasa-matome,1,stageClearCount,g2-nagasa-hitotsu-tasu-hiku,,,,,5,

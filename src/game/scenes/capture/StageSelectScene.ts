@@ -36,6 +36,8 @@ import { getStageBackgroundAssetsByIds } from '../../assets/stageBackgroundAsset
 
 const STAGE_CATEGORIES_PER_PAGE = 4;
 const STAGES_PER_PAGE = 3;
+// Reserve a separate row below the grade button; keep four category cards on screen.
+const CATEGORY_LIST_LAYOUT = { pageIndicatorY: 142, firstCardCenterY: 216, cardSpacing: 138 } as const;
 
 /** 描画中に追加された表示物を、あとでまとめて消せるレイヤーに入れます。 */
 function captureDrawLayer(scene: Phaser.Scene, draw: () => void): Phaser.GameObjects.Container {
@@ -141,7 +143,7 @@ export class StageSelectScene extends Phaser.Scene {
   private drawCategoryList(saveState: AppSaveState): void {
     this.drawHeader('ジャンルをえらぼう', () => this.scene.start(SceneKeys.MainMenu));
     this.drawPracticeLevelButton(saveState);
-    this.drawPageIndicator(this.getMaxCategoryPageIndex(), 132);
+    this.drawPageIndicator(this.getMaxCategoryPageIndex(), CATEGORY_LIST_LAYOUT.pageIndicatorY);
 
     const visibleCategories = this.getVisibleCategories(saveState.practiceLevelId);
     if (visibleCategories.length === 0) {
@@ -157,7 +159,7 @@ export class StageSelectScene extends Phaser.Scene {
     }
 
     visibleCategories.forEach((category, index) => {
-      this.createCategoryCard(category, saveState, 190 + index * 150);
+      this.createCategoryCard(category, saveState, CATEGORY_LIST_LAYOUT.firstCardCenterY + index * CATEGORY_LIST_LAYOUT.cardSpacing);
     });
     this.drawPageControls(this.getMaxCategoryPageIndex(), (pageIndex) => {
       this.changeStageSelectPage(pageIndex);

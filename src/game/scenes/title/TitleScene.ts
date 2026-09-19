@@ -176,10 +176,7 @@ export class TitleScene extends Phaser.Scene {
   /** Draws the title notice button and opens the notice screen. */
   private drawNoticeButton(titleBackground: TitleBackgroundDefinition): void {
     const noticeButton = createButton(this, {
-      x: 306,
-      y: 64,
-      width: 122,
-      height: 44,
+      ...APP_LAYOUT.title.noticeButton,
       label: 'おしらせ！',
       fillColor: '#fff1a8',
       strokeColor: titleBackground.accentColor,

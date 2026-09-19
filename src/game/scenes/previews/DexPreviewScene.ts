@@ -124,9 +124,9 @@ export class DexPreviewScene extends Phaser.Scene {
       .setOrigin(0.5);
 
     createButton(this, {
-      x: 112,
+      x: 106,
       y: 130,
-      width: 150,
+      width: 154,
       height: 42,
       label: this.showCapturedOnly ? 'ぜんぶみる' : 'みつけた子だけ',
       fillColor: this.showCapturedOnly ? COLORS.ice : COLORS.panel,
@@ -135,13 +135,13 @@ export class DexPreviewScene extends Phaser.Scene {
     });
 
     createButton(this, {
-      x: 278,
+      x: 284,
       y: 130,
-      width: 130,
+      width: 158,
       height: 42,
-      label: 'タイトル\nへんしゅう',
+      label: 'タイトルへんしゅう',
       fillColor: COLORS.panel,
-      fontSize: 13,
+      fontSize: 15,
       onClick: () => startSceneWithLoading(this, SceneKeys.TitleEdit, 'titleEdit'),
     });
   }
@@ -266,11 +266,12 @@ export class DexPreviewScene extends Phaser.Scene {
       ? drawRareSecretRoundedFrame(this, GAME_WIDTH / 2, 420, 346, 700, 24)
       : null;
 
+    // Keep closing controls in the footer, leaving the full header width for the name.
     const closeButton = createButton(this, {
-      x: 310,
-      y: 112,
-      width: 82,
-      height: 46,
+      x: GAME_WIDTH / 2,
+      y: 734,
+      width: 124,
+      height: 42,
       label: 'とじる',
       fillColor: COLORS.panel,
       fontSize: 17,
@@ -283,6 +284,8 @@ export class DexPreviewScene extends Phaser.Scene {
         fontStyle: '900',
         color: COLORS.ink,
         align: 'center',
+        lineSpacing: 2,
+        wordWrap: { width: 306, useAdvancedWrap: true },
       })
       .setOrigin(0.5);
     const visual = createMonsterVisual(this, monster, GAME_WIDTH / 2, 238, 132, !captured);

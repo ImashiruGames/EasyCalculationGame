@@ -237,8 +237,9 @@ export class ResultScene extends Phaser.Scene {
     const panel = this.add.graphics();
     panel.fillStyle(Phaser.Display.Color.HexStringToColor(COLORS.panel).color, 1);
     panel.lineStyle(4, Phaser.Display.Color.HexStringToColor(COLORS.line).color, 1);
-    panel.fillRoundedRect(58, 116, 274, 236, 22);
-    panel.strokeRoundedRect(58, 116, 274, 236, 22);
+    // End at y316 so material counts have their own band before the progress panel at y386.
+    panel.fillRoundedRect(58, 116, 274, 200, 22);
+    panel.strokeRoundedRect(58, 116, 274, 200, 22);
 
     panel.fillStyle(Phaser.Display.Color.HexStringToColor(monster.palette.background).color, 1);
     panel.lineStyle(3, Phaser.Display.Color.HexStringToColor(COLORS.line).color, 1);
@@ -257,7 +258,7 @@ export class ResultScene extends Phaser.Scene {
 
     const countText = `つかまえた ${captureCount} / かけら ${fragmentCount}`;
     this.add
-      .text(GAME_WIDTH / 2, 320, countText, {
+      .text(GAME_WIDTH / 2, 296, countText, {
         fontFamily: FONT_FAMILY,
         fontSize: '16px',
         fontStyle: '800',
@@ -348,11 +349,10 @@ export class ResultScene extends Phaser.Scene {
     this.drawMaterialStatus(materialText, candyText);
   }
 
-  /** アメより優先したい、かけら中心の素材状態を描きます。 */
+  /** Places fragments and candy on separate rows between the monster and progress panels. */
   private drawMaterialStatus(materialText: string, candyText: string | null): void {
-    const mainY = candyText ? 362 : 368;
     this.add
-      .text(GAME_WIDTH / 2, mainY, materialText, {
+      .text(GAME_WIDTH / 2, 326, materialText, {
         fontFamily: FONT_FAMILY,
         fontSize: '12px',
         fontStyle: '800',
@@ -360,21 +360,20 @@ export class ResultScene extends Phaser.Scene {
         align: 'center',
         wordWrap: { width: 270, useAdvancedWrap: true },
       })
-      .setOrigin(0.5);
+      .setOrigin(0.5, 0);
 
     if (!candyText) {
       return;
     }
 
     this.add
-      .text(GAME_WIDTH / 2, 380, candyText, {
+      .text(GAME_WIDTH / 2, 372, candyText, {
         fontFamily: FONT_FAMILY,
-        fontSize: '10px',
+        fontSize: '14px',
         fontStyle: '800',
-        color: COLORS.muted,
+        color: COLORS.ink,
       })
-      .setOrigin(0.5)
-      .setAlpha(0.68);
+      .setOrigin(0.5);
   }
 
   /** かけらをアメに変える案内を出してよい状態かを判定します。 */
@@ -912,7 +911,7 @@ export class ResultScene extends Phaser.Scene {
       label: 'ちがうステージへ',
       fillColor: COLORS.panel,
       fontSize: 19,
-      onClick: () => this.scene.start(SceneKeys.StageSelect, { openCategoryList: true }),
+      onClick: () => this.scene.start(SceneKeys.StageSelect, { stageId: this.stageId }),
     });
   }
 

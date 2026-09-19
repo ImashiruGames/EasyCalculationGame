@@ -9,9 +9,13 @@ import { createButton, createSmallButton } from '../../ui/common/button';
 const NOTICE_PAGE_SIZE = 4;
 const CARD_LEFT = 28;
 const CARD_WIDTH = 334;
-const CARD_HEIGHT = 112;
-const CARD_START_Y = 108;
-const CARD_GAP = 14;
+// Four cards end at y668, leaving space before the page buttons at y685.
+const CARD_HEIGHT = 136;
+const CARD_START_Y = 100;
+const CARD_GAP = 8;
+const CARD_TEXT_TOP = 8;
+const TITLE_BODY_GAP = 6;
+const PAGE_CONTROLS_Y = 706;
 
 interface TitleNoticeSceneData {
   pageIndex?: number;
@@ -178,7 +182,7 @@ export class TitleNoticeScene extends Phaser.Scene {
 
     createButton(this, {
       x: 108,
-      y: 692,
+      y: PAGE_CONTROLS_Y,
       width: 88,
       height: 42,
       label: 'まえ',
@@ -189,7 +193,7 @@ export class TitleNoticeScene extends Phaser.Scene {
     });
 
     this.add
-      .text(GAME_WIDTH / 2, 692, `${this.pageIndex + 1}/${maxPageIndex + 1}`, {
+      .text(GAME_WIDTH / 2, PAGE_CONTROLS_Y, `${this.pageIndex + 1}/${maxPageIndex + 1}`, {
         fontFamily: FONT_FAMILY,
         fontSize: '17px',
         fontStyle: '900',
@@ -199,7 +203,7 @@ export class TitleNoticeScene extends Phaser.Scene {
 
     createButton(this, {
       x: GAME_WIDTH - 108,
-      y: 692,
+      y: PAGE_CONTROLS_Y,
       width: 88,
       height: 42,
       label: 'つぎ',
@@ -213,7 +217,6 @@ export class TitleNoticeScene extends Phaser.Scene {
   /** Draws one notice card. */
   private drawNoticeCard(entry: TitleNoticeEntry, top: number): void {
     const graphics = this.add.graphics();
-    const centerY = top + CARD_HEIGHT / 2;
     const isNew = isTitleNoticeNewerThan(entry.id, this.lastSeenNoticeId);
     graphics.fillStyle(colorToNumber('#ffffff'), 0.98);
     graphics.lineStyle(3, colorToNumber(entry.accentColor), 1);
@@ -234,17 +237,18 @@ export class TitleNoticeScene extends Phaser.Scene {
     if (isNew) {
       this.drawCardNewBadge(CARD_LEFT + 52, top + 61);
     }
-    this.add
-      .text(CARD_LEFT + 106, top + 25, entry.title, {
+    const title = this.add
+      .text(CARD_LEFT + 106, top + CARD_TEXT_TOP, entry.title, {
         fontFamily: FONT_FAMILY,
         fontSize: '17px',
         fontStyle: '900',
         color: COLORS.ink,
         wordWrap: { width: 220, useAdvancedWrap: true },
       })
-      .setOrigin(0, 0.5);
+      .setOrigin(0, 0);
+    // Wrapped titles must push the body down instead of sharing fixed center positions.
     this.add
-      .text(CARD_LEFT + 106, centerY + 20, entry.body, {
+      .text(CARD_LEFT + 106, title.y + title.height + TITLE_BODY_GAP, entry.body, {
         fontFamily: FONT_FAMILY,
         fontSize: '14px',
         fontStyle: '800',
@@ -252,7 +256,7 @@ export class TitleNoticeScene extends Phaser.Scene {
         lineSpacing: 3,
         wordWrap: { width: 220, useAdvancedWrap: true },
       })
-      .setOrigin(0, 0.5);
+      .setOrigin(0, 0);
   }
 
   /** Draws the NEW label inside one notice card. */

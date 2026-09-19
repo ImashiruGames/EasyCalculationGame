@@ -109,8 +109,10 @@ export const APP_LAYOUT = {
     loadingText: { x: SCREEN_CENTER.x, y: 392 },
     loadingBarFrame: { x: 64, y: 430, width: 262, height: 26, radius: 13 },
     loadingBarFill: { x: 70, y: 436, width: 250, height: 14, radius: 7 },
-    titleText: { x: SCREEN_CENTER.x, y: 130 },
-    subtitleText: { x: SCREEN_CENTER.x, y: 232 },
+    // Keep the notice button and its NEW badge above the two-line title.
+    noticeButton: { x: 306, y: 48, width: 122, height: 44 },
+    titleText: { x: SCREEN_CENTER.x, y: 146 },
+    subtitleText: { x: SCREEN_CENTER.x, y: 248 },
     touchPrompt: { x: SCREEN_CENTER.x, y: 792 },
     backgroundTopWash: { x: 0, y: 0, width: GAME_WIDTH, height: 300 },
     titleReadabilityPanel: { x: 52, y: 74, width: 286, height: 194, radius: 28 },
