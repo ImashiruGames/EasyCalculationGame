@@ -1,45 +1,10 @@
-docs フォルダについて
+public フォルダについて
 
-仕様、作り方、調査結果と、以前配置した配布用ファイル・画像を置く場所です。
-現在のゲームの元コードはsrc、素材の元ファイルはpublic/assetsを見てください。
+Viteがそのまま配信する静的ファイルを置く場所です。
+画像素材は public/assets にあります。
+style.css と favicon.png もここにあります。
 
-直下の主なファイル
-
-- capture-layout-preview.html
-  開発サーバー専用の問題画面確認ページです。debug=1を付けて開くと、通常とデバッグの回答形式を選んで表示できます。
-
-- capture-layout-implementation.md
-  問題画面に実装した表示領域の寸法と比率、変更内容、画面確認の結果です。
-
-- layout-overflow-policy.md
-  表示領域に入り切らない文字や項目の扱いを決めた設計の初版です。問題の全文表示、一覧のページ送り、詳細のスクロールなどの方針をまとめています。
-
-- capture-layout-audit.md
-  通常の計算・捕獲画面の全回答方式について、縦配置の比率、入力欄の範囲、重なりやすい境界を調べた記録です。
-
-- screen-layout-review.md
-  登録されている25画面と共通パネルに番号を付け、配置の衝突、長文や項目追加時の注意点、手動確認の順番をまとめた資料です。
-
-- stage-select-layout-audit.md
-  ホームの捕獲ボタンから開くジャンル一覧、学年選択、ステージ一覧の配置と、文字や項目を増やす際の注意点です。
-
-- refactoring-report.md
-  コード構造の整理、修正理由、テスト結果、残った課題と手動確認箇所の記録です。
-
-- current-code-overview.md / code-map.txt
-  以前のコード構造の案内です。今回の変更箇所はrefactoring-report.mdを優先してください。
-
-- creation-guide.md / stage-authoring-guide.md / stage-csv-authoring-guide.md
-  作り方とステージデータの記述方法です。
-
-- monster-csv-authoring-guide.md / boss-battle-csv-authoring-guide.md
-  モンスターとボスのデータの記述方法です。
-
-- masushiki-authoring-guide.md / story-rich-text-tags.txt
-  方眼問題とお話の文字指定の案内です。
-
-- bug-audit.md / test-design.md / change-log.md
-  以前の調査、テスト方針と変更記録です。
+直下のファイル
 
 - favicon.png
   ブラウザタブなどに出る小さなアイコンです。
@@ -50,7 +15,4 @@ docs フォルダについて
 直下のフォルダ
 
 - assets
-  以前配置した配布用の素材などです。
-
-- trainer_transparent_png
-  トレーナー画像の制作時ファイルです。
+  アプリで使う画像素材を種類ごとに置いています。
