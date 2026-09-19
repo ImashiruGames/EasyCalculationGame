@@ -4,6 +4,18 @@ problem フォルダについて
 
 直下のファイル
 
+- choiceCardLayout.ts
+  選択肢の表示幅と高さを測り、同じ文字サイズで収まる列数とカードの位置を決めます。
+
+- captureLayoutPreview.ts
+  開発サーバー専用の画面確認処理です。実際の捕獲Sceneの描画を使い、報酬や保存を伴わずに問題形式を切り替えます。
+
+- CaptureProblemView.ts
+  捕獲画面の問題と回答欄の描画を担当します。入力内容はSceneから受け取り、進行や保存は行いません。
+
+- gridExpression.ts
+  捕獲とバトルで共用する方眼の描画です。位置や大きさは呼び出し側が指定します。
+
 - mathPatternBackdrop.ts
   計算画面の背景パターンを作ります。
 

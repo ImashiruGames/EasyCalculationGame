@@ -13,6 +13,11 @@ export const TRAINER_IMAGE_ASSETS: TrainerImageAsset[] = [
     path: 'assets/trainers/green-boy.webp',
   },
   {
+    trainerId: 'trainer-grid-editor',
+    key: 'trainer-art-grid-editor',
+    path: 'assets/trainers/green-boy.webp',
+  },
+  {
     trainerId: 'trainer-noko',
     key: 'trainer-art-noko',
     path: 'assets/trainers/green-girl.webp',

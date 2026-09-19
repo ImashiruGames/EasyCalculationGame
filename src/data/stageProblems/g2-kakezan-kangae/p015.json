@@ -1,0 +1,52 @@
+{
+  "problem": {
+    "id": "g2-kakezan-kangae-p015",
+    "stageId": "g2-kakezan-kangae",
+    "problemNo": 15,
+    "kind": "gridExpression",
+    "title": "絵を見て しきをつくろう",
+    "grid": {
+      "cols": 10,
+      "rows": 5
+    },
+    "chars": [
+      "picoleaf"
+    ],
+    "objects": [
+      { "char": 0, "col": 0, "row": 0 },
+      { "char": 0, "col": 1, "row": 0 },
+      { "char": 0, "col": 0, "row": 1 },
+      { "char": 0, "col": 1, "row": 1 },
+      { "char": 0, "col": 4, "row": 0 },
+      { "char": 0, "col": 5, "row": 0 },
+      { "char": 0, "col": 4, "row": 1 },
+      { "char": 0, "col": 5, "row": 1 },
+      { "char": 0, "col": 8, "row": 0 },
+      { "char": 0, "col": 9, "row": 0 },
+      { "char": 0, "col": 8, "row": 1 },
+      { "char": 0, "col": 9, "row": 1 },
+      { "char": 0, "col": 0, "row": 3 },
+      { "char": 0, "col": 1, "row": 3 },
+      { "char": 0, "col": 0, "row": 4 },
+      { "char": 0, "col": 1, "row": 4 },
+      { "char": 0, "col": 4, "row": 3 },
+      { "char": 0, "col": 5, "row": 3 },
+      { "char": 0, "col": 4, "row": 4 },
+      { "char": 0, "col": 5, "row": 4 },
+      { "char": 0, "col": 8, "row": 3 },
+      { "char": 0, "col": 9, "row": 3 },
+      { "char": 0, "col": 8, "row": 4 },
+      { "char": 0, "col": 9, "row": 4 }
+    ],
+    "groups": [
+      { "col": 0, "row": 0, "cols": 2, "rows": 2, "label": "4こ" },
+      { "col": 4, "row": 0, "cols": 2, "rows": 2, "label": "4こ" },
+      { "col": 8, "row": 0, "cols": 2, "rows": 2, "label": "4こ" },
+      { "col": 0, "row": 3, "cols": 2, "rows": 2, "label": "4こ" },
+      { "col": 4, "row": 3, "cols": 2, "rows": 2, "label": "4こ" },
+      { "col": 8, "row": 3, "cols": 2, "rows": 2, "label": "4こ" }
+    ],
+    "expression": "4 × □ = 24",
+    "answer": 6
+  }
+}

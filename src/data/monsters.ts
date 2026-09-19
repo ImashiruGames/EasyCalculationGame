@@ -116,15 +116,16 @@ export function getStageMonsterEncounterRate(
   return targetWeight / totalWeight;
 }
 
-/** レア種の出現率を抑えつつ、ステージ内の捕獲対象を1体選びます。 */
+/** Picks a monster using stage weights, optionally keeping rates independent of encounter history. */
 export function pickEncounterMonsterId(
   monsterIds: StageMonsterDefinition[],
   encounterStreak?: EncounterStreakState | null,
+  fixedEncounterRates = false,
 ): string {
   let totalWeight = 0;
   const candidates = monsterIds.map((monsterEntry) => {
     const monsterId = getStageMonsterId(monsterEntry);
-    const weight = getAdjustedEncounterWeight(monsterEntry, encounterStreak);
+    const weight = getAdjustedEncounterWeight(monsterEntry, fixedEncounterRates ? null : encounterStreak);
     totalWeight += weight;
 
     return { monsterId, weight };

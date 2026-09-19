@@ -5,6 +5,10 @@ src/game/assets/monsterImageAssets.ts などから参照されます。
 
 直下のファイル
 
+- mirimiriseijin.webp / centimonkey.webp
+  ミリミリ星人とセンチモンキーの元画像です。
+  アプリが読む画像は public/assets/monsters に置いています。
+
 - *.png
   モンスター本番画像です。ファイル名はモンスターIDに対応し、monsterImageAssets.ts から読み込まれます。
   例: achichin.png、ganpiro.png、nokopon.png、sagarun.png、zerogard.png。

@@ -1,6 +1,6 @@
 import * as Phaser from 'phaser';
 import {
-  cloneStoryCreatorPlacement,
+  cloneStoryCreatorDraft,
   createNextStoryCreatorDraft,
   deleteStoryCreatorDraft,
   exportStoryCreatorDraftToJsonText,
@@ -12,6 +12,7 @@ import {
 import { startBgm } from '../../bgm';
 import { COLORS, FONT_FAMILY, GAME_HEIGHT, GAME_WIDTH } from '../../constants';
 import { SceneKeys } from '../../sceneKeys';
+import { createSceneLifetime } from '../../sceneLifetime';
 import { createButton, createSmallButton } from '../../ui/common/button';
 
 const LIST_TOP = 132;
@@ -23,6 +24,7 @@ function colorToNumber(color: string): number {
 }
 
 export class StoryListScene extends Phaser.Scene {
+  private lifetime: AbortSignal;
   private drafts: StoryCreatorDraft[] = [];
   private listPage = 0;
   private deleteTarget?: StoryCreatorDraft;
@@ -36,6 +38,7 @@ export class StoryListScene extends Phaser.Scene {
 
   /** 保存済みのお話を読み、一覧画面を描きます。 */
   create(): void {
+    this.lifetime = createSceneLifetime(this);
     startBgm('home');
     this.drafts = loadStoryCreatorDrafts();
     this.cameras.main.setBackgroundColor('#eef8f3');
@@ -308,12 +311,17 @@ export class StoryListScene extends Phaser.Scene {
 
   /** 選ばれたJSONファイルを読み、下書きとして保存します。 */
   private async readSelectedJsonFile(file?: File): Promise<void> {
+    const lifetime = this.lifetime;
     if (!file) {
       return;
     }
 
     try {
-      const draft = importStoryCreatorDraftFromJsonText(await file.text(), this.getJsonFallbackName(file.name));
+      const jsonText = await file.text();
+      if (lifetime.aborted) {
+        return;
+      }
+      const draft = importStoryCreatorDraftFromJsonText(jsonText, this.getJsonFallbackName(file.name));
       if (!draft) {
         this.showImportNotice('よめないJSON');
         return;
@@ -325,7 +333,9 @@ export class StoryListScene extends Phaser.Scene {
       this.deleteTarget = undefined;
       this.showImportNotice('JSONをよんだ');
     } catch {
-      this.showImportNotice('よめないJSON');
+      if (!lifetime.aborted) {
+        this.showImportNotice('よめないJSON');
+      }
     }
   }
 
@@ -346,7 +356,7 @@ export class StoryListScene extends Phaser.Scene {
   /** 選んだストーリー下書きをJSONファイルとして保存します。 */
   private exportDraft(draft: StoryCreatorDraft): void {
     try {
-      const draftToExport = draft.id ? this.cloneDraft(draft) : saveStoryCreatorDraft(this.cloneDraft(draft));
+      const draftToExport = draft.id ? cloneStoryCreatorDraft(draft) : saveStoryCreatorDraft(cloneStoryCreatorDraft(draft));
       const jsonText = exportStoryCreatorDraftToJsonText(draftToExport);
       const blob = new Blob([jsonText], { type: 'application/json;charset=utf-8' });
       const url = URL.createObjectURL(blob);
@@ -374,7 +384,7 @@ export class StoryListScene extends Phaser.Scene {
   /** 選んだお話を確認画面で再生します。 */
   private openPreview(draft: StoryCreatorDraft): void {
     this.scene.start(SceneKeys.StoryPreview, {
-      draft: this.cloneDraft(draft),
+      draft: cloneStoryCreatorDraft(draft),
       returnScene: 'list',
     });
   }
@@ -382,7 +392,7 @@ export class StoryListScene extends Phaser.Scene {
   /** 選んだお話を編集画面で開きます。 */
   private openEditor(draft: StoryCreatorDraft): void {
     this.scene.start(SceneKeys.StoryCreator, {
-      draft: this.cloneDraft(draft),
+      draft: cloneStoryCreatorDraft(draft),
       pageIndex: 0,
       savedName: draft.name,
     });
@@ -516,20 +526,5 @@ export class StoryListScene extends Phaser.Scene {
   /** 保存済みストーリー一覧のページ番号が、今の保存数に収まるよう整えます。 */
   private clampListPage(): void {
     this.listPage = Phaser.Math.Clamp(this.listPage, 0, this.getDraftPageCount() - 1);
-  }
-
-  /** 下書きデータを画面間で安全に渡せるよう複製します。 */
-  private cloneDraft(draft: StoryCreatorDraft): StoryCreatorDraft {
-    return {
-      id: draft.id,
-      name: draft.name,
-      updatedAt: draft.updatedAt,
-      pages: draft.pages.map((page) => ({
-        text: page.text,
-        speaker: { ...(page.speaker ?? { kind: 'narration' }) },
-        placements: page.placements.map((placement) => cloneStoryCreatorPlacement(placement)),
-        soundEffectId: page.soundEffectId,
-      })),
-    };
   }
 }

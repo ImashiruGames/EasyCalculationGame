@@ -1,10 +1,12 @@
 export const SceneKeys = {
   Title: 'Title',
+  TitleNotice: 'TitleNotice',
   Loading: 'Loading',
   LoginBonus: 'LoginBonus',
   TitleEdit: 'TitleEdit',
   MainMenu: 'MainMenu',
   DebugBgm: 'DebugBgm',
+  GridProblemEditor: 'GridProblemEditor',
   Story: 'Story',
   StoryList: 'StoryList',
   StoryCreator: 'StoryCreator',

@@ -1,0 +1,37 @@
+{
+  "problem": {
+    "id": "g2-kakezan-kangae-p003",
+    "stageId": "g2-kakezan-kangae",
+    "problemNo": 3,
+    "kind": "gridExpression",
+    "title": "絵を見て しきをつくろう",
+    "grid": {
+      "cols": 9,
+      "rows": 4
+    },
+    "chars": [
+      "picoleaf"
+    ],
+    "objects": [
+      { "char": 0, "col": 0, "row": 0 },
+      { "char": 0, "col": 1, "row": 0 },
+      { "char": 0, "col": 0, "row": 1 },
+      { "char": 0, "col": 1, "row": 1 },
+      { "char": 0, "col": 4, "row": 0 },
+      { "char": 0, "col": 5, "row": 0 },
+      { "char": 0, "col": 4, "row": 1 },
+      { "char": 0, "col": 5, "row": 1 },
+      { "char": 0, "col": 7, "row": 2 },
+      { "char": 0, "col": 8, "row": 2 },
+      { "char": 0, "col": 7, "row": 3 },
+      { "char": 0, "col": 8, "row": 3 }
+    ],
+    "groups": [
+      { "col": 0, "row": 0, "cols": 2, "rows": 2, "label": "4こ" },
+      { "col": 4, "row": 0, "cols": 2, "rows": 2, "label": "4こ" },
+      { "col": 7, "row": 2, "cols": 2, "rows": 2, "label": "4こ" }
+    ],
+    "expression": "4 × □ = 12",
+    "answer": 3
+  }
+}

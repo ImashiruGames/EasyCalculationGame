@@ -1,5 +1,8 @@
 import type {
+  ClockDisplayMode,
+  ClockRangeMode,
   ConfigurableProblemRule,
+  MeasurementMode,
   ProblemAnswerMode,
   ProblemAnswerSlot,
   ProblemDigitRule,
@@ -12,6 +15,7 @@ import type {
   SquareRootProblemMode,
   StageCategoryDefinition,
   StageDefinition,
+  StageId,
   StageMonsterDefinition,
   StageUnlockCondition,
 } from '../game/types';
@@ -65,10 +69,12 @@ const LEGACY_PROBLEM_RULES = new Set<ProblemRule>([
 ]);
 
 const PROBLEM_KINDS = new Set<ProblemExpressionKind>([
+  'measurement',
   'integer',
   'integerDivision',
   'squareRoot',
   'clockTime',
+  'clockElapsedMinutes',
   'clockMinuteConversion',
   'decimal',
   'shapeArea',
@@ -78,6 +84,7 @@ const PROBLEM_KINDS = new Set<ProblemExpressionKind>([
   'sameDenominatorFraction',
   'differentDenominatorFraction',
   'fractionProductQuotient',
+  'gridExpression',
 ]);
 
 const PROBLEM_OPERATORS = new Set<ProblemOperatorInput>([
@@ -97,9 +104,11 @@ const PROBLEM_OPERATORS = new Set<ProblemOperatorInput>([
 ]);
 
 const PROBLEM_ANSWER_MODES = new Set<ProblemAnswerMode>([
+  'measurementPair',
   'single',
   'quotientRemainder',
   'clockHourMinute',
+  'clockElapsedHours',
   'squareRootPair',
   'squareRootSimplify',
   'squareRootExpression',
@@ -109,6 +118,16 @@ const PROBLEM_ANSWER_MODES = new Set<ProblemAnswerMode>([
   'choiceRow',
   'choiceColumn',
   'multiSelect',
+]);
+
+const CLOCK_DISPLAY_MODES = new Set<ClockDisplayMode>([
+  'analog',
+  'text',
+]);
+
+const CLOCK_RANGE_MODES = new Set<ClockRangeMode>([
+  'any',
+  'sameHour',
 ]);
 
 const BLANK_SLOTS = new Set<ProblemRangeSlot>([
@@ -345,6 +364,49 @@ function parseMinuteStep(row: CsvRow, rowNumber: number): number | undefined {
   return step;
 }
 
+/** Reads an optional clock minute step and checks that it is usable. */
+function parseOptionalClockMinuteStep(row: CsvRow, column: string, rowNumber: number): number | undefined {
+  const value = parseOptionalCsvNumber(row, column, rowNumber);
+  if (value === undefined) {
+    return undefined;
+  }
+
+  const step = Math.floor(value);
+  if (step !== value || step < 1 || step > 60) {
+    throw new Error(`CSV row ${rowNumber} column "${column}" must be an integer between 1 and 60.`);
+  }
+
+  return step;
+}
+
+/** Reads whether clock elapsed problems use clocks or text only. */
+function parseClockDisplayMode(row: CsvRow, rowNumber: number): ClockDisplayMode | undefined {
+  const value = optionalCsvValue(row.clockDisplayMode);
+  if (value === undefined) {
+    return undefined;
+  }
+
+  if (!CLOCK_DISPLAY_MODES.has(value as ClockDisplayMode)) {
+    throw new Error(`CSV row ${rowNumber} column "clockDisplayMode" has an unknown mode.`);
+  }
+
+  return value as ClockDisplayMode;
+}
+
+/** Reads whether clock elapsed problems may cross into the next hour. */
+function parseClockRangeMode(row: CsvRow, rowNumber: number): ClockRangeMode | undefined {
+  const value = optionalCsvValue(row.clockRangeMode);
+  if (value === undefined) {
+    return undefined;
+  }
+
+  if (!CLOCK_RANGE_MODES.has(value as ClockRangeMode)) {
+    throw new Error(`CSV row ${rowNumber} column "clockRangeMode" has an unknown mode.`);
+  }
+
+  return value as ClockRangeMode;
+}
+
 /** 小数けた数を読み、0から3けたまでの整数だけを許可します。 */
 function parseDecimalPlaces(row: CsvRow, column: string, rowNumber: number): number | undefined {
   const value = parseOptionalCsvNumber(row, column, rowNumber);
@@ -360,7 +422,27 @@ function parseDecimalPlaces(row: CsvRow, column: string, rowNumber: number): num
   return places;
 }
 
-/** ステージやカテゴリを表示する学年の下限・上限を読みます。 */
+/** Reads the hand-authored grid problem stage id from a CSV rule row. */
+function parseStageProblemStageId(row: CsvRow): StageId | undefined {
+  return optionalCsvValue(row.stageProblemStageId);
+}
+
+/** Reads one optional hand-authored grid problem number from a CSV rule row. */
+function parseStageProblemNo(row: CsvRow, rowNumber: number): number | undefined {
+  const value = parseOptionalCsvNumber(row, 'stageProblemNo', rowNumber);
+  if (value === undefined) {
+    return undefined;
+  }
+
+  const problemNo = Math.floor(value);
+  if (problemNo !== value || problemNo < 1) {
+    throw new Error(`CSV row ${rowNumber} column "stageProblemNo" must be a positive integer.`);
+  }
+
+  return problemNo;
+}
+
+/** Reads optional practice level boundaries from a CSV row. */
 function parsePracticeLevelBoundary(row: CsvRow, column: string, rowNumber: number): number | undefined {
   const value = parseOptionalCsvNumber(row, column, rowNumber);
   if (value === undefined) {
@@ -393,6 +475,10 @@ function parseLegacyProblemRule(row: CsvRow, rowNumber: number): ProblemRule | u
 function parseConfigurableProblemRule(entry: CsvRowWithNumber): ConfigurableProblemRule {
   const { row, rowNumber } = entry;
   const kind = parseProblemKind(row, rowNumber);
+  const measurementMode = optionalCsvValue(row.measurementMode) as MeasurementMode | undefined;
+  if (measurementMode && !['reading', 'compare', 'convert', 'mixedConvert', 'sameArithmetic', 'mixedSimpleArithmetic', 'mixedArithmetic'].includes(measurementMode)) {
+    throw new Error(`CSV row ${rowNumber} has an unknown measurementMode.`);
+  }
   const blankSlot = getBlankSlot(row, rowNumber);
   const answerSlot: ProblemAnswerSlot | undefined = blankSlot as ProblemAnswerSlot | undefined;
   const rule: ConfigurableProblemRule = {
@@ -413,9 +499,17 @@ function parseConfigurableProblemRule(entry: CsvRowWithNumber): ConfigurableProb
   const remainderRule = parseRemainderRule(row, rowNumber);
   const rootMode = parseRootMode(row, rowNumber);
   const minuteStep = parseMinuteStep(row, rowNumber);
+  const clockStartMinuteStep = parseOptionalClockMinuteStep(row, 'clockStartMinuteStep', rowNumber);
+  const clockDisplayMode = parseClockDisplayMode(row, rowNumber);
+  const clockRangeMode = parseClockRangeMode(row, rowNumber);
   const leftDecimalPlaces = parseDecimalPlaces(row, 'leftDecimalPlaces', rowNumber);
   const rightDecimalPlaces = parseDecimalPlaces(row, 'rightDecimalPlaces', rowNumber);
   const resultDecimalPlaces = parseDecimalPlaces(row, 'resultDecimalPlaces', rowNumber);
+  const stageProblemStageId = parseStageProblemStageId(row);
+  const stageProblemNo = parseStageProblemNo(row, rowNumber);
+  if (measurementMode !== undefined) {
+    rule.measurementMode = measurementMode;
+  }
 
   if (denominator !== undefined) {
     rule.denominator = denominator;
@@ -447,6 +541,15 @@ function parseConfigurableProblemRule(entry: CsvRowWithNumber): ConfigurableProb
   if (minuteStep !== undefined) {
     rule.minuteStep = minuteStep;
   }
+  if (clockStartMinuteStep !== undefined) {
+    rule.clockStartMinuteStep = clockStartMinuteStep;
+  }
+  if (clockDisplayMode !== undefined) {
+    rule.clockDisplayMode = clockDisplayMode;
+  }
+  if (clockRangeMode !== undefined) {
+    rule.clockRangeMode = clockRangeMode;
+  }
   if (leftDecimalPlaces !== undefined) {
     rule.leftDecimalPlaces = leftDecimalPlaces;
   }
@@ -455,6 +558,12 @@ function parseConfigurableProblemRule(entry: CsvRowWithNumber): ConfigurableProb
   }
   if (resultDecimalPlaces !== undefined) {
     rule.resultDecimalPlaces = resultDecimalPlaces;
+  }
+  if (stageProblemStageId !== undefined) {
+    rule.stageProblemStageId = stageProblemStageId;
+  }
+  if (stageProblemNo !== undefined) {
+    rule.stageProblemNo = stageProblemNo;
   }
 
   return rule;
@@ -586,6 +695,7 @@ function parseStage(
   const unlockConditions = (unlockConditionsByStageId.get(id) ?? []).map(parseUnlockCondition);
   const comingSoon = parseCsvBoolean(row, 'comingSoon', rowNumber);
   const playLimitDisabled = parseCsvBoolean(row, 'playLimitDisabled', rowNumber);
+  const fixedEncounterRates = parseCsvBoolean(row, 'fixedEncounterRates', rowNumber);
   const captureGaugeGain = parseOptionalPositiveNumber(row, 'captureGaugeGain', rowNumber);
   const speedStarAverageMs = parseOptionalPositiveNumber(row, 'speedStarAverageMs', rowNumber);
   const minPracticeLevel = parsePracticeLevelBoundary(row, 'minPracticeLevel', rowNumber);
@@ -597,6 +707,7 @@ function parseStage(
     name: requireCsvValue(row, 'name', rowNumber),
     subtitle: requireCsvValue(row, 'subtitle', rowNumber),
     themeLabel: requireCsvValue(row, 'themeLabel', rowNumber),
+    newContentVersion: optionalCsvValue(row.newContentVersion),
     problemRule: parseProblemRule(id, problemRulesByStageId.get(id) ?? []),
     monsterIds: parseStageMonsters(id, monstersByStageId.get(id) ?? []),
     backgroundPath: optionalCsvValue(row.backgroundPath),
@@ -608,6 +719,7 @@ function parseStage(
     ...(unlockConditions.length > 0 ? { unlockConditions } : {}),
     ...(comingSoon !== undefined ? { comingSoon } : {}),
     ...(playLimitDisabled !== undefined ? { playLimitDisabled } : {}),
+    ...(fixedEncounterRates !== undefined ? { fixedEncounterRates } : {}),
   };
 }
 

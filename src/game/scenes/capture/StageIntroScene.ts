@@ -6,6 +6,7 @@ import { getStageById } from '../../../data/stages';
 import {
   consumeShopItem,
   getItemCount,
+  hasReadStageIntroStory,
   getMonsterCaptureCount,
   getStagePlayLimitStatus,
   loadSaveState,
@@ -14,6 +15,7 @@ import {
 } from '../../../state/save';
 import type { StoryCreatorDraft } from '../../../state/storyCreator';
 import { getStageAvailability } from '../../../state/progression';
+import { markStageContentSeen } from '../../../state/stageNotices';
 import { COLORS, FONT_FAMILY } from '../../constants';
 import { APP_LAYOUT, STAGE_INTRO_MONSTER_CANDIDATE_POSITIONS } from '../../layoutConfig';
 import { SceneKeys } from '../../sceneKeys';
@@ -75,9 +77,10 @@ export class StageIntroScene extends Phaser.Scene {
       return;
     }
 
-    const introStoryDraft = this.skipIntroStory ? undefined : this.getStageIntroStoryDraft(stage);
-    if (introStoryDraft) {
-      this.openStageIntroStory(introStoryDraft, stage);
+    const introStoryDraft = this.getStageIntroStoryDraft(stage);
+    markStageContentSeen(stage);
+    if (!this.skipIntroStory && this.shouldAutoOpenStageIntroStory(introStoryDraft, saveState)) {
+      this.openStageIntroStory(introStoryDraft, stage, true);
       return;
     }
 
@@ -97,6 +100,7 @@ export class StageIntroScene extends Phaser.Scene {
       this.drawHeader(stage);
       this.drawMonsterCandidates(stage, saveState);
       this.drawItemHint(stage, saveState);
+      this.drawStageIntroStoryButton(stage);
       const playLimitStatus = getStagePlayLimitStatus(saveState, stage.id);
       if (!stage.playLimitDisabled) {
         drawStagePlayLimitGauge(
@@ -137,8 +141,16 @@ export class StageIntroScene extends Phaser.Scene {
     return getEmbeddedStoryDraftForStageIntro(stage.id);
   }
 
-  /** ステージ開始前のストーリーを一度だけ開き、戻った後は通常の開始画面を描けるようにします。 */
-  private openStageIntroStory(draft: StoryCreatorDraft, stage: StageDefinition): void {
+  /** Checks whether the stage intro story still needs forced first-time playback. */
+  private shouldAutoOpenStageIntroStory(
+    draft: StoryCreatorDraft | undefined,
+    saveState: ReturnType<typeof loadSaveState>,
+  ): draft is StoryCreatorDraft {
+    return Boolean(draft?.id && !hasReadStageIntroStory(saveState, draft.id));
+  }
+
+  /** Opens the stage intro story and returns to this stage afterward. */
+  private openStageIntroStory(draft: StoryCreatorDraft, stage: StageDefinition, required = false): void {
     this.scene.start(SceneKeys.StoryPreview, {
       draft,
       returnScene: 'stageIntro',
@@ -146,6 +158,31 @@ export class StageIntroScene extends Phaser.Scene {
         stageId: stage.id,
         skipIntroStory: true,
       },
+      stageIntroStoryReadData: draft.id ? {
+        storyId: draft.id,
+        required,
+      } : undefined,
+    });
+  }
+
+  /** Draws a small button that lets players reread the stage intro story. */
+  private drawStageIntroStoryButton(stage: StageDefinition): void {
+    const draft = this.getStageIntroStoryDraft(stage);
+    if (!draft) {
+      return;
+    }
+
+    createButton(this, {
+      x: 302,
+      y: APP_LAYOUT.stageIntro.monsterSectionLabel.y,
+      width: 92,
+      height: 36,
+      label: 'おはなし',
+      fillColor: COLORS.panel,
+      strokeColor: stage.accentColor,
+      textColor: COLORS.ink,
+      fontSize: 15,
+      onClick: () => this.openStageIntroStory(draft, stage),
     });
   }
 
@@ -361,7 +398,7 @@ export class StageIntroScene extends Phaser.Scene {
     const usedRareBell = rareMonster ? consumeShopItem(SHOP_ITEM_IDS.rareBell) : null;
     const monsterId = usedRareBell && rareMonster
       ? rareMonster.id
-      : pickEncounterMonsterId(stage.monsterIds, loadSaveState().encounterStreak);
+      : pickEncounterMonsterId(stage.monsterIds, loadSaveState().encounterStreak, stage.fixedEncounterRates);
     recordEncounterMonster(monsterId);
     this.scene.start(SceneKeys.CaptureGame, { stageId: stage.id, monsterId });
   }

@@ -13,18 +13,22 @@ stageCsvLoader.ts や trainers.ts が読み込んで使います。
 
 - stages.csv
   ステージ本体の一覧です。
+  fixedEncounterRates が TRUE のステージは、連続出現による補正を行わず、CSVの重みどおりに通常抽選します。
+  長さの7ステージは playLimitDisabled が FALSE で、各ステージの最初の入場から10分間に10回まで入れます。
 
 - stage_categories.csv
   ステージ分類の一覧です。
 
 - stage_monsters.csv
   ステージごとに出るモンスターの対応表です。
+  長さの7ステージの通常抽選は、ケシケシクン42.5%、ミリミリ星人10%、えほんちゃん42.5%、センチモンキー5%です。
 
 - stage_problem_rules.csv
   ステージごとの出題ルールです。
 
 - stage_unlock_conditions.csv
   ステージ解放条件の一覧です。
+  長さのステージ2〜7は、直前のステージを5回クリアすると開きます。クリアはモンスターを捕獲した回数です。
 
 - trainers.csv
   トレーナーの一覧です。
@@ -46,6 +50,9 @@ stageCsvLoader.ts や trainers.ts が読み込んで使います。
 
 - debug_stage_problem_rules.csv
   URLに debug=1 がある開発中だけ読み足す、デバッグ用ステージの出題ルールCSVです。
+
+- debug_trainers.csv
+  URLに debug=1 がある開発中だけ読み足す、デバッグ用トレーナーCSVです。
 
 直下のフォルダ
 

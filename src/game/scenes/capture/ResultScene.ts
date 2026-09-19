@@ -928,7 +928,7 @@ export class ResultScene extends Phaser.Scene {
       return;
     }
 
-    const monsterId = pickEncounterMonsterId(this.stage.monsterIds, loadSaveState().encounterStreak);
+    const monsterId = pickEncounterMonsterId(this.stage.monsterIds, loadSaveState().encounterStreak, this.stage.fixedEncounterRates);
     recordEncounterMonster(monsterId);
     this.scene.start(SceneKeys.CaptureGame, {
       stageId: this.stage.id,

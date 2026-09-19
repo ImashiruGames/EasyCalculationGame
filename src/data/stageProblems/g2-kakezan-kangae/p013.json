@@ -1,0 +1,46 @@
+{
+  "problem": {
+    "id": "g2-kakezan-kangae-p013",
+    "stageId": "g2-kakezan-kangae",
+    "problemNo": 13,
+    "kind": "gridExpression",
+    "title": "絵を見て しきをつくろう",
+    "grid": {
+      "cols": 9,
+      "rows": 5
+    },
+    "chars": [
+      "kaketama"
+    ],
+    "objects": [
+      { "char": 0, "col": 0, "row": 0 },
+      { "char": 0, "col": 0, "row": 1 },
+      { "char": 0, "col": 0, "row": 2 },
+      { "char": 0, "col": 2, "row": 0 },
+      { "char": 0, "col": 2, "row": 1 },
+      { "char": 0, "col": 2, "row": 2 },
+      { "char": 0, "col": 4, "row": 0 },
+      { "char": 0, "col": 4, "row": 1 },
+      { "char": 0, "col": 4, "row": 2 },
+      { "char": 0, "col": 6, "row": 0 },
+      { "char": 0, "col": 6, "row": 1 },
+      { "char": 0, "col": 6, "row": 2 },
+      { "char": 0, "col": 0, "row": 4 },
+      { "char": 0, "col": 1, "row": 4 },
+      { "char": 0, "col": 2, "row": 4 },
+      { "char": 0, "col": 6, "row": 4 },
+      { "char": 0, "col": 7, "row": 4 },
+      { "char": 0, "col": 8, "row": 4 }
+    ],
+    "groups": [
+      { "col": 0, "row": 0, "cols": 1, "rows": 3, "label": "3こ" },
+      { "col": 2, "row": 0, "cols": 1, "rows": 3, "label": "3こ" },
+      { "col": 4, "row": 0, "cols": 1, "rows": 3, "label": "3こ" },
+      { "col": 6, "row": 0, "cols": 1, "rows": 3, "label": "3こ" },
+      { "col": 0, "row": 4, "cols": 3, "rows": 1, "label": "3こ" },
+      { "col": 6, "row": 4, "cols": 3, "rows": 1, "label": "3こ" }
+    ],
+    "expression": "3 × □ = 18",
+    "answer": 6
+  }
+}

@@ -109,6 +109,7 @@ export function createDefaultSaveState(): AppSaveState {
     ownedTitleBackgroundIds: [],
     selectedTitleBackgroundId: DEFAULT_TITLE_BACKGROUND_ID,
     unlockedDexStoryMonsterIds: [],
+    readStageIntroStoryIds: [],
   };
 }
 

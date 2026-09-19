@@ -5,6 +5,27 @@ save フォルダについて
 
 直下のファイル
 
+- storage.ts
+  既存の保存キーと形式でlocalStorageの読み書きを行います。
+
+- selectors.ts
+  状態から図鑑、進行、星などの値を読み取ります。
+
+- progressActions.ts
+  捕獲、バトル、進行、引き継ぎに伴う更新を扱います。
+
+- inventoryActions.ts
+  進化、ショップ、持ち物、図鑑、お話、タイトルの更新を扱います。
+
+- dailyRewards.ts
+  ログインと毎日のミッションの報酬を受け取る処理です。
+
+- playEntries.ts
+  プレイ回数の表示と、ステージへの入場を記録する処理です。
+
+- debugActions.ts
+  開発時に使う状態変更の処理です。
+
 - constants.ts
   セーブで使う定数や初期値をまとめています。
 

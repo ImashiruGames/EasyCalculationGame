@@ -1,16 +1,18 @@
 import * as Phaser from 'phaser';
 import { getMonsterById } from '../../../data/monsters';
 import {
-  storyCreatorActorChoices,
   StoryCreatorActorChoice,
+  storyCreatorActorChoices,
   storyCreatorCharacterChoices,
   storyCreatorMonsterIds,
   storyCreatorTrainerIds,
 } from '../../../data/storyCreatorActors';
 import { getStorySoundEffectById, storySoundEffects } from '../../../data/storySoundEffects';
 import {
+  cloneStoryCreatorDraft,
   cloneStoryCreatorPage,
   cloneStoryCreatorPlacement,
+  createDefaultStoryCreatorMoveMotion,
   createDefaultStoryCreatorPage,
   createDefaultStoryCreatorShape,
   createDefaultStoryCreatorTextBox,
@@ -22,13 +24,14 @@ import {
   StoryCreatorActorEffect,
   StoryCreatorActorMotion,
   StoryCreatorDraft,
+  StoryCreatorMoveMotion,
   StoryCreatorPage,
   StoryCreatorPlacement,
   StoryCreatorSceneTemplate,
-  StoryCreatorSide,
-  StoryCreatorSpeaker,
   StoryCreatorShape,
   StoryCreatorShapeLabel,
+  StoryCreatorSide,
+  StoryCreatorSpeaker,
   StoryCreatorTextAlign,
   StoryCreatorTextBox,
   StoryCreatorTextLine,
@@ -43,6 +46,7 @@ import { createButton, createSmallButton } from '../../ui/common/button';
 import { createRichText } from '../../ui/common/richText';
 import { drawStoryShape, getStoryShapeHitBounds, getStoryShapeLocalBounds } from '../../ui/common/storyShape';
 import { createMonsterVisual } from '../../ui/creatures/monsterVisual';
+import { applyStoryActorMotion } from './storyMotion';
 
 const STAGE_TOP = 92;
 const STAGE_BOTTOM = 592;
@@ -52,6 +56,8 @@ const RIGHT_X = 286;
 const DEFAULT_ACTOR_Y = 430;
 const STEP = 5;
 const SCALE_STEP = 0.1;
+const MOVE_START_STEP = 10;
+const MOVE_SPEED_STEP = 40;
 const MONSTERS_PER_PICKER_PAGE = 9;
 const SPEAKERS_PER_PICKER_PAGE = 9;
 const SOUND_EFFECTS_PER_PICKER_PAGE = 9;
@@ -73,10 +79,15 @@ const SIDE_X: Record<StoryCreatorSide, number> = {
 
 const MOTION_LABELS: Record<StoryCreatorActorMotion, string> = {
   none: 'なし',
+  move: 'うごく',
   bounce: 'ぴょん',
   sway: 'ゆら',
   twitch: 'ビク',
   slide: 'すべる',
+  spin: '回る',
+  pulse: '大小',
+  blink: '点めつ',
+  spinPulse: '回大',
 };
 
 const EFFECT_LABELS: Record<StoryCreatorActorEffect, string> = {
@@ -87,7 +98,18 @@ const EFFECT_LABELS: Record<StoryCreatorActorEffect, string> = {
   silhouette: 'かげ',
 };
 
-const ACTOR_MOTION_OPTIONS: StoryCreatorActorMotion[] = ['none', 'bounce', 'sway', 'twitch', 'slide'];
+const ACTOR_MOTION_OPTIONS: StoryCreatorActorMotion[] = [
+  'none',
+  'move',
+  'bounce',
+  'sway',
+  'twitch',
+  'slide',
+  'spin',
+  'pulse',
+  'blink',
+  'spinPulse',
+];
 const ACTOR_EFFECT_OPTIONS: StoryCreatorActorEffect[] = ['none', 'glow', 'shrink', 'grow', 'silhouette'];
 
 interface StoryCreatorSceneData {
@@ -152,7 +174,7 @@ export class StoryCreatorScene extends Phaser.Scene {
     this.soundPickerSelectedEffectId = undefined;
     this.sceneTemplates = loadStoryCreatorSceneTemplates();
     if (data?.draft) {
-      this.draft = this.cloneDraft(data.draft);
+      this.draft = cloneStoryCreatorDraft(data.draft);
       this.savedDraftName = data.savedName ?? data.draft.name;
     }
 
@@ -452,14 +474,15 @@ export class StoryCreatorScene extends Phaser.Scene {
     }
 
     const effectLayer = this.applyEditorEffect(visual, placement.effect ?? 'none');
-    this.applyMotion(visual, placement.motion);
-    if (effectLayer) {
-      this.applyMotion(effectLayer, placement.motion);
-    }
     this.drawNameTag(placement.x, 574, actor.name, actor.tagColor, 24 + index);
     this.drawPlacementHitZone(placement, index, actor.visualSize * placement.scale, visual, effectLayer);
     if (this.selectedPlacementIndex === index) {
       this.drawSelectionFrame(placement, actor.visualSize * placement.scale);
+      this.drawMoveMotionGuide(placement);
+    }
+    applyStoryActorMotion(this, visual, placement.motion, placement.motionMove);
+    if (effectLayer) {
+      applyStoryActorMotion(this, effectLayer, placement.motion, placement.motionMove);
     }
   }
 
@@ -993,6 +1016,36 @@ export class StoryCreatorScene extends Phaser.Scene {
     );
   }
 
+  /** Draws the custom move start marker for the selected actor. */
+  private drawMoveMotionGuide(placement: StoryCreatorPlacement): void {
+    if (placement.motion !== 'move') {
+      return;
+    }
+
+    const moveMotion = this.getPlacementMoveMotion(placement);
+    const startX = placement.x + moveMotion.startX;
+    const startY = placement.y + moveMotion.startY;
+    const graphics = this.add.graphics().setDepth(41);
+    graphics.lineStyle(3, colorToNumber('#2364aa'), 0.72);
+    graphics.beginPath();
+    graphics.moveTo(startX, startY);
+    graphics.lineTo(placement.x, placement.y);
+    graphics.strokePath();
+    graphics.fillStyle(colorToNumber('#2364aa'), 0.9);
+    graphics.fillCircle(startX, startY, 7);
+
+    const labelX = Phaser.Math.Clamp(startX, 34, GAME_WIDTH - 34);
+    this.add
+      .text(labelX, startY - 18, 'START', {
+        fontFamily: FONT_FAMILY,
+        fontSize: '10px',
+        fontStyle: '900',
+        color: '#2364aa',
+      })
+      .setDepth(42)
+      .setOrigin(0.5);
+  }
+
   /** キャラの影を描きます。 */
   private drawCharacterShadow(x: number, y: number, width: number, height: number): void {
     const graphics = this.add.graphics().setDepth(3);
@@ -1072,24 +1125,18 @@ export class StoryCreatorScene extends Phaser.Scene {
       return;
     }
 
+    const movePanelLiftY = placement.motion === 'move' && !this.isToolsPanelRaised ? -56 : 0;
+    const actorPanelOffsetY = panelOffsetY + movePanelLiftY;
+    const moveControlsOffsetY = placement.motion === 'move' ? 64 : 0;
+    const panelHeight = placement.motion === 'move' ? 278 : 214;
     const graphics = this.add.graphics().setDepth(80);
     graphics.fillStyle(colorToNumber('#ffffff'), 0.96);
     graphics.lineStyle(3, colorToNumber('#9cb5c7'), 1);
-    graphics.fillRoundedRect(22, 430 + panelOffsetY, GAME_WIDTH - 44, 174, 18);
-    graphics.strokeRoundedRect(22, 430 + panelOffsetY, GAME_WIDTH - 44, 174, 18);
+    graphics.fillRoundedRect(22, 390 + actorPanelOffsetY, GAME_WIDTH - 44, panelHeight, 18);
+    graphics.strokeRoundedRect(22, 390 + actorPanelOffsetY, GAME_WIDTH - 44, panelHeight, 18);
 
     this.add
-      .text(70, 498 + panelOffsetY, `x ${Math.round(placement.x)}  y ${Math.round(placement.y)}`, {
-        fontFamily: FONT_FAMILY,
-        fontSize: '15px',
-        fontStyle: '900',
-        color: COLORS.ink,
-      })
-      .setDepth(81)
-      .setOrigin(0.5);
-
-    this.add
-      .text(198, 498 + panelOffsetY, `大きさ ${Math.round(placement.scale * 100)}%`, {
+      .text(142, 502 + actorPanelOffsetY + moveControlsOffsetY, `x ${Math.round(placement.x)}  y ${Math.round(placement.y)}`, {
         fontFamily: FONT_FAMILY,
         fontSize: '14px',
         fontStyle: '900',
@@ -1098,15 +1145,28 @@ export class StoryCreatorScene extends Phaser.Scene {
       .setDepth(81)
       .setOrigin(0.5);
 
-    this.drawNudgeButtons(placement, panelOffsetY);
-    this.drawScaleButtons(placement, panelOffsetY);
-    this.drawMotionButtons(placement, panelOffsetY);
-    this.drawEffectButtons(placement, panelOffsetY);
-    this.drawToolsPanelMoveButton(340, 426 + panelOffsetY);
+    this.add
+      .text(236, 502 + actorPanelOffsetY + moveControlsOffsetY, `大きさ ${Math.round(placement.scale * 100)}%`, {
+        fontFamily: FONT_FAMILY,
+        fontSize: '13px',
+        fontStyle: '900',
+        color: COLORS.ink,
+      })
+      .setDepth(81)
+      .setOrigin(0.5);
+
+    this.drawNudgeButtons(placement, actorPanelOffsetY + moveControlsOffsetY);
+    this.drawScaleButtons(placement, actorPanelOffsetY + moveControlsOffsetY);
+    this.drawMotionButtons(placement, actorPanelOffsetY);
+    if (placement.motion === 'move') {
+      this.drawMoveMotionControls(placement, actorPanelOffsetY);
+    }
+    this.drawEffectButtons(placement, actorPanelOffsetY + moveControlsOffsetY);
+    this.drawToolsPanelMoveButton(340, 394 + actorPanelOffsetY);
 
     createButton(this, {
-      x: 310,
-      y: 462 + panelOffsetY,
+      x: 306,
+      y: 502 + actorPanelOffsetY + moveControlsOffsetY,
       width: 54,
       height: 32,
       label: 'はんてん',
@@ -1118,7 +1178,7 @@ export class StoryCreatorScene extends Phaser.Scene {
 
     createButton(this, {
       x: 364,
-      y: 462 + panelOffsetY,
+      y: 502 + actorPanelOffsetY + moveControlsOffsetY,
       width: 48,
       height: 32,
       label: '中へ',
@@ -1129,10 +1189,10 @@ export class StoryCreatorScene extends Phaser.Scene {
     }).setDepth(81);
 
     createButton(this, {
-      x: 328,
-      y: 498 + panelOffsetY,
-      width: 56,
-      height: 34,
+      x: 50,
+      y: 502 + actorPanelOffsetY + moveControlsOffsetY,
+      width: 50,
+      height: 32,
       label: 'けす',
       fillColor: '#ffe1df',
       strokeColor: '#b52a24',
@@ -1143,7 +1203,7 @@ export class StoryCreatorScene extends Phaser.Scene {
 
   /** 編集パネルを下に置くか上に逃がすかで、描画Y座標のずれを返します。 */
   private getSelectedToolsOffsetY(): number {
-    return this.isToolsPanelRaised ? -300 : 0;
+    return this.isToolsPanelRaised ? -245 : 0;
   }
 
   /** 編集パネルを上下に切り替える小ボタンを描きます。 */
@@ -1678,18 +1738,100 @@ export class StoryCreatorScene extends Phaser.Scene {
   /** キャラごとの動き切り替えボタンを描きます。 */
   private drawMotionButtons(placement: StoryCreatorPlacement, panelOffsetY: number): void {
     ACTOR_MOTION_OPTIONS.forEach((motion, index) => {
+      const column = index % 5;
+      const row = Math.floor(index / 5);
       createButton(this, {
-        x: 44 + index * 52,
-        y: 462 + panelOffsetY,
-        width: 48,
-        height: 32,
+        x: 54 + column * 70,
+        y: 424 + row * 32 + panelOffsetY,
+        width: 62,
+        height: 28,
         label: MOTION_LABELS[motion],
         fillColor: placement.motion === motion ? '#fff1a8' : COLORS.panel,
         strokeColor: placement.motion === motion ? '#b8941e' : '#9cb5c7',
-        fontSize: 11,
+        fontSize: 12,
         onClick: () => this.setPlacementMotion(placement, motion),
       }).setDepth(81);
     });
+  }
+
+  /** Draws custom move start and speed controls. */
+  private drawMoveMotionControls(placement: StoryCreatorPlacement, panelOffsetY: number): void {
+    const moveMotion = this.getPlacementMoveMotion(placement);
+    this.add
+      .text(116, 496 + panelOffsetY, `スタート x ${Math.round(moveMotion.startX)} y ${Math.round(moveMotion.startY)}`, {
+        fontFamily: FONT_FAMILY,
+        fontSize: '13px',
+        fontStyle: '900',
+        color: COLORS.ink,
+      })
+      .setDepth(81)
+      .setOrigin(0.5);
+
+    const moveButtons: Array<{ label: string; x: number; dx: number; dy: number }> = [
+      { label: '←', x: 238, dx: -MOVE_START_STEP, dy: 0 },
+      { label: '→', x: 280, dx: MOVE_START_STEP, dy: 0 },
+      { label: '↑', x: 322, dx: 0, dy: -MOVE_START_STEP },
+      { label: '↓', x: 364, dx: 0, dy: MOVE_START_STEP },
+    ];
+    moveButtons.forEach((button) => {
+      createButton(this, {
+        x: button.x,
+        y: 496 + panelOffsetY,
+        width: 36,
+        height: 28,
+        label: button.label,
+        fillColor: COLORS.panel,
+        strokeColor: '#47647d',
+        fontSize: 15,
+        onClick: () => this.nudgePlacementMoveStart(placement, button.dx, button.dy),
+      }).setDepth(81);
+    });
+
+    this.add
+      .text(140, 528 + panelOffsetY, `はやさ ${Math.round(moveMotion.speed)}`, {
+        fontFamily: FONT_FAMILY,
+        fontSize: '13px',
+        fontStyle: '900',
+        color: COLORS.ink,
+      })
+      .setDepth(81)
+      .setOrigin(0.5);
+
+    createButton(this, {
+      x: 242,
+      y: 528 + panelOffsetY,
+      width: 54,
+      height: 28,
+      label: '-',
+      fillColor: COLORS.panel,
+      strokeColor: '#47647d',
+      fontSize: 17,
+      onClick: () => this.changePlacementMoveSpeed(placement, -MOVE_SPEED_STEP),
+    }).setDepth(81);
+
+    createButton(this, {
+      x: 304,
+      y: 528 + panelOffsetY,
+      width: 54,
+      height: 28,
+      label: '+',
+      fillColor: COLORS.panel,
+      strokeColor: '#47647d',
+      fontSize: 17,
+      onClick: () => this.changePlacementMoveSpeed(placement, MOVE_SPEED_STEP),
+    }).setDepth(81);
+
+    createButton(this, {
+      x: 366,
+      y: 528 + panelOffsetY,
+      width: 42,
+      height: 28,
+      label: 'もどす',
+      fillColor: COLORS.panel,
+      strokeColor: '#47647d',
+      fontSize: 11,
+      onClick: () => this.resetPlacementMoveMotion(placement),
+    }).setDepth(81);
   }
 
   /** キャラごとのエフェクト切り替えボタンを描きます。 */
@@ -2386,99 +2528,6 @@ export class StoryCreatorScene extends Phaser.Scene {
     this.redraw();
   }
 
-  /** 配置済みキャラに動きを付けます。 */
-  private applyMotion(
-    target: Phaser.GameObjects.Image | Phaser.GameObjects.Container,
-    motion: StoryCreatorActorMotion,
-  ): void {
-    if (motion === 'bounce') {
-      this.tweens.add({
-        targets: target,
-        y: target.y - 10,
-        duration: 460,
-        yoyo: true,
-        repeat: 1,
-        ease: 'Sine.easeInOut',
-      });
-      return;
-    }
-
-    if (motion === 'sway') {
-      this.tweens.add({
-        targets: target,
-        x: target.x + 10,
-        duration: 560,
-        yoyo: true,
-        repeat: 1,
-        ease: 'Sine.easeInOut',
-      });
-      return;
-    }
-
-    if (motion === 'twitch') {
-      this.applyTwitchMotion(target);
-      return;
-    }
-
-    if (motion === 'slide') {
-      this.applySlideMotion(target);
-    }
-  }
-
-  /** 配置済みキャラを、びくっと角ばった動きで短く動かします。 */
-  private applyTwitchMotion(target: Phaser.GameObjects.Image | Phaser.GameObjects.Container): void {
-    const baseX = target.x;
-    const baseY = target.y;
-    const baseAngle = target.angle;
-    this.tweens.add({
-      targets: target,
-      x: baseX + 8,
-      y: baseY - 4,
-      angle: baseAngle - 4,
-      duration: 70,
-      ease: 'Quad.easeOut',
-      onComplete: () => {
-        this.tweens.add({
-          targets: target,
-          x: baseX - 6,
-          y: baseY + 3,
-          angle: baseAngle + 4,
-          duration: 80,
-          ease: 'Quad.easeInOut',
-          onComplete: () => {
-            this.tweens.add({
-              targets: target,
-              x: baseX,
-              y: baseY,
-              angle: baseAngle,
-              duration: 100,
-              ease: 'Back.easeOut',
-            });
-          },
-        });
-      },
-    });
-  }
-
-  /** 配置済みキャラを、横へすべらせてから元の位置へ戻します。 */
-  private applySlideMotion(target: Phaser.GameObjects.Image | Phaser.GameObjects.Container): void {
-    const baseX = target.x;
-    this.tweens.add({
-      targets: target,
-      x: baseX + 30,
-      duration: 130,
-      ease: 'Quad.easeOut',
-      onComplete: () => {
-        this.tweens.add({
-          targets: target,
-          x: baseX,
-          duration: 260,
-          ease: 'Cubic.easeOut',
-        });
-      },
-    });
-  }
-
   /** 文章クリエイトデータを保存して画面へ知らせます。 */
   private saveDraft(): void {
     this.captureMessageInput();
@@ -2492,7 +2541,7 @@ export class StoryCreatorScene extends Phaser.Scene {
   private openPreview(): void {
     this.captureMessageInput();
     this.scene.start(SceneKeys.StoryPreview, {
-      draft: this.cloneDraft(this.draft),
+      draft: cloneStoryCreatorDraft(this.draft),
       returnPageIndex: this.pageIndex,
       returnScene: 'creator',
       savedName: this.savedDraftName,
@@ -2559,7 +2608,7 @@ export class StoryCreatorScene extends Phaser.Scene {
   /** 現在の作業状態を、もどす用の履歴に積みます。 */
   private recordUndoSnapshot(): void {
     this.undoSnapshots.push({
-      draft: this.cloneDraft(this.draft),
+      draft: cloneStoryCreatorDraft(this.draft),
       pageIndex: this.pageIndex,
       selectedPlacementIndex: this.selectedPlacementIndex,
       selectedTextLineIndex: this.selectedTextLineIndex,
@@ -2578,7 +2627,7 @@ export class StoryCreatorScene extends Phaser.Scene {
       return;
     }
 
-    this.draft = this.cloneDraft(snapshot.draft);
+    this.draft = cloneStoryCreatorDraft(snapshot.draft);
     this.pageIndex = Phaser.Math.Clamp(snapshot.pageIndex, 0, this.draft.pages.length - 1);
     this.selectedPlacementIndex = snapshot.selectedPlacementIndex;
     this.selectedTextLineIndex = snapshot.selectedTextLineIndex;
@@ -2682,7 +2731,7 @@ export class StoryCreatorScene extends Phaser.Scene {
   /** 今のページをシーンテンプレートとして保存します。 */
   private saveCurrentPageAsTemplate(): void {
     this.captureMessageInput();
-    saveStoryCreatorSceneTemplate(this.clonePage(this.currentPage));
+    saveStoryCreatorSceneTemplate(cloneStoryCreatorPage(this.currentPage));
     this.sceneTemplates = loadStoryCreatorSceneTemplates();
     this.templatePickerPage = 0;
     this.noticeText = 'シーンをとうろくした';
@@ -2788,6 +2837,7 @@ export class StoryCreatorScene extends Phaser.Scene {
       scale: previousPlacement?.scale ?? actor.defaultScale,
       flipX: previousPlacement?.flipX ?? side === 'right',
       motion: previousPlacement?.motion ?? 'none',
+      motionMove: previousPlacement?.motionMove ? { ...previousPlacement.motionMove } : undefined,
       effect: previousPlacement?.effect ?? 'none',
     };
 
@@ -2904,6 +2954,36 @@ export class StoryCreatorScene extends Phaser.Scene {
   private setPlacementMotion(placement: StoryCreatorPlacement, motion: StoryCreatorActorMotion): void {
     this.recordUndoSnapshot();
     placement.motion = motion;
+    if (motion === 'move' && !placement.motionMove) {
+      placement.motionMove = createDefaultStoryCreatorMoveMotion();
+    }
+    this.noticeText = '';
+    this.redraw();
+  }
+
+  /** Moves the custom move start point by a small step. */
+  private nudgePlacementMoveStart(placement: StoryCreatorPlacement, dx: number, dy: number): void {
+    this.recordUndoSnapshot();
+    const moveMotion = this.ensurePlacementMoveMotion(placement);
+    moveMotion.startX = Phaser.Math.Clamp(moveMotion.startX + dx, -360, 360);
+    moveMotion.startY = Phaser.Math.Clamp(moveMotion.startY + dy, -360, 360);
+    this.noticeText = '';
+    this.redraw();
+  }
+
+  /** Changes the custom move speed by a small step. */
+  private changePlacementMoveSpeed(placement: StoryCreatorPlacement, delta: number): void {
+    this.recordUndoSnapshot();
+    const moveMotion = this.ensurePlacementMoveMotion(placement);
+    moveMotion.speed = Phaser.Math.Clamp(moveMotion.speed + delta, 40, 640);
+    this.noticeText = '';
+    this.redraw();
+  }
+
+  /** Resets custom move data to its default start and speed. */
+  private resetPlacementMoveMotion(placement: StoryCreatorPlacement): void {
+    this.recordUndoSnapshot();
+    placement.motionMove = createDefaultStoryCreatorMoveMotion();
     this.noticeText = '';
     this.redraw();
   }
@@ -3247,26 +3327,6 @@ export class StoryCreatorScene extends Phaser.Scene {
     };
   }
 
-  /** ストーリーの1ページを、解説行まで含めて安全に複製します。 */
-  private clonePage(page: StoryCreatorPage): StoryCreatorPage {
-    return {
-      text: page.text,
-      speaker: { ...(page.speaker ?? { kind: 'narration' }) },
-      placements: page.placements.map((placement) => cloneStoryCreatorPlacement(placement)),
-      soundEffectId: page.soundEffectId,
-    };
-  }
-
-  /** 下書きデータを画面間で安全に渡せるよう複製します。 */
-  private cloneDraft(draft: StoryCreatorDraft): StoryCreatorDraft {
-    return {
-      id: draft.id,
-      name: draft.name,
-      updatedAt: draft.updatedAt,
-      pages: draft.pages.map((page) => this.clonePage(page)),
-    };
-  }
-
   /** 名まえ変更モーダルを開きます。 */
   private openNameModal(): void {
     this.captureMessageInput();
@@ -3415,6 +3475,20 @@ export class StoryCreatorScene extends Phaser.Scene {
 
     this.selectedTextLineIndex = Phaser.Math.Clamp(this.selectedTextLineIndex, 0, placement.textBox.lines.length - 1);
     return placement.textBox;
+  }
+
+  /** Returns custom move data without changing the placement. */
+  private getPlacementMoveMotion(placement: StoryCreatorPlacement): StoryCreatorMoveMotion {
+    return placement.motionMove ?? createDefaultStoryCreatorMoveMotion();
+  }
+
+  /** Adds default custom move data when the placement does not have it. */
+  private ensurePlacementMoveMotion(placement: StoryCreatorPlacement): StoryCreatorMoveMotion {
+    if (!placement.motionMove) {
+      placement.motionMove = createDefaultStoryCreatorMoveMotion();
+    }
+
+    return placement.motionMove;
   }
 
   /** 選択中の解説行を返します。 */

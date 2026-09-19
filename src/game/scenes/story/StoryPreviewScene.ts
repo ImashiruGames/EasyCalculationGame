@@ -1,18 +1,18 @@
 import * as Phaser from 'phaser';
 import { getMonsterById } from '../../../data/monsters';
 import {
-  storyCreatorActorChoices,
   StoryCreatorActorChoice,
+  storyCreatorActorChoices,
   storyCreatorMonsterIds,
   storyCreatorTrainerIds,
 } from '../../../data/storyCreatorActors';
+import { recordStageIntroStoryRead } from '../../../state/save';
 import {
-  cloneStoryCreatorPlacement,
+  cloneStoryCreatorDraft,
   createDefaultStoryCreatorShape,
   createDefaultStoryCreatorTextBox,
   loadLatestStoryCreatorDraft,
   StoryCreatorActorEffect,
-  StoryCreatorActorMotion,
   StoryCreatorDraft,
   StoryCreatorPlacement,
   StoryCreatorSide,
@@ -26,11 +26,13 @@ import { getTrainerImageAsset, preloadTrainerImageAssetsByIds } from '../../asse
 import { startBgm } from '../../bgm';
 import { COLORS, FONT_FAMILY, GAME_HEIGHT, GAME_WIDTH } from '../../constants';
 import { SceneKeys } from '../../sceneKeys';
+import { onSceneExit } from '../../sceneLifetime';
 import type { ResultSceneData, StageSceneData } from '../../types';
 import { createButton, createSmallButton } from '../../ui/common/button';
 import { createRichText } from '../../ui/common/richText';
 import { drawStoryShape } from '../../ui/common/storyShape';
 import { createMonsterVisual } from '../../ui/creatures/monsterVisual';
+import { applyStoryActorMotion } from './storyMotion';
 
 interface StoryPreviewSceneData {
   draft?: StoryCreatorDraft;
@@ -43,6 +45,10 @@ interface StoryPreviewSceneData {
     showCapturedOnly?: boolean;
   };
   returnStageIntroData?: StageSceneData;
+  stageIntroStoryReadData?: {
+    storyId: string;
+    required?: boolean;
+  };
   returnResultData?: ResultSceneData;
   savedName?: string;
 }
@@ -65,6 +71,7 @@ export class StoryPreviewScene extends Phaser.Scene {
   private returnScene: 'creator' | 'list' | 'dex' | 'stageIntro' | 'result' = 'creator';
   private returnDexData: StoryPreviewSceneData['returnDexData'];
   private returnStageIntroData: StageSceneData | undefined;
+  private stageIntroStoryReadData: StoryPreviewSceneData['stageIntroStoryReadData'];
   private returnResultData: ResultSceneData | undefined;
   private savedName: string | undefined;
   private lastPlayedSoundPageIndex = -1;
@@ -77,7 +84,7 @@ export class StoryPreviewScene extends Phaser.Scene {
 
   /** 作成画面から渡された下書きと、戻る時のページ位置を受け取ります。 */
   init(data?: StoryPreviewSceneData): void {
-    this.draft = data?.draft ? this.cloneDraft(data.draft) : loadLatestStoryCreatorDraft();
+    this.draft = data?.draft ? cloneStoryCreatorDraft(data.draft) : loadLatestStoryCreatorDraft();
     this.pageIndex = Phaser.Math.Clamp(Math.floor(data?.pageIndex ?? 0), 0, this.draft.pages.length - 1);
     this.returnPageIndex = Phaser.Math.Clamp(
       Math.floor(data?.returnPageIndex ?? this.pageIndex),
@@ -87,6 +94,7 @@ export class StoryPreviewScene extends Phaser.Scene {
     this.returnScene = data?.returnScene ?? 'creator';
     this.returnDexData = data?.returnDexData;
     this.returnStageIntroData = data?.returnStageIntroData;
+    this.stageIntroStoryReadData = data?.stageIntroStoryReadData;
     this.returnResultData = data?.returnResultData;
     this.savedName = data?.savedName;
     this.lastPlayedSoundPageIndex = -1;
@@ -103,8 +111,7 @@ export class StoryPreviewScene extends Phaser.Scene {
   create(): void {
     startBgm('home');
     this.cameras.main.setBackgroundColor('#eef8f3');
-    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.stopActiveStorySound());
-    this.events.once(Phaser.Scenes.Events.DESTROY, () => this.stopActiveStorySound());
+    onSceneExit(this, () => this.stopActiveStorySound());
     this.redraw();
   }
 
@@ -269,9 +276,9 @@ export class StoryPreviewScene extends Phaser.Scene {
     const effect = placement.effect ?? 'none';
     const effectLayer = this.applyPreviewEffect(visual, effect);
     if (effect !== 'shrink') {
-      this.applyMotion(visual, placement.motion);
+      applyStoryActorMotion(this, visual, placement.motion, placement.motionMove);
       if (effectLayer) {
-        this.applyMotion(effectLayer, placement.motion);
+        applyStoryActorMotion(this, effectLayer, placement.motion, placement.motionMove);
       }
     }
     if (effect !== 'shrink') {
@@ -526,99 +533,6 @@ export class StoryPreviewScene extends Phaser.Scene {
       );
   }
 
-  /** 配置済みキャラに作成画面と同じ短い動きを付けます。 */
-  private applyMotion(
-    target: Phaser.GameObjects.Image | Phaser.GameObjects.Container,
-    motion: StoryCreatorActorMotion,
-  ): void {
-    if (motion === 'bounce') {
-      this.tweens.add({
-        targets: target,
-        y: target.y - 10,
-        duration: 460,
-        yoyo: true,
-        repeat: 1,
-        ease: 'Sine.easeInOut',
-      });
-      return;
-    }
-
-    if (motion === 'sway') {
-      this.tweens.add({
-        targets: target,
-        x: target.x + 10,
-        duration: 560,
-        yoyo: true,
-        repeat: 1,
-        ease: 'Sine.easeInOut',
-      });
-      return;
-    }
-
-    if (motion === 'twitch') {
-      this.applyTwitchMotion(target);
-      return;
-    }
-
-    if (motion === 'slide') {
-      this.applySlideMotion(target);
-    }
-  }
-
-  /** 配置済みキャラを、びくっと角ばった動きで短く動かします。 */
-  private applyTwitchMotion(target: Phaser.GameObjects.Image | Phaser.GameObjects.Container): void {
-    const baseX = target.x;
-    const baseY = target.y;
-    const baseAngle = target.angle;
-    this.tweens.add({
-      targets: target,
-      x: baseX + 8,
-      y: baseY - 4,
-      angle: baseAngle - 4,
-      duration: 70,
-      ease: 'Quad.easeOut',
-      onComplete: () => {
-        this.tweens.add({
-          targets: target,
-          x: baseX - 6,
-          y: baseY + 3,
-          angle: baseAngle + 4,
-          duration: 80,
-          ease: 'Quad.easeInOut',
-          onComplete: () => {
-            this.tweens.add({
-              targets: target,
-              x: baseX,
-              y: baseY,
-              angle: baseAngle,
-              duration: 100,
-              ease: 'Back.easeOut',
-            });
-          },
-        });
-      },
-    });
-  }
-
-  /** 配置済みキャラを、横へすべらせてから元の位置へ戻します。 */
-  private applySlideMotion(target: Phaser.GameObjects.Image | Phaser.GameObjects.Container): void {
-    const baseX = target.x;
-    this.tweens.add({
-      targets: target,
-      x: baseX + 30,
-      duration: 130,
-      ease: 'Quad.easeOut',
-      onComplete: () => {
-        this.tweens.add({
-          targets: target,
-          x: baseX,
-          duration: 260,
-          ease: 'Cubic.easeOut',
-        });
-      },
-    });
-  }
-
   /** キャラの影を描きます。 */
   private drawCharacterShadow(x: number, y: number, width: number, height: number): void {
     const graphics = this.add.graphics().setDepth(3);
@@ -650,7 +564,7 @@ export class StoryPreviewScene extends Phaser.Scene {
   /** 次のページへ進み、最後なら作成画面へ戻ります。 */
   private advancePage(): void {
     if (this.pageIndex >= this.draft.pages.length - 1) {
-      this.returnToCreator();
+      this.returnToCreator(true);
       return;
     }
 
@@ -671,7 +585,7 @@ export class StoryPreviewScene extends Phaser.Scene {
   }
 
   /** 呼び出し元に合わせて、作成画面・一覧・ずかん・ステージ開始画面のどれかへ戻します。 */
-  private returnToCreator(): void {
+  private returnToCreator(completed = false): void {
     this.stopActiveStorySound();
     if (this.returnScene === 'list') {
       this.scene.start(SceneKeys.StoryList);
@@ -684,6 +598,14 @@ export class StoryPreviewScene extends Phaser.Scene {
     }
 
     if (this.returnScene === 'stageIntro') {
+      if (completed && this.stageIntroStoryReadData?.storyId) {
+        recordStageIntroStoryRead(this.stageIntroStoryReadData.storyId);
+      }
+      if (!completed && this.stageIntroStoryReadData?.required) {
+        this.scene.start(SceneKeys.StageSelect, { stageId: this.returnStageIntroData?.stageId });
+        return;
+      }
+
       this.scene.start(SceneKeys.StageIntro, this.returnStageIntroData);
       return;
     }
@@ -694,7 +616,7 @@ export class StoryPreviewScene extends Phaser.Scene {
     }
 
     this.scene.start(SceneKeys.StoryCreator, {
-      draft: this.cloneDraft(this.draft),
+      draft: cloneStoryCreatorDraft(this.draft),
       pageIndex: this.returnPageIndex,
       savedName: this.savedName,
     });
@@ -731,20 +653,5 @@ export class StoryPreviewScene extends Phaser.Scene {
   /** 現在ページを返します。 */
   private get currentPage() {
     return this.draft.pages[this.pageIndex] ?? this.draft.pages[0];
-  }
-
-  /** 下書きデータを画面間で安全に渡せるよう複製します。 */
-  private cloneDraft(draft: StoryCreatorDraft): StoryCreatorDraft {
-    return {
-      id: draft.id,
-      name: draft.name,
-      updatedAt: draft.updatedAt,
-      pages: draft.pages.map((page) => ({
-        text: page.text,
-        speaker: { ...(page.speaker ?? { kind: 'narration' }) },
-        placements: page.placements.map((placement) => cloneStoryCreatorPlacement(placement)),
-        soundEffectId: page.soundEffectId,
-      })),
-    };
   }
 }

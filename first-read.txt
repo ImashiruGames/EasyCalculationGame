@@ -61,7 +61,22 @@ first-read
 
 整理の方針
 
+- コード構造の整理内容と確認結果は docs/refactoring-report.md にあります。
+  出題は src/game/problem、問題表示は src/game/ui/problem、保存処理は src/state/save に分かれています。
+
 - ログや一時確認ファイルは tmp 側に寄せる方針でお願いします。
 tmpに作成した一時ファイルは、基本的に確認が終わった後、「前に使用した一時ファイルは削除する」ことを徹底してください。
 - src/data/stories
   エクスポートしたストーリーJSONを置く場所です。index.ts からJSON内の story.id で探して、ゲーム内の関数から呼び出せるようにします。
+- src/data/stageProblems
+  ステージごとの手作り方眼問題JSONを置く場所です。stageId と problemNo から問題を探せるようにします。
+- src/data/stageProblems/g2-kakezan-kangae
+  かけ算の考えステージでつかう、手作りほうがんもんだいJSONがあります。
+- 新しい機能や新しい出題ジャンルを実装したら、src/data/titleNotices.ts の先頭にお知らせを追加してください。
+  id は新しい値にすると、タイトル画面の NEW 表示に反映されます。
+- お知らせ一覧など、下へ増えるUIを作る時は、4件ずつのページ送りやスクロールを用意し、画面下で見切れないようにしてください。
+- 長さの7ステージは src/data/csv/stages.csv の g2-nagasa- で始まる行です。
+  出題は src/game/problem/measurementProblems.ts、表示は CaptureProblemView.ts にあります。
+- 新しいステージや既存ステージへの問題追加を知らせるときは、stages.csv の newContentVersion に新しい日付や版名を入れてください。
+  ジャンルとステージに new! が出て、ステージを開くとその端末では消えます。再度知らせるときは値を変えてください。
+  既読管理は src/state/stageNotices.ts です。CSVはUTF-8 BOM付きで保存してください。

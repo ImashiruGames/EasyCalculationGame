@@ -10,6 +10,7 @@ import {
   getTitleMonsterPlacements,
   loadSaveState,
 } from '../../../state/save';
+import { hasUnreadTitleNotice } from '../../../state/titleNotice';
 import { scheduleImageAssetWarmup } from '../../assets/assetWarmup';
 import { COLORS, FONT_FAMILY } from '../../constants';
 import {
@@ -27,6 +28,7 @@ import { startBgm } from '../../bgm';
 import { TitleBackgroundDefinition } from '../../../data/titleBackgrounds';
 import { drawTitleBackgroundArt } from '../../ui/title/titleBackground';
 import { createMonsterVisual } from '../../ui/creatures/monsterVisual';
+import { createButton } from '../../ui/common/button';
 
 export class TitleScene extends Phaser.Scene {
   private isProceeding = false;
@@ -65,10 +67,11 @@ export class TitleScene extends Phaser.Scene {
     drawTitleBackgroundArt(this, titleBackground);
     this.drawTitle(titleBackground);
     this.drawCharacters(saveState);
+    this.drawNoticeButton(titleBackground);
     this.drawTouchPrompt(titleBackground);
     this.warmLikelyNextAssets();
 
-    this.input.once('pointerdown', () => this.proceed());
+    this.input.on('pointerdown', this.handleTitlePointerDown, this);
     this.input.keyboard?.once('keydown-ENTER', () => this.proceed());
     this.input.keyboard?.once('keydown-SPACE', () => this.proceed());
   }
@@ -170,6 +173,63 @@ export class TitleScene extends Phaser.Scene {
     });
   }
 
+  /** Draws the title notice button and opens the notice screen. */
+  private drawNoticeButton(titleBackground: TitleBackgroundDefinition): void {
+    const noticeButton = createButton(this, {
+      x: 306,
+      y: 64,
+      width: 122,
+      height: 44,
+      label: 'おしらせ！',
+      fillColor: '#fff1a8',
+      strokeColor: titleBackground.accentColor,
+      textColor: COLORS.ink,
+      fontSize: 17,
+      onClick: () => this.openNotice(),
+    }).setDepth(60);
+
+    if (hasUnreadTitleNotice()) {
+      this.drawNewBadge(noticeButton.x + 42, noticeButton.y - 26, 52, 24);
+    }
+  }
+
+  /** Draws a small NEW label above a button. */
+  private drawNewBadge(x: number, y: number, width: number, height: number): void {
+    const graphics = this.add.graphics().setDepth(82);
+    graphics.fillStyle(Phaser.Display.Color.HexStringToColor('#ef5350').color, 1);
+    graphics.lineStyle(2, Phaser.Display.Color.HexStringToColor('#ffffff').color, 1);
+    graphics.fillRoundedRect(x - width / 2, y - height / 2, width, height, height / 2);
+    graphics.strokeRoundedRect(x - width / 2, y - height / 2, width, height, height / 2);
+
+    this.add
+      .text(x, y + 1, 'NEW', {
+        fontFamily: FONT_FAMILY,
+        fontSize: '13px',
+        fontStyle: '900',
+        color: '#ffffff',
+      })
+      .setOrigin(0.5)
+      .setDepth(83);
+  }
+
+  /** Opens the notice screen from the title screen. */
+  private openNotice(): void {
+    this.input.off('pointerdown', this.handleTitlePointerDown, this);
+    this.scene.start(SceneKeys.TitleNotice);
+  }
+
+  /** Starts only when the player taps outside title buttons. */
+  private handleTitlePointerDown(
+    _pointer: Phaser.Input.Pointer,
+    currentlyOver: Phaser.GameObjects.GameObject[] = [],
+  ): void {
+    if (currentlyOver.length > 0) {
+      return;
+    }
+
+    this.proceed();
+  }
+
   private warmLikelyNextAssets(): void {
     const earlyStages = stages.slice(0, 3);
     scheduleImageAssetWarmup(this, [
@@ -191,6 +251,7 @@ export class TitleScene extends Phaser.Scene {
     }
 
     this.isProceeding = true;
+    this.input.off('pointerdown', this.handleTitlePointerDown, this);
     if (SHOW_TITLE_SCREEN) {
       playButtonTapSound();
     }

@@ -11,66 +11,48 @@ import {
   loadSaveState,
   recordStageAverageAnswerTime,
 } from '../../../state/save';
-import { playButtonTapSound, playCaptureFeedback, playCorrectSound, playWrongAnswerSound } from '../../audio';
-import { COLORS, FONT_FAMILY, GAME_HEIGHT, GAME_WIDTH } from '../../constants';
-import { APP_LAYOUT } from '../../layoutConfig';
-import {
-  createProblemAvoiding,
-  formatSquareRootSquaredBase,
-  formatProblem,
-  formatProblemAnswer,
-  getProblemAnswerPairJudgement,
-  isClockMinuteConversionProblem,
-  isClockTimeProblem,
-  isDecimalProblem,
-  isFractionProblem,
-  isMissingDigitArithmeticProblem,
-  isProblemAnswerCorrect,
-  isShapeAreaProblem,
-  isSquareRootProblem,
-  isVerticalArithmeticProblem,
-  usesChoiceAnswer,
-  usesClockMinuteConversionPairAnswer,
-  usesMultiSelectChoiceAnswer,
-  usesOptionalSquareRootCoefficientInput,
-  usesSquareRootComparisonAnswer,
-  usesSquareRootDecimalValueAnswer,
-  usesSquareRootExpressionAnswer,
-  usesSquareRootFractionAnswer,
-  usesSquareRootPairAnswer,
-  usesSquareRootRationalizeAnswer,
-  usesSquareRootSimplifyAnswer,
-  usesTwoPartAnswer,
-  usesQuotientRemainderAnswer,
-} from '../../problem/mathProblems';
-import { SceneKeys } from '../../sceneKeys';
-import { getAnswerSpeedBonus } from '../../problem/speedBonus';
-import { CaptureSceneData, ConfigurableProblemRule, MathProblem, MonsterDefinition, SquareRootComparisonTerm, StageDefinition, StageId } from '../../types';
-import { createButton, createSmallButton } from '../../ui/common/button';
-import { showGameMenu } from '../../ui/common/gameMenu';
-import { createCaptureBall, getCaptureBallTexture } from '../../ui/capture/captureBall';
-import { createMonsterVisual } from '../../ui/creatures/monsterVisual';
-import { drawNumberKeypad, NumberKeypadLabel, resolveNumberKeyInput } from '../../ui/problem/numberKeypad';
-import { startStageBgm } from '../../bgm';
-import { getCaptureGaugeGain } from '../../captureGauge';
-import { showRankUpOverlayIfNeeded } from '../../ui/achievements/rankUpOverlay';
-import { drawCaptureReadabilityPanel, drawStageBackdrop } from '../../ui/stage/stageBackdrop';
 import { preloadMonsterEvolutionLineImageAssetsByIds } from '../../assets/monsterImageAssets';
 import { preloadStageBackgroundAsset } from '../../assets/stageBackgroundAssets';
+import { playButtonTapSound, playCaptureFeedback, playCorrectSound, playWrongAnswerSound } from '../../audio';
+import { startStageBgm } from '../../bgm';
+import { getCaptureGaugeGain } from '../../captureGauge';
+import { COLORS, FONT_FAMILY, GAME_HEIGHT, GAME_WIDTH } from '../../constants';
+import { APP_LAYOUT } from '../../layoutConfig';
+import { getCaptureAnswerDecimalPlaces, getCaptureAnswerMaxDigits, usesPlaceValueAnswer } from '../../problem/answerInput';
+import { ChoiceAnswerGenerator, type ChoiceAnswerOption } from '../../problem/choiceAnswers';
+import {
+  createProblemAvoiding,
+  formatProblemAnswer,
+  getProblemAnswerPairJudgement,
+  isGridExpressionProblem,
+  isProblemAnswerCorrect,
+  usesChoiceAnswer,
+  usesMultiSelectChoiceAnswer,
+  usesOptionalSquareRootCoefficientInput,
+  usesTwoPartAnswer,
+} from '../../problem/mathProblems';
+import { getAnswerSpeedBonus } from '../../problem/speedBonus';
+import { SceneKeys } from '../../sceneKeys';
+import {
+  CaptureSceneData,
+  MathProblem,
+  MonsterDefinition,
+  StageDefinition,
+  StageId,
+} from '../../types';
+import { showRankUpOverlayIfNeeded } from '../../ui/achievements/rankUpOverlay';
+import { createCaptureBall, getCaptureBallTexture } from '../../ui/capture/captureBall';
+import { createButton, createSmallButton } from '../../ui/common/button';
+import { showGameMenu } from '../../ui/common/gameMenu';
+import { createMonsterVisual } from '../../ui/creatures/monsterVisual';
+import { CaptureProblemView, type CaptureAnswerDisplayState } from '../../ui/problem/CaptureProblemView';
+import { getChoiceCardLayout } from '../../ui/problem/choiceCardLayout';
+import { drawNumberKeypad, NumberKeypadLabel, resolveNumberKeyInput } from '../../ui/problem/numberKeypad';
+import { drawCaptureReadabilityPanel, drawStageBackdrop } from '../../ui/stage/stageBackdrop';
 
 const CAPTURE_LAYOUT = APP_LAYOUT.captureGame;
 type RareEncounterIntro = 'none' | 'rare' | 'superRare';
 type DivisionAnswerPart = 'quotient' | 'remainder';
-interface ChoiceAnswerOption {
-  id: string;
-  label: string;
-  value: number;
-  isCorrect: boolean;
-}
-interface ChoiceExpression {
-  label: string;
-  value: number;
-}
 interface ChoiceAnswerCard {
   option: ChoiceAnswerOption;
   container: Phaser.GameObjects.Container;
@@ -78,47 +60,9 @@ interface ChoiceAnswerCard {
   width: number;
   height: number;
 }
-interface AnswerSlotBounds {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-}
-type RootEquationPart =
-  | {
-      kind: 'text';
-      width: number;
-      text: Phaser.GameObjects.Text;
-    }
-  | {
-      kind: 'slot';
-      width: number;
-    }
-  | {
-      kind: 'radical';
-      width: number;
-      contentWidth: number;
-      text: Phaser.GameObjects.Text | null;
-      hasSlot: boolean;
-    };
-type FractionEquationPart =
-  | {
-      kind: 'fraction';
-      width: number;
-      slot: 'numerator' | 'denominator' | null;
-      numeratorText: Phaser.GameObjects.Text | null;
-      denominatorText: Phaser.GameObjects.Text | null;
-    }
-  | {
-      kind: 'text';
-      width: number;
-      text: Phaser.GameObjects.Text;
-    };
-
-const FORMULA_HORIZONTAL_MARGIN = 16;
-const ROOT_RADICAL_CONTENT_OFFSET = 30;
 
 export class CaptureGameScene extends Phaser.Scene {
+  private problemView: CaptureProblemView;
   private stageId: StageId = 'g1-tashizan-hazimarinosougen';
   private monsterId = 'picoleaf';
   private stage!: StageDefinition;
@@ -129,13 +73,6 @@ export class CaptureGameScene extends Phaser.Scene {
   private activeDivisionAnswerPart: DivisionAnswerPart = 'quotient';
   private progress = 0;
   private isBusy = false;
-  private equationContainer!: Phaser.GameObjects.Container;
-  private answerBox!: Phaser.GameObjects.Graphics;
-  private activeAnswerBox!: Phaser.GameObjects.Graphics;
-  private answerText!: Phaser.GameObjects.Text;
-  private remainderAnswerText?: Phaser.GameObjects.Text;
-  private quotientAnswerBounds: AnswerSlotBounds | null = null;
-  private remainderAnswerBounds: AnswerSlotBounds | null = null;
   private feedbackText!: Phaser.GameObjects.Text;
   private progressFill!: Phaser.GameObjects.Rectangle;
   private progressBall!: Phaser.GameObjects.Image;
@@ -152,9 +89,11 @@ export class CaptureGameScene extends Phaser.Scene {
   private hasStageBackground = false;
   private rareEncounterIntro: RareEncounterIntro = 'none';
   private choiceControlsContainer!: Phaser.GameObjects.Container;
+  private keypadContainer?: Phaser.GameObjects.Container;
   private choiceOptions: ChoiceAnswerOption[] = [];
   private selectedChoiceIds = new Set<string>();
   private choiceCards: ChoiceAnswerCard[] = [];
+  private gridProblemFocusLayer?: Phaser.GameObjects.Container;
 
   /** Phaserにこの画面のSceneキーを渡して、捕獲ゲーム画面として登録します。 */
   constructor() {
@@ -170,9 +109,6 @@ export class CaptureGameScene extends Phaser.Scene {
     this.answerInput = '';
     this.remainderAnswerInput = '';
     this.activeDivisionAnswerPart = 'quotient';
-    this.remainderAnswerText = undefined;
-    this.quotientAnswerBounds = null;
-    this.remainderAnswerBounds = null;
     this.progress = 0;
     this.isBusy = true;
     this.progressTween = undefined;
@@ -185,6 +121,7 @@ export class CaptureGameScene extends Phaser.Scene {
     this.choiceOptions = [];
     this.selectedChoiceIds.clear();
     this.choiceCards = [];
+    this.keypadContainer = undefined;
   }
 
   /** 背景やモンスター画像など、この捕獲画面で使う素材を事前に読み込みます。 */
@@ -204,9 +141,6 @@ export class CaptureGameScene extends Phaser.Scene {
     this.drawHeader();
     this.drawMonsterArea();
     this.drawProblemArea();
-    if (!this.stageUsesChoiceControls()) {
-      this.drawKeypad();
-    }
     this.startEncounterIntro();
   }
 
@@ -391,21 +325,9 @@ export class CaptureGameScene extends Phaser.Scene {
     graphics.fillPath();
   }
 
-  /** 式、答え欄、フィードバック文の表示先を用意します。 */
+  /** Creates the question view and scene-owned feedback and choice controls. */
   private drawProblemArea(): void {
-    this.answerBox = this.add.graphics();
-    this.activeAnswerBox = this.add.graphics();
-    this.equationContainer = this.add.container(0, 0);
-
-    this.answerText = this.add
-      .text(CAPTURE_LAYOUT.answerText.x, CAPTURE_LAYOUT.answerText.y, '', {
-        fontFamily: FONT_FAMILY,
-        fontSize: '34px',
-        fontStyle: '900',
-        color: COLORS.ink,
-        align: 'center',
-      })
-      .setOrigin(0.5);
+    this.problemView = new CaptureProblemView(this, this.stage.accentColor);
 
     this.feedbackText = this.add
       .text(CAPTURE_LAYOUT.feedbackText.x, CAPTURE_LAYOUT.feedbackText.y, '', {
@@ -415,7 +337,7 @@ export class CaptureGameScene extends Phaser.Scene {
         color: COLORS.grassDark,
         align: 'center',
         lineSpacing: 4,
-        wordWrap: { width: 330, useAdvancedWrap: true },
+        wordWrap: { width: CAPTURE_LAYOUT.regions.feedback.width, useAdvancedWrap: true },
       })
       .setOrigin(0.5);
     this.choiceControlsContainer = this.add.container(0, 0);
@@ -423,7 +345,8 @@ export class CaptureGameScene extends Phaser.Scene {
 
   /** ステージ内容に合わせて小数点つき/なしのテンキーを作ります。 */
   private drawKeypad(): void {
-    drawNumberKeypad(this, {
+    this.keypadContainer?.destroy(true);
+    this.keypadContainer = drawNumberKeypad(this, {
       ...CAPTURE_LAYOUT.keypad,
       allowDecimalPoint: this.stageUsesDecimalKeypad(),
       onKey: (label) => this.handleKey(label),
@@ -447,26 +370,6 @@ export class CaptureGameScene extends Phaser.Scene {
     return rule.kind === 'decimal' || (rule.kind === 'squareRoot' && rule.rootMode === 'decimalValue');
   }
 
-  /** ステージ内に選択式ルールがあるかを見て、テンキーの代わりに選択カードを使うか決めます。 */
-  private stageUsesChoiceControls(): boolean {
-    const problemRule = this.stage.problemRule;
-    if (typeof problemRule === 'string') {
-      return false;
-    }
-
-    return Array.isArray(problemRule)
-      ? problemRule.some((rule) => this.problemRuleUsesChoiceControls(rule))
-      : this.problemRuleUsesChoiceControls(problemRule);
-  }
-
-  /** 問題ルールのanswerModeが選択カード用かを判定します。 */
-  private problemRuleUsesChoiceControls(rule: ConfigurableProblemRule): boolean {
-    return rule.answerMode === 'choiceGrid'
-      || rule.answerMode === 'choiceRow'
-      || rule.answerMode === 'choiceColumn'
-      || rule.answerMode === 'multiSelect';
-  }
-
   /** 選択式問題用のカードと、選んでから答えるためのボタンを描画します。 */
   private renderChoiceControls(): void {
     this.clearChoiceControls();
@@ -474,22 +377,22 @@ export class CaptureGameScene extends Phaser.Scene {
       return;
     }
 
-    this.choiceOptions = this.createChoiceOptionsForProblem();
-    const layout = this.getChoiceCardLayout();
+    this.choiceOptions = new ChoiceAnswerGenerator(this.problem, getCaptureAnswerDecimalPlaces(this.problem), Phaser.Utils.Array.Shuffle).createOptions();
+    const layout = getChoiceCardLayout(this, this.choiceOptions.map((option) => option.label), this.problem.answerMode);
     this.choiceOptions.forEach((option, index) => {
       const position = layout.positions[index];
       if (!position) {
         return;
       }
 
-      const card = this.createChoiceCard(option, position.x, position.y, layout.width, layout.height);
+      const card = this.createChoiceCard(option, position.x, position.y, layout.width, layout.height, layout.fontSize);
       this.choiceCards.push(card);
     });
 
     if (usesMultiSelectChoiceAnswer(this.problem)) {
       const clearButton = createButton(this, {
         x: 126,
-        y: 674,
+        y: CAPTURE_LAYOUT.regions.choiceActions.y + CAPTURE_LAYOUT.regions.choiceActions.height / 2,
         width: 118,
         height: 56,
         label: 'けす',
@@ -502,7 +405,7 @@ export class CaptureGameScene extends Phaser.Scene {
 
     const submitButton = createButton(this, {
       x: usesMultiSelectChoiceAnswer(this.problem) ? 264 : GAME_WIDTH / 2,
-      y: 674,
+      y: CAPTURE_LAYOUT.regions.choiceActions.y + CAPTURE_LAYOUT.regions.choiceActions.height / 2,
       width: usesMultiSelectChoiceAnswer(this.problem) ? 132 : 172,
       height: 56,
       label: 'こたえる',
@@ -511,46 +414,6 @@ export class CaptureGameScene extends Phaser.Scene {
       onClick: () => this.submitChoiceAnswer(),
     });
     this.choiceControlsContainer.add(submitButton);
-  }
-
-  /** 選択式カードの表示位置を、2×2・横1列・縦4枚の指定に合わせて返します。 */
-  private getChoiceCardLayout(): { width: number; height: number; positions: Array<{ x: number; y: number }> } {
-    if (this.problem.answerMode === 'choiceRow') {
-      return {
-        width: 78,
-        height: 66,
-        positions: [
-          { x: 54, y: 512 },
-          { x: 148, y: 512 },
-          { x: 242, y: 512 },
-          { x: 336, y: 512 },
-        ],
-      };
-    }
-
-    if (this.problem.answerMode === 'choiceColumn') {
-      return {
-        width: 286,
-        height: 52,
-        positions: [
-          { x: GAME_WIDTH / 2, y: 412 },
-          { x: GAME_WIDTH / 2, y: 472 },
-          { x: GAME_WIDTH / 2, y: 532 },
-          { x: GAME_WIDTH / 2, y: 592 },
-        ],
-      };
-    }
-
-    return {
-      width: 138,
-      height: 66,
-      positions: [
-        { x: 118, y: 456 },
-        { x: 272, y: 456 },
-        { x: 118, y: 536 },
-        { x: 272, y: 536 },
-      ],
-    };
   }
 
   /** 選択式カードや決定ボタンを消し、次の問題用に描き直せる状態へ戻します。 */
@@ -566,17 +429,19 @@ export class CaptureGameScene extends Phaser.Scene {
     y: number,
     width: number,
     height: number,
+    fontSize: number,
   ): ChoiceAnswerCard {
     const container = this.add.container(x, y);
     const background = this.add.graphics();
     const label = this.add
       .text(0, 0, option.label, {
         fontFamily: FONT_FAMILY,
-        fontSize: `${this.getChoiceCardFontSize(option.label, width)}px`,
+        fontSize: `${fontSize}px`,
         fontStyle: '900',
         color: COLORS.ink,
         align: 'center',
-        wordWrap: { width: width - 18, useAdvancedWrap: true },
+        lineSpacing: 2,
+        wordWrap: { width: width - 24, useAdvancedWrap: true },
       })
       .setOrigin(0.5);
     const hitZone = this.add
@@ -593,15 +458,6 @@ export class CaptureGameScene extends Phaser.Scene {
     this.choiceControlsContainer.add(container);
     this.redrawChoiceCard(card);
     return card;
-  }
-
-  /** カード幅と文字数に合わせて、選択肢ラベルの読みやすい文字サイズを返します。 */
-  private getChoiceCardFontSize(label: string, width: number): number {
-    if (width >= 220) {
-      return label.length >= 9 ? 24 : 28;
-    }
-
-    return label.length >= 5 ? 22 : 28;
   }
 
   /** 選択中かどうかに合わせて、カードの色と枠線を描き直します。 */
@@ -655,231 +511,6 @@ export class CaptureGameScene extends Phaser.Scene {
     this.updateAnswerText();
   }
 
-  /** 今のanswerModeに合わせて、数字カード・式カード・全て選べカードを作り分けます。 */
-  private createChoiceOptionsForProblem(): ChoiceAnswerOption[] {
-    if (usesMultiSelectChoiceAnswer(this.problem)) {
-      return this.createMultiSelectChoiceOptions();
-    }
-
-    if (this.problem.answerMode === 'choiceColumn') {
-      return this.createExpressionSingleChoiceOptions();
-    }
-
-    return this.createSingleChoiceOptions();
-  }
-
-  /** 4択用に、正解1つと近い数字の不正解3つを候補へ整えます。 */
-  private createSingleChoiceOptions(): ChoiceAnswerOption[] {
-    const values = this.shuffleItems(this.createNumericChoiceValues(this.problem.answer, 4));
-    return values.map((value, index) => ({
-      id: `choice-${index}`,
-      label: this.formatChoiceValue(value),
-      value,
-      isCorrect: isProblemAnswerCorrect(this.problem, value),
-    }));
-  }
-
-  /** 式を選ぶ4択用に、同じ答えになる式1つと違う答えの式3つを候補へ整えます。 */
-  private createExpressionSingleChoiceOptions(): ChoiceAnswerOption[] {
-    const target = Math.max(0, Math.trunc(this.problem.answer));
-    const usedLabels = new Set<string>();
-    const correctExpression = this.pickExpressionChoicesForValue(target, 1, usedLabels)[0]
-      ?? { label: `${target}+0`, value: target };
-    const wrongExpressions = this.pickWrongExpressionChoices(target, 3, usedLabels);
-    const expressions = this.shuffleItems([
-      { ...correctExpression, isCorrect: true },
-      ...wrongExpressions.map((expression) => ({ ...expression, isCorrect: false })),
-    ]).slice(0, 4);
-
-    return expressions.map((expression, index) => ({
-      id: `choice-${index}`,
-      label: expression.label,
-      value: expression.value,
-      isCorrect: expression.isCorrect,
-    }));
-  }
-
-  /** 全て選べ用に、同じ答えになる式2つと違う答えの式2つを候補へ整えます。 */
-  private createMultiSelectChoiceOptions(): ChoiceAnswerOption[] {
-    const target = Math.max(0, Math.trunc(this.problem.answer));
-    const usedLabels = new Set<string>();
-    const correctExpressions = this.pickExpressionChoicesForValue(target, 2, usedLabels);
-    const wrongExpressions: ChoiceExpression[] = [];
-    const wrongValues = this.createNumericChoiceValues(target, 10)
-      .map((value) => Math.trunc(value))
-      .filter((value) => value !== target);
-
-    wrongValues.forEach((value) => {
-      if (wrongExpressions.length >= 2) {
-        return;
-      }
-
-      const [expression] = this.pickExpressionChoicesForValue(value, 1, usedLabels);
-      if (expression) {
-        wrongExpressions.push(expression);
-      }
-    });
-
-    const expressions = this.shuffleItems([
-      ...correctExpressions.map((expression) => ({ ...expression, isCorrect: true })),
-      ...wrongExpressions.map((expression) => ({ ...expression, isCorrect: false })),
-    ]).slice(0, 4);
-
-    return expressions.map((expression, index) => ({
-      id: `choice-${index}`,
-      label: expression.label,
-      value: expression.value,
-      isCorrect: expression.isCorrect,
-    }));
-  }
-
-  /** 式選択の不正解用に、近い答えと大きめの答えを混ぜながら式候補を集めます。 */
-  private pickWrongExpressionChoices(target: number, count: number, usedLabels: Set<string>): ChoiceExpression[] {
-    const wrongExpressions: ChoiceExpression[] = [];
-    const wrongValues = this.createExpressionWrongValues(target);
-
-    wrongValues.forEach((value) => {
-      if (wrongExpressions.length >= count) {
-        return;
-      }
-
-      const [expression] = this.pickExpressionChoicesForValue(value, 1, usedLabels);
-      if (expression) {
-        wrongExpressions.push(expression);
-      }
-    });
-
-    for (let value = 0; wrongExpressions.length < count && value <= 99; value += 1) {
-      if (value === target) {
-        continue;
-      }
-
-      const [expression] = this.pickExpressionChoicesForValue(value, 1, usedLabels);
-      if (expression) {
-        wrongExpressions.push(expression);
-      }
-    }
-
-    return wrongExpressions;
-  }
-
-  /** 式カードの不正解に使う答え値を、同じ値を避けながら順に作ります。 */
-  private createExpressionWrongValues(target: number): number[] {
-    const values: number[] = [];
-    const addValue = (value: number) => {
-      const roundedValue = Math.max(0, Math.trunc(value));
-      if (roundedValue === target || values.includes(roundedValue)) {
-        return;
-      }
-
-      values.push(roundedValue);
-    };
-
-    [
-      target + 4,
-      target + 7,
-      target + 34,
-      target + 10,
-      target + 20,
-      target * 2 + 1,
-      Math.max(0, target - 1),
-    ].forEach(addValue);
-    this.createNumericChoiceValues(target, 12).forEach(addValue);
-
-    return values;
-  }
-
-  /** 答えの近くにある数字を、重複しない選択肢として必要数だけ作ります。 */
-  private createNumericChoiceValues(answer: number, count: number): number[] {
-    const values = [this.roundChoiceValue(answer)];
-    const step = this.getChoiceValueStep();
-
-    for (let distance = 1; values.length < count && distance < 40; distance += 1) {
-      this.addUniqueChoiceValue(values, answer + step * distance);
-      this.addUniqueChoiceValue(values, answer - step * distance);
-    }
-
-    return values.slice(0, count);
-  }
-
-  /** 小数問題でも表示が崩れないよう、候補値を答えの小数けたに丸めます。 */
-  private roundChoiceValue(value: number): number {
-    const decimalPlaces = this.getAnswerDecimalPlaces();
-    const scale = 10 ** decimalPlaces;
-    return Math.round(value * scale) / scale;
-  }
-
-  /** 選択肢を1ずつずらすか、小数の最小単位でずらすかを返します。 */
-  private getChoiceValueStep(): number {
-    const decimalPlaces = this.getAnswerDecimalPlaces();
-    return decimalPlaces > 0 ? 1 / (10 ** decimalPlaces) : 1;
-  }
-
-  /** 数字候補の表示が同じにならない場合だけ、候補配列へ追加します。 */
-  private addUniqueChoiceValue(values: number[], value: number): void {
-    const roundedValue = this.roundChoiceValue(value);
-    if (roundedValue < 0) {
-      return;
-    }
-
-    const label = this.formatChoiceValue(roundedValue);
-    if (values.some((current) => this.formatChoiceValue(current) === label)) {
-      return;
-    }
-
-    values.push(roundedValue);
-  }
-
-  /** 数字候補を、整数または小数けたつきの文字として表示用に整えます。 */
-  private formatChoiceValue(value: number): string {
-    const decimalPlaces = this.getAnswerDecimalPlaces();
-    if (decimalPlaces > 0) {
-      return value.toFixed(decimalPlaces);
-    }
-
-    return String(value);
-  }
-
-  /** 指定した答えになる一けたのたし算・ひき算式を、重複を避けて必要数だけ選びます。 */
-  private pickExpressionChoicesForValue(value: number, count: number, usedLabels: Set<string>): ChoiceExpression[] {
-    const candidates = this.shuffleItems(this.createExpressionCandidatesForValue(value));
-    const picked: ChoiceExpression[] = [];
-
-    candidates.forEach((candidate) => {
-      if (picked.length >= count || usedLabels.has(candidate.label)) {
-        return;
-      }
-
-      usedLabels.add(candidate.label);
-      picked.push(candidate);
-    });
-
-    return picked;
-  }
-
-  /** 一けたと十のまとまりを使い、指定した答えになる式候補をすべて作ります。 */
-  private createExpressionCandidatesForValue(value: number): ChoiceExpression[] {
-    const candidates: ChoiceExpression[] = [];
-    const operands = [...Array.from({ length: 10 }, (_, index) => index), 10, 20, 30, 40, 50, 60, 70, 80, 90];
-    operands.forEach((left) => {
-      operands.forEach((right) => {
-        if (left + right === value && (value === 0 || (left > 0 && right > 0))) {
-          candidates.push({ label: `${left}+${right}`, value });
-        }
-        if (left >= right && left - right === value && (value === 0 || right > 0)) {
-          candidates.push({ label: `${left}-${right}`, value });
-        }
-      });
-    });
-
-    return candidates;
-  }
-
-  /** 配列の順番をランダムに入れ替え、元配列は変えずに返します。 */
-  private shuffleItems<T>(items: T[]): T[] {
-    return Phaser.Utils.Array.Shuffle([...items]);
-  }
-
   /** 選択済みカードを実体の配列として返します。 */
   private getSelectedChoiceOptions(): ChoiceAnswerOption[] {
     return this.choiceOptions.filter((option) => this.selectedChoiceIds.has(option.id));
@@ -930,7 +561,7 @@ export class CaptureGameScene extends Phaser.Scene {
     }
 
     this.feedbackText.setColor(COLORS.red);
-    this.feedbackText.setText(`こたえは ${this.getChoiceCorrectAnswerLabel()}`);
+    this.setFeedbackMessage(`こたえは ${this.getChoiceCorrectAnswerLabel()}`);
     playWrongAnswerSound();
     this.time.delayedCall(1500, () => this.showNextProblem());
   }
@@ -950,11 +581,12 @@ export class CaptureGameScene extends Phaser.Scene {
       return;
     }
 
-    const answerDecimalPlaces = this.getAnswerDecimalPlaces();
-    const maxDigits = this.getSingleAnswerMaxDigits(answerDecimalPlaces);
+    const answerDecimalPlaces = getCaptureAnswerDecimalPlaces(this.problem);
+    const maxDigits = getCaptureAnswerMaxDigits(this.problem, answerDecimalPlaces);
     const result = resolveNumberKeyInput(label, this.answerInput, maxDigits, {
       allowDecimalPoint: answerDecimalPlaces > 0,
       decimalPlaces: answerDecimalPlaces,
+      onesFirst: usesPlaceValueAnswer(this.problem),
     });
     if (result.type === 'submit') {
       this.submitAnswer();
@@ -979,7 +611,8 @@ export class CaptureGameScene extends Phaser.Scene {
     const currentInput = this.activeDivisionAnswerPart === 'quotient'
       ? this.answerInput
       : this.remainderAnswerInput;
-    const result = resolveNumberKeyInput(label, currentInput, 2);
+    const maxDigits = this.problem.answerMode === 'measurementPair' && this.activeDivisionAnswerPart === 'remainder' ? 1 : 2;
+    const result = resolveNumberKeyInput(label, currentInput, maxDigits);
     if (result.type === 'submit') {
       const canSkipCoefficient = this.answerInput.length === 0
         && usesOptionalSquareRootCoefficientInput(this.problem);
@@ -1001,48 +634,6 @@ export class CaptureGameScene extends Phaser.Scene {
       }
       this.updateAnswerText();
     }
-  }
-
-  /** 今の問題で、小数入力が必要な場合の答えの小数けた数を返します。 */
-  private getAnswerDecimalPlaces(): number {
-    if (usesSquareRootDecimalValueAnswer(this.problem)) {
-      return this.problem.resultDecimalPlaces ?? 3;
-    }
-
-    if (!isDecimalProblem(this.problem)) {
-      return 0;
-    }
-
-    if (this.problem.answerSlot === 'left') {
-      return this.problem.leftDecimalPlaces ?? 0;
-    }
-    if (this.problem.answerSlot === 'right') {
-      return this.problem.rightDecimalPlaces ?? 0;
-    }
-
-    return this.problem.resultDecimalPlaces ?? 0;
-  }
-
-  /** Returns how many typed characters the current single answer needs. */
-  private getSingleAnswerMaxDigits(answerDecimalPlaces = 0): number {
-    if (answerDecimalPlaces > 0) {
-      return 5 + answerDecimalPlaces;
-    }
-
-    if (isMissingDigitArithmeticProblem(this.problem)) {
-      return 1;
-    }
-
-    if (
-      isClockTimeProblem(this.problem)
-      && this.problem.answerSlot === 'result'
-      && this.problem.right !== 0
-    ) {
-      return 4;
-    }
-
-    const wholeNumberAnswer = Math.abs(Math.trunc(this.problem.answer));
-    return Phaser.Math.Clamp(String(wholeNumberAnswer).length, 2, 4);
   }
 
   /** 今の問題が二つの入力欄を使う形式かどうかを判定します。 */
@@ -1296,7 +887,7 @@ export class CaptureGameScene extends Phaser.Scene {
     }
 
     this.feedbackText.setColor(COLORS.red);
-    this.feedbackText.setText(`こたえは ${formatProblemAnswer(this.problem)}`);
+    this.setFeedbackMessage(`こたえは ${formatProblemAnswer(this.problem)}`);
     playWrongAnswerSound();
     this.time.delayedCall(1500, () => this.showNextProblem());
   }
@@ -1326,7 +917,7 @@ export class CaptureGameScene extends Phaser.Scene {
     }
 
     this.feedbackText.setColor(judgement === 'partial' ? COLORS.fire : COLORS.red);
-    this.feedbackText.setText(`${judgement === 'partial' ? '△ ' : ''}こたえは ${formatProblemAnswer(this.problem)}`);
+    this.setFeedbackMessage(`${judgement === 'partial' ? '△ ' : ''}こたえは ${formatProblemAnswer(this.problem)}`);
     playWrongAnswerSound();
     this.time.delayedCall(1500, () => this.showNextProblem());
   }
@@ -1343,9 +934,20 @@ export class CaptureGameScene extends Phaser.Scene {
     this.feedbackText.setText('');
     this.showCorrectMark();
     this.updateProgressBar(true);
+    this.showGridExpressionCorrectFocus();
 
     if (this.progress >= this.monster.goalGauge) {
+      if (isGridExpressionProblem(this.problem)) {
+        this.time.delayedCall(560, () => this.fadeOutGridExpressionCorrectFocus(() => this.showThrowOverlay()));
+        return;
+      }
+
       this.time.delayedCall(450, () => this.showThrowOverlay());
+      return;
+    }
+
+    if (isGridExpressionProblem(this.problem)) {
+      this.time.delayedCall(560, () => this.fadeOutGridExpressionCorrectFocus(() => this.showNextProblem()));
       return;
     }
 
@@ -1359,23 +961,53 @@ export class CaptureGameScene extends Phaser.Scene {
       return;
     }
 
-    const markX = this.remainderAnswerText
-      ? (this.answerText.x + this.remainderAnswerText.x) / 2
-      : this.answerText.x;
-    const markY = this.answerText.y;
+    if (isGridExpressionProblem(this.problem)) {
+      this.showGridExpressionCorrectMark();
+      return;
+    }
+
+    const target = this.problemView.getCorrectMarkTarget();
+    const markX = target.x;
+    const markY = target.y;
     const mark = this.add.container(markX, markY);
     const graphics = this.add.graphics();
     const markColor = Phaser.Display.Color.HexStringToColor(COLORS.grassDark).color;
-    const targetWidth = this.remainderAnswerText
-      ? Math.abs(this.remainderAnswerText.x - this.answerText.x) + 58
-      : Math.max(this.answerText.width, this.answerText.height);
-    const radius = Math.max(40, Math.min(96, targetWidth / 2 + 30));
+    const radius = Math.max(40, Math.min(96, target.width / 2 + 30));
+    const region = CAPTURE_LAYOUT.regions.question;
+    const verticalRadius = Math.max(12, Math.min(radius, markY - region.y - 6, region.y + region.height - markY - 6));
 
     graphics.lineStyle(7, markColor, 0.92);
-    graphics.strokeCircle(0, 0, radius);
+    graphics.strokeEllipse(0, 0, radius * 2, verticalRadius * 2);
     mark.add(graphics);
     mark.setScale(0.72);
-    this.equationContainer.add(mark);
+    this.problemView.equationContainer.add(mark);
+    this.tweens.add({
+      targets: mark,
+      scale: 1,
+      alpha: { from: 0.45, to: 1 },
+      duration: 180,
+      ease: 'Back.easeOut',
+    });
+  }
+
+  /** Draws the correct mark around the answer text inside a grid problem card. */
+  private showGridExpressionCorrectMark(): void {
+    if (!this.problemView.gridProblemAnswerText) {
+      return;
+    }
+
+    const mark = this.add.container(this.problemView.gridProblemAnswerText.x, this.problemView.gridProblemAnswerText.y);
+    const graphics = this.add.graphics();
+    const markColor = Phaser.Display.Color.HexStringToColor(COLORS.grassDark).color;
+    const radius = Math.max(44, Math.min(92, Math.max(this.problemView.gridProblemAnswerText.width, this.problemView.gridProblemAnswerText.height) / 2 + 24));
+    const region = CAPTURE_LAYOUT.regions.gridQuestion;
+    const verticalRadius = Math.min(radius, region.y + region.height - mark.y - 6);
+
+    graphics.lineStyle(7, markColor, 0.92);
+    graphics.strokeEllipse(0, 0, radius * 2, verticalRadius * 2);
+    mark.add(graphics);
+    mark.setScale(0.72);
+    this.problemView.gridProblemLayer?.add(mark);
     this.tweens.add({
       targets: mark,
       scale: 1,
@@ -1413,10 +1045,33 @@ export class CaptureGameScene extends Phaser.Scene {
     this.selectedChoiceIds.clear();
     this.isBusy = false;
     this.renderProblem();
-    this.renderChoiceControls();
+    this.renderAnswerControls();
     this.feedbackText.setText('');
     this.updateAnswerText();
     this.problemStartedAt = this.time.now;
+  }
+
+  /** Switches answer controls per question while reusing an unchanged number keypad. */
+  private renderAnswerControls(): void {
+    if (usesChoiceAnswer(this.problem)) {
+      this.keypadContainer?.destroy(true);
+      this.keypadContainer = undefined;
+    } else if (!this.keypadContainer) {
+      this.drawKeypad();
+    }
+    this.renderChoiceControls();
+  }
+
+  /** Fits complete feedback into its reserved region without clipping or ellipsis. */
+  private setFeedbackMessage(message: string): void {
+    const region = CAPTURE_LAYOUT.regions.feedback;
+    this.feedbackText.setText(message).setFontSize(22).setWordWrapWidth(region.width, true);
+    for (let size = 21; size >= 18 && this.feedbackText.height > region.height; size -= 1) {
+      this.feedbackText.setFontSize(size);
+    }
+    if (import.meta.env.DEV && this.feedbackText.height > region.height) {
+      console.warn('Capture feedback exceeds its reserved region:', message);
+    }
   }
 
   /** 問題を解く速さとゲージボール効果を合わせて、正解時に増える捕獲ゲージ量を決めます。 */
@@ -1455,1685 +1110,171 @@ export class CaptureGameScene extends Phaser.Scene {
     return this.gaugeBallAvailable || this.gaugeBallActive ? 'gauge' : 'normal';
   }
 
-  /** 問題の種類を見て、専用の式レイアウト描画関数へ振り分けます。 */
+  /** Draws the next question after removing the capture focus effect. */
   private renderProblem(): void {
-    if (this.problem.answerMode === 'choiceColumn') {
-      this.renderChoiceColumnProblem();
-      return;
-    }
-
-    if (usesMultiSelectChoiceAnswer(this.problem)) {
-      this.renderMultiSelectProblem();
-      return;
-    }
-
-    if (usesQuotientRemainderAnswer(this.problem)) {
-      this.renderDivisionRemainderProblem();
-      return;
-    }
-
-    if (isSquareRootProblem(this.problem)) {
-      this.renderSquareRootProblem();
-      return;
-    }
-
-    if (isClockMinuteConversionProblem(this.problem)) {
-      this.renderClockMinuteConversionProblem();
-      return;
-    }
-
-    this.clearRemainderAnswerText();
-
-    if (isClockTimeProblem(this.problem)) {
-      this.renderClockProblem();
-      return;
-    }
-
-    if (isShapeAreaProblem(this.problem)) {
-      this.renderShapeAreaProblem();
-      return;
-    }
-
-    if (isVerticalArithmeticProblem(this.problem)) {
-      this.renderVerticalArithmeticProblem();
-      return;
-    }
-
-    if (isMissingDigitArithmeticProblem(this.problem)) {
-      this.renderTextFormulaProblem();
-      return;
-    }
-
-    if (isFractionProblem(this.problem)) {
-      this.renderFractionProblem();
-      return;
-    }
-
-    this.renderIntegerProblem();
+    this.clearGridProblemFocusLayer();
+    this.problemView.render(this.problem, this.getAnswerDisplayState());
   }
 
-  /** 縦に並ぶ式カードから、指定した答えになるものを1つ選ぶ問題文を表示します。 */
-  private renderChoiceColumnProblem(): void {
-    const equationY = CAPTURE_LAYOUT.problemFormula.y - 4;
-    const prompt = this.add
-      .text(GAME_WIDTH / 2, equationY, `こたえが ${this.formatChoiceValue(this.problem.answer)}\nになるものはどれ？`, {
+  /** Removes the temporary monster focus layer used after a grid problem answer. */
+  private clearGridProblemFocusLayer(): void {
+    if (this.gridProblemFocusLayer) {
+      this.tweens.killTweensOf(this.gridProblemFocusLayer);
+    }
+    this.gridProblemFocusLayer?.destroy(true);
+    this.gridProblemFocusLayer = undefined;
+  }
+
+  /** Shows the monster and capture gauge above a faded grid problem after a correct answer. */
+  private showGridExpressionCorrectFocus(): void {
+    if (!isGridExpressionProblem(this.problem)) {
+      return;
+    }
+
+    this.clearGridProblemFocusLayer();
+    if (this.problemView.gridProblemLayer) {
+      this.tweens.killTweensOf(this.problemView.gridProblemLayer);
+      this.tweens.add({
+        targets: this.problemView.gridProblemLayer,
+        alpha: 0.32,
+        duration: 180,
+        ease: 'Sine.easeOut',
+      });
+    }
+
+    const layer = this.add.container(0, 0).setDepth(12);
+    layer.setAlpha(0);
+    this.gridProblemFocusLayer = layer;
+
+    const panel = this.add.graphics();
+    const monsterPanel = CAPTURE_LAYOUT.monsterPanel;
+    const fillColor = this.hasStageBackground ? COLORS.panel : this.monster.palette.background;
+    panel.fillStyle(Phaser.Display.Color.HexStringToColor(fillColor).color, 0.98);
+    panel.lineStyle(4, Phaser.Display.Color.HexStringToColor(this.stage.accentColor).color, 0.95);
+    panel.fillRoundedRect(
+      monsterPanel.x,
+      monsterPanel.y,
+      monsterPanel.width,
+      monsterPanel.height,
+      monsterPanel.radius,
+    );
+    panel.strokeRoundedRect(
+      monsterPanel.x,
+      monsterPanel.y,
+      monsterPanel.width,
+      monsterPanel.height,
+      monsterPanel.radius,
+    );
+
+    const monsterVisual = createMonsterVisual(
+      this,
+      this.monster,
+      this.monsterCenter.x,
+      this.monsterCenter.y,
+      CAPTURE_LAYOUT.monsterSize,
+    );
+
+    const nameText = this.add
+      .text(CAPTURE_LAYOUT.monsterName.x, CAPTURE_LAYOUT.monsterName.y, this.monster.name, {
         fontFamily: FONT_FAMILY,
-        fontSize: '29px',
+        fontSize: '18px',
         fontStyle: '900',
         color: COLORS.ink,
-        align: 'center',
-        lineSpacing: 8,
       })
-      .setOrigin(0.5);
-
-    this.clearRemainderAnswerText();
-    this.equationContainer.removeAll(true);
-    this.answerBox.clear();
-    this.activeAnswerBox.clear();
-    this.answerText.setText('');
-    this.equationContainer.add(prompt);
-  }
-
-  /** 全て選べ問題の条件文を表示し、答え欄を使わない見た目に切り替えます。 */
-  private renderMultiSelectProblem(): void {
-    const equationY = CAPTURE_LAYOUT.problemFormula.y;
-    const prompt = this.add
-      .text(GAME_WIDTH / 2, equationY, `こたえが ${this.formatChoiceValue(this.problem.answer)}\nぜんぶえらぶ`, {
-        fontFamily: FONT_FAMILY,
-        fontSize: '30px',
-        fontStyle: '900',
-        color: COLORS.ink,
-        align: 'center',
-        lineSpacing: 8,
-      })
-      .setOrigin(0.5);
-
-    this.clearRemainderAnswerText();
-    this.equationContainer.removeAll(true);
-    this.answerBox.clear();
-    this.activeAnswerBox.clear();
-    this.answerText.setText('');
-    this.equationContainer.add(prompt);
-  }
-
-  /** あまりつき割り算を横一列に組み、商とあまりの二つの入力欄を置きます。 */
-  private renderDivisionRemainderProblem(): void {
-    if (!usesQuotientRemainderAnswer(this.problem)) {
-      return;
-    }
-
-    const equationY = CAPTURE_LAYOUT.problemFormula.y;
-    const slotWidth = 58;
-    const slotHeight = 64;
-    const textStyle = {
-      fontFamily: FONT_FAMILY,
-      fontSize: '32px',
-      fontStyle: '900',
-      color: COLORS.ink,
-    };
-    const parts = [
-      String(this.problem.left),
-      ' ÷ ',
-      String(this.problem.right),
-      ' = ',
-      null,
-      ' あまり ',
-      null,
-    ];
-
-    this.equationContainer.removeAll(true);
-    this.answerBox.clear();
-    this.activeAnswerBox.clear();
-    this.quotientAnswerBounds = null;
-    this.remainderAnswerBounds = null;
-    this.answerText.setFontSize(30);
-    this.ensureRemainderAnswerText();
-    this.remainderAnswerText?.setFontSize(30);
-
-    const visibleParts = parts.map((part) => {
-      if (part === null) {
-        return { kind: 'slot' as const, width: slotWidth };
-      }
-
-      const text = this.add.text(0, equationY, part, textStyle).setOrigin(0, 0.5);
-      this.equationContainer.add(text);
-      return { kind: 'text' as const, width: text.width, text };
-    });
-    const totalWidth = visibleParts.reduce((sum, part) => sum + part.width, 0);
-    const scale = this.getFormulaFitScale(totalWidth);
-    const fittedSlotWidth = slotWidth * scale;
-    const fittedSlotHeight = slotHeight * scale;
-    const fittedTotalWidth = totalWidth * scale;
-    const fittedAnswerFontSize = this.getFittedFontSize(30, scale, 20);
-    this.answerText.setFontSize(fittedAnswerFontSize);
-    this.remainderAnswerText?.setFontSize(fittedAnswerFontSize);
-    let cursorX = this.getFormulaStartX(fittedTotalWidth);
-    let slotIndex = 0;
-
-    visibleParts.forEach((part) => {
-      if (part.kind === 'slot') {
-        this.drawAnswerBox(cursorX, equationY, fittedSlotWidth, fittedSlotHeight);
-        const bounds = { x: cursorX, y: equationY, width: fittedSlotWidth, height: fittedSlotHeight };
-        if (slotIndex === 0) {
-          this.quotientAnswerBounds = bounds;
-          this.answerText.setPosition(cursorX + fittedSlotWidth / 2, equationY);
-        } else {
-          this.remainderAnswerBounds = bounds;
-          this.remainderAnswerText?.setPosition(cursorX + fittedSlotWidth / 2, equationY);
-        }
-        slotIndex += 1;
-        cursorX += fittedSlotWidth;
-        return;
-      }
-
-      part.text.setScale(scale);
-      part.text.setX(cursorX);
-      cursorX += part.width * scale;
-    });
-
-    this.updateAnswerText();
-  }
-
-  /** 計算式が画面端に触れないよう、左右余白を引いた最大幅を返します。 */
-  private getFormulaMaxWidth(): number {
-    return GAME_WIDTH - FORMULA_HORIZONTAL_MARGIN * 2;
-  }
-
-  /** 式の合計幅が長いときだけ、全体を収める縮小率を計算します。 */
-  private getFormulaFitScale(totalWidth: number): number {
-    if (totalWidth <= 0) {
-      return 1;
-    }
-
-    return Math.min(1, this.getFormulaMaxWidth() / totalWidth);
-  }
-
-  /** 縮小後の式を中央寄せしつつ、左余白より左へ出ない開始位置を返します。 */
-  private getFormulaStartX(totalWidth: number): number {
-    return Math.max(FORMULA_HORIZONTAL_MARGIN, (GAME_WIDTH - totalWidth) / 2);
-  }
-
-  /** 縮小率に合わせて入力文字も小さくし、読みづらくなりすぎない下限を守ります。 */
-  private getFittedFontSize(baseFontSize: number, scale: number, minFontSize: number): number {
-    return Math.max(minFontSize, Math.floor(baseFontSize * scale));
-  }
-
-  /** √問題を部品ごとに組み、必要なら式全体を縮小して一行に収めます。 */
-  private renderSquareRootProblem(): void {
-    if (!isSquareRootProblem(this.problem)) {
-      return;
-    }
-    if (usesSquareRootComparisonAnswer(this.problem)) {
-      this.renderSquareRootComparisonProblem();
-      return;
-    }
-    if (usesSquareRootFractionAnswer(this.problem)) {
-      this.renderSquareRootFractionProblem();
-      return;
-    }
-    if (usesSquareRootRationalizeAnswer(this.problem)) {
-      this.renderSquareRootRationalizeProblem();
-      return;
-    }
-
-    const equationY = CAPTURE_LAYOUT.problemFormula.y;
-    const slotWidth = usesSquareRootDecimalValueAnswer(this.problem) ? 104 : 58;
-    const slotHeight = 64;
-    const textStyle = {
-      fontFamily: FONT_FAMILY,
-      fontSize: usesSquareRootDecimalValueAnswer(this.problem) ? '26px' : '30px',
-      fontStyle: '900',
-      color: COLORS.ink,
-    };
-    const lineGraphics = this.add.graphics();
-    let parts: RootEquationPart[];
-    if (usesSquareRootPairAnswer(this.problem)) {
-      parts = [
-        this.createRootInlineText(`${this.problem.left}の平方根=`, equationY, textStyle),
-        { kind: 'slot', width: slotWidth },
-        this.createRootInlineText('と-', equationY, textStyle),
-        { kind: 'slot', width: slotWidth },
-      ];
-    } else if (usesSquareRootExpressionAnswer(this.problem)) {
-      parts = [
-        ...this.createRootTermParts(this.problem.left, this.problem.rootLeftRadicand, equationY, slotWidth, textStyle),
-        this.createRootInlineText(this.problem.operator, equationY, textStyle),
-        ...this.createRootTermParts(this.problem.right, this.problem.rootRightRadicand, equationY, slotWidth, textStyle),
-        this.createRootInlineText('=', equationY, textStyle),
-        { kind: 'slot', width: slotWidth },
-        this.createRootRadicalPart(null, true, equationY, slotWidth, textStyle),
-      ];
-    } else if (usesSquareRootSimplifyAnswer(this.problem)) {
-      parts = [
-        this.createRootRadicalPart(String(this.problem.left), false, equationY, slotWidth, textStyle),
-        this.createRootInlineText('=', equationY, textStyle),
-        { kind: 'slot', width: slotWidth },
-        this.createRootRadicalPart(null, true, equationY, slotWidth, textStyle),
-      ];
-    } else if (usesSquareRootDecimalValueAnswer(this.problem)) {
-      parts = [
-        this.createRootInlineText(`小数点下${this.getAnswerDecimalPlaces()}けたまで `, equationY, textStyle),
-        this.createRootRadicalPart(String(this.problem.left), false, equationY, slotWidth, textStyle),
-        this.createRootInlineText('=', equationY, textStyle),
-        { kind: 'slot', width: slotWidth },
-      ];
-    } else if (this.problem.rootMode === 'absoluteSquare') {
-      parts = [
-        this.createRootRadicalPart(formatSquareRootSquaredBase(this.problem.left), false, equationY, slotWidth, textStyle),
-        this.createRootInlineText('=', equationY, textStyle),
-        { kind: 'slot', width: slotWidth },
-      ];
-    } else {
-      parts = [
-        this.createRootRadicalPart(String(this.problem.left), false, equationY, slotWidth, textStyle),
-        this.createRootInlineText('=', equationY, textStyle),
-        { kind: 'slot', width: slotWidth },
-      ];
-    }
-
-    this.equationContainer.removeAll(true);
-    this.answerBox.clear();
-    this.activeAnswerBox.clear();
-    this.quotientAnswerBounds = null;
-    this.remainderAnswerBounds = null;
-    this.answerText.setFontSize(30);
-    if (usesTwoPartAnswer(this.problem)) {
-      this.ensureRemainderAnswerText();
-      this.remainderAnswerText?.setFontSize(30);
-    } else {
-      this.clearRemainderAnswerText();
-    }
-    this.equationContainer.add(lineGraphics);
-
-    parts.forEach((part) => {
-      if (part.kind === 'text') {
-        this.equationContainer.add(part.text);
-      }
-      if (part.kind === 'radical' && part.text) {
-        this.equationContainer.add(part.text);
-      }
-    });
-
-    const totalWidth = parts.reduce((sum, part) => sum + part.width, 0);
-    const scale = this.getFormulaFitScale(totalWidth);
-    const fittedSlotWidth = slotWidth * scale;
-    const fittedSlotHeight = slotHeight * scale;
-    const fittedAnswerFontSize = this.getFittedFontSize(30, scale, 20);
-    const fittedTotalWidth = totalWidth * scale;
-    let cursorX = this.getFormulaStartX(fittedTotalWidth);
-    let slotIndex = 0;
-
-    this.answerText.setFontSize(fittedAnswerFontSize);
-    this.remainderAnswerText?.setFontSize(fittedAnswerFontSize);
-    lineGraphics.lineStyle(Math.max(2, 4 * scale), Phaser.Display.Color.HexStringToColor(COLORS.ink).color, 1);
-    parts.forEach((part) => {
-      if (part.kind === 'text') {
-        part.text.setScale(scale);
-        part.text.setX(cursorX);
-        cursorX += part.width * scale;
-        return;
-      }
-
-      if (part.kind === 'radical') {
-        const fittedPartWidth = part.width * scale;
-        const fittedContentWidth = part.contentWidth * scale;
-        this.drawRadical(lineGraphics, cursorX, equationY, fittedPartWidth, fittedContentWidth, scale);
-        const contentX = cursorX + ROOT_RADICAL_CONTENT_OFFSET * scale;
-        if (part.hasSlot) {
-          this.drawAnswerBox(contentX, equationY, fittedSlotWidth, fittedSlotHeight);
-          this.placeTwoPartAnswerSlot(slotIndex, contentX, equationY, fittedSlotWidth, fittedSlotHeight);
-          slotIndex += 1;
-        } else {
-          part.text?.setScale(scale);
-          part.text?.setPosition(contentX + fittedContentWidth / 2, equationY + 3 * scale);
-        }
-        cursorX += fittedPartWidth;
-        return;
-      }
-
-      this.drawAnswerBox(cursorX, equationY, fittedSlotWidth, fittedSlotHeight);
-      this.placeTwoPartAnswerSlot(slotIndex, cursorX, equationY, fittedSlotWidth, fittedSlotHeight);
-      slotIndex += 1;
-      cursorX += part.width * scale;
-    });
-
-    this.updateAnswerText();
-  }
-
-  /** √の中に分数がある問題を、分数の縦書きレイアウトで描きます。 */
-  private renderSquareRootFractionProblem(): void {
-    if (!usesSquareRootFractionAnswer(this.problem)) {
-      return;
-    }
-
-    const equationY = CAPTURE_LAYOUT.problemFormula.y;
-    const numeratorY = equationY - 24;
-    const lineY = equationY + 1;
-    const denominatorY = equationY + 28;
-    const slotWidth = 58;
-    const slotHeight = 42;
-    const fractionPadding = 8;
-    const fractionStyle = {
-      fontFamily: FONT_FAMILY,
-      fontSize: '30px',
-      fontStyle: '900',
-      color: COLORS.ink,
-      align: 'center',
-    };
-    const operatorStyle = {
-      fontFamily: FONT_FAMILY,
-      fontSize: '34px',
-      fontStyle: '900',
-      color: COLORS.ink,
-    };
-
-    this.equationContainer.removeAll(true);
-    this.answerBox.clear();
-    this.activeAnswerBox.clear();
-    this.quotientAnswerBounds = null;
-    this.remainderAnswerBounds = null;
-    this.answerText.setFontSize(30);
-    this.ensureRemainderAnswerText();
-    this.remainderAnswerText?.setFontSize(30);
-
-    const lineGraphics = this.add.graphics();
-    this.equationContainer.add(lineGraphics);
-    const radicandFraction = this.createFractionEquationPart(
-      this.problem.left,
-      this.problem.right,
-      null,
-      numeratorY,
-      denominatorY,
-      slotWidth,
-      fractionPadding,
-      fractionStyle,
-    );
-    const equalsPart = this.createFractionInlineText(' = ', equationY, operatorStyle);
-    const answerFractionWidth = slotWidth + fractionPadding * 2;
-    const radicalContentWidth = radicandFraction.width;
-    const radicalWidth = 34 + radicalContentWidth + 8;
-    const totalWidth = radicalWidth + equalsPart.width + answerFractionWidth;
-    const scale = this.getFormulaFitScale(totalWidth);
-    const fittedSlotWidth = slotWidth * scale;
-    const fittedSlotHeight = slotHeight * scale;
-    const fittedAnswerFontSize = this.getFittedFontSize(30, scale, 20);
-    const fittedTotalWidth = totalWidth * scale;
-    let cursorX = this.getFormulaStartX(fittedTotalWidth);
-
-    this.answerText.setFontSize(fittedAnswerFontSize);
-    this.remainderAnswerText?.setFontSize(fittedAnswerFontSize);
-    lineGraphics.lineStyle(Math.max(2, 3 * scale), Phaser.Display.Color.HexStringToColor(COLORS.ink).color, 1);
-
-    const radicalX = cursorX;
-    const fittedRadicalWidth = radicalWidth * scale;
-    const fittedRadicalContentWidth = radicalContentWidth * scale;
-    this.drawRadical(lineGraphics, radicalX, equationY - 12 * scale, fittedRadicalWidth, fittedRadicalContentWidth, scale);
-    const radicandX = radicalX + ROOT_RADICAL_CONTENT_OFFSET * scale;
-    this.placeFractionPart(
-      radicandFraction,
-      radicandX,
-      numeratorY,
-      lineY,
-      denominatorY,
-      fractionPadding,
-      scale,
-      lineGraphics,
-    );
-    cursorX += fittedRadicalWidth;
-
-    equalsPart.text.setScale(scale);
-    equalsPart.text.setX(cursorX);
-    cursorX += equalsPart.width * scale;
-
-    this.placeSquareRootFractionAnswer(
-      cursorX,
-      numeratorY,
-      lineY,
-      denominatorY,
-      answerFractionWidth,
-      fittedSlotWidth,
-      fittedSlotHeight,
-      fractionPadding,
-      scale,
-      lineGraphics,
-    );
-    this.updateAnswerText();
-  }
-
-  /** 分母の√をなくす問題を、元の分数と答えの分数を並べて描きます。 */
-  private renderSquareRootRationalizeProblem(): void {
-    if (!usesSquareRootRationalizeAnswer(this.problem)) {
-      return;
-    }
-
-    const equationY = CAPTURE_LAYOUT.problemFormula.y;
-    const numeratorY = equationY - 34;
-    const lineY = equationY - 2;
-    const denominatorY = equationY + 36;
-    const slotWidth = 58;
-    const slotHeight = 42;
-    const fractionPadding = 8;
-    const fractionStyle = {
-      fontFamily: FONT_FAMILY,
-      fontSize: '30px',
-      fontStyle: '900',
-      color: COLORS.ink,
-      align: 'center',
-    };
-    const operatorStyle = {
-      fontFamily: FONT_FAMILY,
-      fontSize: '34px',
-      fontStyle: '900',
-      color: COLORS.ink,
-    };
-
-    this.equationContainer.removeAll(true);
-    this.answerBox.clear();
-    this.activeAnswerBox.clear();
-    this.quotientAnswerBounds = null;
-    this.remainderAnswerBounds = null;
-    this.answerText.setFontSize(30);
-    this.ensureRemainderAnswerText();
-    this.remainderAnswerText?.setFontSize(30);
-
-    const lineGraphics = this.add.graphics();
-    this.equationContainer.add(lineGraphics);
-    const sourceNumerator = this.add.text(0, numeratorY, String(this.problem.left), fractionStyle).setOrigin(0.5);
-    const sourceDenominatorRoot = this.createRootRadicalPart(String(this.problem.right), false, denominatorY, slotWidth, fractionStyle);
-    const equalsPart = this.createFractionInlineText(' = ', equationY, operatorStyle);
-    const answerNumeratorRoot = this.createRootRadicalPart(String(this.problem.right), false, numeratorY, slotWidth, fractionStyle);
-    const sourceFractionWidth = Math.max(sourceNumerator.width, sourceDenominatorRoot.width) + fractionPadding * 2;
-    const answerFractionWidth = slotWidth + answerNumeratorRoot.width + fractionPadding * 2 + 4;
-    const totalWidth = sourceFractionWidth + equalsPart.width + answerFractionWidth;
-    const scale = this.getFormulaFitScale(totalWidth);
-    const fittedSlotWidth = slotWidth * scale;
-    const fittedSlotHeight = slotHeight * scale;
-    const fittedAnswerFontSize = this.getFittedFontSize(30, scale, 20);
-    const fittedTotalWidth = totalWidth * scale;
-    let cursorX = this.getFormulaStartX(fittedTotalWidth);
-
-    this.answerText.setFontSize(fittedAnswerFontSize);
-    this.remainderAnswerText?.setFontSize(fittedAnswerFontSize);
-    lineGraphics.lineStyle(Math.max(2, 3 * scale), Phaser.Display.Color.HexStringToColor(COLORS.ink).color, 1);
-    this.equationContainer.add([
-      sourceNumerator,
-      equalsPart.text,
-      ...(sourceDenominatorRoot.text ? [sourceDenominatorRoot.text] : []),
-      ...(answerNumeratorRoot.text ? [answerNumeratorRoot.text] : []),
-    ]);
-
-    this.placeRationalizeSourceFraction(
-      cursorX,
-      sourceFractionWidth,
-      sourceNumerator,
-      sourceDenominatorRoot,
-      numeratorY,
-      lineY,
-      denominatorY,
-      fractionPadding,
-      scale,
-      lineGraphics,
-    );
-    cursorX += sourceFractionWidth * scale;
-
-    equalsPart.text.setScale(scale);
-    equalsPart.text.setX(cursorX);
-    cursorX += equalsPart.width * scale;
-
-    this.placeRationalizeAnswerFraction(
-      cursorX,
-      answerFractionWidth,
-      answerNumeratorRoot,
-      numeratorY,
-      lineY,
-      denominatorY,
-      fittedSlotWidth,
-      fittedSlotHeight,
-      fractionPadding,
-      scale,
-      lineGraphics,
-    );
-    this.updateAnswerText();
-  }
-
-  /** 有理化問題の左側にある、元のa/√bの分数を配置します。 */
-  private placeRationalizeSourceFraction(
-    x: number,
-    fractionWidth: number,
-    numeratorText: Phaser.GameObjects.Text,
-    denominatorRoot: Extract<RootEquationPart, { kind: 'radical' }>,
-    numeratorY: number,
-    lineY: number,
-    denominatorY: number,
-    padding: number,
-    scale: number,
-    graphics: Phaser.GameObjects.Graphics,
-  ): void {
-    const fittedFractionWidth = fractionWidth * scale;
-    const centerX = x + fittedFractionWidth / 2;
-    const denominatorRootX = centerX - denominatorRoot.width * scale / 2;
-    const denominatorContentX = denominatorRootX + ROOT_RADICAL_CONTENT_OFFSET * scale;
-
-    numeratorText.setScale(scale);
-    numeratorText.setPosition(centerX, numeratorY);
-    graphics.lineBetween(x + padding * scale, lineY, x + fittedFractionWidth - padding * scale, lineY);
-    this.drawRadical(
-      graphics,
-      denominatorRootX,
-      denominatorY,
-      denominatorRoot.width * scale,
-      denominatorRoot.contentWidth * scale,
-      scale,
-    );
-    denominatorRoot.text?.setScale(scale);
-    denominatorRoot.text?.setPosition(
-      denominatorContentX + denominatorRoot.contentWidth * scale / 2,
-      denominatorY + 3 * scale,
-    );
-  }
-
-  /** 有理化問題の右側にある、□√b/□の答え分数を配置します。 */
-  private placeRationalizeAnswerFraction(
-    x: number,
-    fractionWidth: number,
-    numeratorRoot: Extract<RootEquationPart, { kind: 'radical' }>,
-    numeratorY: number,
-    lineY: number,
-    denominatorY: number,
-    slotWidth: number,
-    slotHeight: number,
-    padding: number,
-    scale: number,
-    graphics: Phaser.GameObjects.Graphics,
-  ): void {
-    const fittedFractionWidth = fractionWidth * scale;
-    const numeratorX = x + padding * scale;
-    const rootX = numeratorX + slotWidth + 4 * scale;
-    const rootContentX = rootX + ROOT_RADICAL_CONTENT_OFFSET * scale;
-    const denominatorX = x + fittedFractionWidth / 2 - slotWidth / 2;
-
-    graphics.lineBetween(x + padding * scale, lineY, x + fittedFractionWidth - padding * scale, lineY);
-    this.drawAnswerBox(numeratorX, numeratorY, slotWidth, slotHeight);
-    this.placeTwoPartAnswerSlot(0, numeratorX, numeratorY, slotWidth, slotHeight);
-    this.drawRadical(
-      graphics,
-      rootX,
-      numeratorY,
-      numeratorRoot.width * scale,
-      numeratorRoot.contentWidth * scale,
-      scale,
-    );
-    numeratorRoot.text?.setScale(scale);
-    numeratorRoot.text?.setPosition(rootContentX + numeratorRoot.contentWidth * scale / 2, numeratorY + 3 * scale);
-    this.drawAnswerBox(denominatorX, denominatorY, slotWidth, slotHeight);
-    this.placeTwoPartAnswerSlot(1, denominatorX, denominatorY, slotWidth, slotHeight);
-  }
-
-  /** 分数部品を指定位置へ置き、分数線を描きます。 */
-  private placeFractionPart(
-    part: Extract<FractionEquationPart, { kind: 'fraction' }>,
-    x: number,
-    numeratorY: number,
-    lineY: number,
-    denominatorY: number,
-    padding: number,
-    scale: number,
-    graphics: Phaser.GameObjects.Graphics,
-  ): void {
-    const fittedPartWidth = part.width * scale;
-    const centerX = x + fittedPartWidth / 2;
-    part.numeratorText?.setScale(scale);
-    part.denominatorText?.setScale(scale);
-    part.numeratorText?.setPosition(centerX, numeratorY);
-    part.denominatorText?.setPosition(centerX, denominatorY);
-    graphics.lineBetween(
-      x + padding * scale,
-      lineY,
-      x + fittedPartWidth - padding * scale,
-      lineY,
-    );
-  }
-
-  /** √分数問題の答え欄を、分子と分母の二段の入力欄として置きます。 */
-  private placeSquareRootFractionAnswer(
-    x: number,
-    numeratorY: number,
-    lineY: number,
-    denominatorY: number,
-    fractionWidth: number,
-    slotWidth: number,
-    slotHeight: number,
-    padding: number,
-    scale: number,
-    graphics: Phaser.GameObjects.Graphics,
-  ): void {
-    const fittedFractionWidth = fractionWidth * scale;
-    const centerX = x + fittedFractionWidth / 2;
-    const numeratorX = centerX - slotWidth / 2;
-    const denominatorX = centerX - slotWidth / 2;
-    graphics.lineBetween(
-      x + padding * scale,
-      lineY,
-      x + fittedFractionWidth - padding * scale,
-      lineY,
-    );
-    this.drawAnswerBox(numeratorX, numeratorY, slotWidth, slotHeight);
-    this.drawAnswerBox(denominatorX, denominatorY, slotWidth, slotHeight);
-    this.quotientAnswerBounds = { x: numeratorX, y: numeratorY, width: slotWidth, height: slotHeight };
-    this.remainderAnswerBounds = { x: denominatorX, y: denominatorY, width: slotWidth, height: slotHeight };
-    this.answerText.setPosition(centerX, numeratorY);
-    this.remainderAnswerText?.setPosition(centerX, denominatorY);
-  }
-
-  /** √を含む数の大小問題を、番号選択で答えられるように描きます。 */
-  private renderSquareRootComparisonProblem(): void {
-    if (!usesSquareRootComparisonAnswer(this.problem)) {
-      return;
-    }
-
-    const equationY = CAPTURE_LAYOUT.problemFormula.y;
-    const slotWidth = CAPTURE_LAYOUT.problemFormula.slotWidth;
-    const slotHeight = CAPTURE_LAYOUT.problemFormula.slotHeight;
-    const prompt = this.add
-      .text(GAME_WIDTH / 2, equationY - 58, '大きいほうのばんごう', {
-        fontFamily: FONT_FAMILY,
-        fontSize: '24px',
-        fontStyle: '900',
-        color: COLORS.muted,
-      })
-      .setOrigin(0.5);
-    const optionText = this.add
-      .text(
-        0,
-        equationY,
-        this.problem.rootComparisonTerms
-          .map((term, index) => `(${index + 1}) ${this.formatSquareRootComparisonTerm(term)}`)
-          .join('   '),
-        {
-          fontFamily: FONT_FAMILY,
-          fontSize: '30px',
-          fontStyle: '900',
-          color: COLORS.ink,
-        },
-      )
       .setOrigin(0, 0.5);
-    const optionScale = this.getFormulaFitScale(optionText.width);
-    const fittedOptionWidth = optionText.width * optionScale;
-    const answerY = equationY + 72;
 
-    this.equationContainer.removeAll(true);
-    this.answerBox.clear();
-    this.activeAnswerBox.clear();
-    this.clearRemainderAnswerText();
-    this.answerText.setFontSize(34);
-    this.equationContainer.add([prompt, optionText]);
-    optionText.setScale(optionScale);
-    optionText.setX(this.getFormulaStartX(fittedOptionWidth));
-    this.drawAnswerBox(GAME_WIDTH / 2 - slotWidth / 2, answerY, slotWidth, slotHeight);
-    this.answerText.setPosition(GAME_WIDTH / 2, answerY);
-    this.updateAnswerText();
-  }
-
-  /** 大小比較の項を、√やマイナスつきで表示する文字列にします。 */
-  private formatSquareRootComparisonTerm(term: SquareRootComparisonTerm): string {
-    const sign = term.sign < 0 ? '-' : '';
-    return term.kind === 'root' ? `${sign}√${term.value}` : `${sign}${term.value}`;
-  }
-
-  /** √の式の中で、そのまま表示する文字部品を作ります。 */
-  private createRootInlineText(
-    text: string,
-    y: number,
-    style: Phaser.Types.GameObjects.Text.TextStyle,
-  ): RootEquationPart {
-    const textObject = this.add.text(0, y, text, style).setOrigin(0, 0.5);
-    return { kind: 'text', width: textObject.width, text: textObject };
-  }
-
-  /** 係数と√の中身を、横に並べられる式部品の配列へ分けます。 */
-  private createRootTermParts(
-    coefficient: number,
-    radicand: number,
-    y: number,
-    slotWidth: number,
-    style: Phaser.Types.GameObjects.Text.TextStyle,
-  ): RootEquationPart[] {
-    const parts: RootEquationPart[] = [];
-    if (coefficient !== 1) {
-      parts.push(this.createRootInlineText(String(coefficient), y, style));
-    }
-    parts.push(this.createRootRadicalPart(String(radicand), false, y, slotWidth, style));
-    return parts;
-  }
-
-  /** √記号つきの部品を作り、文字表示か入力欄かに応じて必要な幅を決めます。 */
-  private createRootRadicalPart(
-    value: string | null,
-    hasSlot: boolean,
-    y: number,
-    slotWidth: number,
-    style: Phaser.Types.GameObjects.Text.TextStyle,
-  ): Extract<RootEquationPart, { kind: 'radical' }> {
-    const text = value === null
-      ? null
-      : this.add.text(0, y, value, style).setOrigin(0.5);
-    const contentWidth = hasSlot ? slotWidth : Math.max(28, text?.width ?? 0);
-    return {
-      kind: 'radical',
-      width: 34 + contentWidth + 8,
-      contentWidth,
-      text,
-      hasSlot,
-    };
-  }
-
-  /** √記号を線で描きます。全体幅と縮小率に合わせて線の位置も調整します。 */
-  private drawRadical(
-    graphics: Phaser.GameObjects.Graphics,
-    x: number,
-    y: number,
-    width: number,
-    contentWidth: number,
-    scale = 1,
-  ): void {
-    const left = x + 2 * scale;
-    const midY = y + 8 * scale;
-    const bottomY = y + 24 * scale;
-    const topY = y - 30 * scale;
-    const turnX = x + 11 * scale;
-    const bottomX = x + 17 * scale;
-    const topX = x + ROOT_RADICAL_CONTENT_OFFSET * scale;
-    const endX = x + 34 * scale + contentWidth + 4 * scale;
-
-    graphics.lineBetween(left, midY, turnX, midY);
-    graphics.lineBetween(turnX, midY, bottomX, bottomY);
-    graphics.lineBetween(bottomX, bottomY, topX, topY);
-    graphics.lineBetween(topX, topY, Math.min(endX, x + width - 2), topY);
-  }
-
-  /** 二枠回答の入力位置を保存し、対応する答えテキストを欄の中央に置きます。 */
-  private placeTwoPartAnswerSlot(
-    slotIndex: number,
-    x: number,
-    y: number,
-    width: number,
-    height: number,
-  ): void {
-    const bounds = { x, y, width, height };
-    if (slotIndex === 0) {
-      this.quotientAnswerBounds = bounds;
-      this.answerText.setPosition(x + width / 2, y);
-      return;
-    }
-
-    this.remainderAnswerBounds = bounds;
-    this.remainderAnswerText?.setPosition(x + width / 2, y);
-  }
-
-  /** 分を時間と分に直す問題を描き、単独入力と二枠入力の両方を配置します。 */
-  private renderClockMinuteConversionProblem(): void {
-    if (!isClockMinuteConversionProblem(this.problem)) {
-      return;
-    }
-
-    const equationY = CAPTURE_LAYOUT.problemFormula.y;
-    const usesPairAnswer = usesClockMinuteConversionPairAnswer(this.problem);
-    const slotWidth = usesPairAnswer ? 58 : 72;
-    const slotHeight = CAPTURE_LAYOUT.problemFormula.slotHeight;
-    const textStyle = {
-      fontFamily: FONT_FAMILY,
-      fontSize: usesPairAnswer ? '30px' : '34px',
-      fontStyle: '900',
-      color: COLORS.ink,
-    };
-    const parts = usesPairAnswer
-      ? [
-          String(this.problem.left),
-          '分 = ',
-          null,
-          '時間',
-          null,
-          '分',
-        ]
-      : [
-          String(this.problem.left),
-          '分 = ',
-          this.problem.answerSlot === 'right' ? null : String(this.problem.right),
-          '時間',
-          this.problem.answerSlot === 'result' ? null : String(this.problem.result),
-          '分',
-        ];
-
-    this.equationContainer.removeAll(true);
-    this.answerBox.clear();
-    this.activeAnswerBox.clear();
-    this.quotientAnswerBounds = null;
-    this.remainderAnswerBounds = null;
-    this.answerText.setFontSize(usesPairAnswer ? 30 : 34);
-    if (usesPairAnswer) {
-      this.ensureRemainderAnswerText();
-      this.remainderAnswerText?.setFontSize(30);
-    } else {
-      this.clearRemainderAnswerText();
-    }
-
-    const visibleParts = parts.map((part) => {
-      if (part === null) {
-        return { kind: 'slot' as const, width: slotWidth };
-      }
-
-      const text = this.add.text(0, equationY, part, textStyle).setOrigin(0, 0.5);
-      this.equationContainer.add(text);
-      return { kind: 'text' as const, width: text.width, text };
-    });
-    const totalWidth = visibleParts.reduce((sum, part) => sum + part.width, 0);
-    const scale = this.getFormulaFitScale(totalWidth);
-    const fittedSlotWidth = slotWidth * scale;
-    const fittedSlotHeight = slotHeight * scale;
-    const fittedTotalWidth = totalWidth * scale;
-    const fittedAnswerFontSize = this.getFittedFontSize(usesPairAnswer ? 30 : 34, scale, 20);
-    this.answerText.setFontSize(fittedAnswerFontSize);
-    this.remainderAnswerText?.setFontSize(fittedAnswerFontSize);
-    let cursorX = this.getFormulaStartX(fittedTotalWidth);
-    let slotIndex = 0;
-
-    visibleParts.forEach((part) => {
-      if (part.kind === 'slot') {
-        this.drawAnswerBox(cursorX, equationY, fittedSlotWidth, fittedSlotHeight);
-        if (usesPairAnswer) {
-          this.placeTwoPartAnswerSlot(slotIndex, cursorX, equationY, fittedSlotWidth, fittedSlotHeight);
-          slotIndex += 1;
-        } else {
-          this.answerText.setPosition(cursorX + fittedSlotWidth / 2, equationY);
-        }
-        cursorX += fittedSlotWidth;
-        return;
-      }
-
-      part.text.setScale(scale);
-      part.text.setX(cursorX);
-      cursorX += part.width * scale;
-    });
-
-    this.updateAnswerText();
-  }
-
-  /** Draws a rectangle with side labels so area problems are read visually, not just as text. */
-  private renderShapeAreaProblem(): void {
-    if (!isShapeAreaProblem(this.problem)) {
-      return;
-    }
-
-    const equationY = CAPTURE_LAYOUT.problemFormula.y;
-    const answerDigits = this.getSingleAnswerMaxDigits();
-    const slotWidth = answerDigits >= 3 ? 94 : 66;
-    const slotHeight = 50;
-    const answerY = equationY + 86;
-    const heightLabel = this.problem.answerSlot === 'left' ? '□' : String(this.problem.left);
-    const widthLabel = this.problem.answerSlot === 'right' ? '□' : String(this.problem.right);
-    const areaLabel = this.problem.answerSlot === 'result' ? '□' : String(this.problem.result);
-
-    this.equationContainer.removeAll(true);
-    this.answerBox.clear();
-    this.activeAnswerBox.clear();
-    this.answerText.setFontSize(answerDigits >= 3 ? 30 : 32);
-    this.drawShapeAreaDiagram(equationY + 2, heightLabel, widthLabel, 62, 44);
-
-    if (this.problem.answerSlot === 'result') {
-      const promptText = this.add
-        .text(0, answerY, 'ひろさ =', {
-          fontFamily: FONT_FAMILY,
-          fontSize: '28px',
-          fontStyle: '900',
-          color: COLORS.ink,
-          align: 'center',
-        })
-        .setOrigin(0, 0.5);
-      const gap = 10;
-      const totalWidth = promptText.width + gap + slotWidth;
-      const textX = GAME_WIDTH / 2 - totalWidth / 2;
-      const slotX = textX + promptText.width + gap;
-      promptText.setX(textX);
-      this.equationContainer.add(promptText);
-      this.drawAnswerBox(slotX, answerY, slotWidth, slotHeight);
-      this.answerText.setPosition(slotX + slotWidth / 2, answerY);
-      this.updateAnswerText();
-      return;
-    }
-
-    const promptText = this.add
-      .text(GAME_WIDTH / 2, answerY, `ひろさ = ${areaLabel}`, {
-        fontFamily: FONT_FAMILY,
-        fontSize: '28px',
-        fontStyle: '900',
-        color: COLORS.ink,
-        align: 'center',
-      })
-      .setOrigin(0.5);
-    this.equationContainer.add(promptText);
-    this.updateAnswerText();
-  }
-
-  /** Draws the rectangle and its grid/side labels for the current area problem. */
-  private drawShapeAreaDiagram(
-    centerY: number,
-    heightLabel: string,
-    widthLabel: string,
-    slotWidth: number,
-    slotHeight: number,
-  ): void {
-    if (!isShapeAreaProblem(this.problem)) {
-      return;
-    }
-
-    const rows = Phaser.Math.Clamp(Math.floor(this.problem.left), 1, 12);
-    const cols = Phaser.Math.Clamp(Math.floor(this.problem.right), 1, 12);
-    const maxWidth = 160;
-    const maxHeight = 88;
-    const cellSize = Math.min(maxWidth / cols, maxHeight / rows, 22);
-    const rectWidth = cols * cellSize;
-    const rectHeight = rows * cellSize;
-    const rectX = GAME_WIDTH / 2 - rectWidth / 2;
-    const rectY = centerY - rectHeight / 2;
-    const graphics = this.add.graphics();
-    const accent = Phaser.Display.Color.HexStringToColor(this.stage.accentColor).color;
-    const panel = Phaser.Display.Color.HexStringToColor(COLORS.panel).color;
-    const line = Phaser.Display.Color.HexStringToColor(COLORS.line).color;
-
-    graphics.fillStyle(panel, 0.94);
-    graphics.lineStyle(3, accent, 1);
-    graphics.fillRect(rectX, rectY, rectWidth, rectHeight);
-    graphics.strokeRect(rectX, rectY, rectWidth, rectHeight);
-    graphics.lineStyle(1, line, 0.28);
-    for (let column = 1; column < cols; column += 1) {
-      const x = rectX + column * cellSize;
-      graphics.lineBetween(x, rectY + 2, x, rectY + rectHeight - 2);
-    }
-    for (let row = 1; row < rows; row += 1) {
-      const y = rectY + row * cellSize;
-      graphics.lineBetween(rectX + 2, y, rectX + rectWidth - 2, y);
-    }
-    this.equationContainer.add(graphics);
-
-    const labelStyle = {
-      fontFamily: FONT_FAMILY,
-      fontSize: '18px',
-      fontStyle: '900',
-      color: COLORS.ink,
-      align: 'center',
-      lineSpacing: 0,
-    };
-    if (this.problem.answerSlot === 'left') {
-      const labelX = rectX - 32;
-      const labelY = rectY + rectHeight / 2 - 17;
-      const slotY = rectY + rectHeight / 2 + 18;
-      const heightText = this.add.text(labelX, labelY, 'たて', labelStyle).setOrigin(0.5);
-      this.equationContainer.add(heightText);
-      this.drawAnswerBox(labelX - slotWidth / 2, slotY, slotWidth, slotHeight);
-      this.answerText.setPosition(labelX, slotY);
-    } else {
-      const heightText = this.add
-        .text(rectX - 28, rectY + rectHeight / 2, `たて\n${heightLabel}`, labelStyle)
-        .setOrigin(0.5);
-      this.equationContainer.add(heightText);
-    }
-
-    if (this.problem.answerSlot === 'right') {
-      const labelY = rectY + rectHeight + 24;
-      const labelText = this.add.text(GAME_WIDTH / 2 - 48, labelY, 'よこ', labelStyle).setOrigin(0.5);
-      const slotX = GAME_WIDTH / 2 - 8;
-      this.equationContainer.add(labelText);
-      this.drawAnswerBox(slotX, labelY, slotWidth, slotHeight);
-      this.answerText.setPosition(slotX + slotWidth / 2, labelY);
-    } else {
-      const widthText = this.add
-        .text(GAME_WIDTH / 2, rectY + rectHeight + 22, `よこ ${widthLabel}`, labelStyle)
-        .setOrigin(0.5);
-      this.equationContainer.add(widthText);
-    }
-  }
-
-  /** Draws vertical arithmetic as a right-aligned written calculation with a rule line. */
-  private renderVerticalArithmeticProblem(): void {
-    if (!isVerticalArithmeticProblem(this.problem)) {
-      return;
-    }
-
-    const equationY = CAPTURE_LAYOUT.problemFormula.y;
-    const answerDigits = this.getSingleAnswerMaxDigits();
-    const slotWidth = answerDigits >= 3 ? 122 : 104;
-    const slotHeight = 54;
-    const answerY = equationY + 90;
-    const rightEdgeX = GAME_WIDTH / 2 + 44;
-    const operatorX = rightEdgeX - 82;
-    const leftText = this.problem.answerSlot === 'left' ? '□' : String(this.problem.left);
-    const rightText = this.problem.answerSlot === 'right' ? '□' : String(this.problem.right);
-    const resultText = this.problem.answerSlot === 'result' ? '□' : String(this.problem.result);
-    const textStyle = {
-      fontFamily: FONT_FAMILY,
-      fontSize: '25px',
-      fontStyle: '900',
-      color: COLORS.ink,
-      align: 'right',
-    };
-
-    this.equationContainer.removeAll(true);
-    this.answerBox.clear();
-    this.activeAnswerBox.clear();
-    this.answerText.setFontSize(answerDigits >= 3 ? 30 : 32);
-
-    const title = this.add
-      .text(GAME_WIDTH / 2, equationY - 38, 'ひっ算', {
-        fontFamily: FONT_FAMILY,
-        fontSize: '24px',
-        fontStyle: '900',
-        color: COLORS.ink,
-      })
-      .setOrigin(0.5);
-    const topNumber = this.add.text(rightEdgeX, equationY - 10, leftText, textStyle).setOrigin(1, 0.5);
-    const operator = this.add
-      .text(operatorX, equationY + 18, this.problem.operator, {
-        ...textStyle,
-        fontSize: '23px',
-      })
-      .setOrigin(0.5);
-    const bottomNumber = this.add.text(rightEdgeX, equationY + 18, rightText, textStyle).setOrigin(1, 0.5);
-    const resultNumber = this.add.text(rightEdgeX, equationY + 52, resultText, textStyle).setOrigin(1, 0.5);
-    const graphics = this.add.graphics();
-    graphics.lineStyle(3, Phaser.Display.Color.HexStringToColor(COLORS.ink).color, 1);
-    graphics.lineBetween(operatorX - 10, equationY + 36, rightEdgeX + 4, equationY + 36);
-
-    this.equationContainer.add([title, topNumber, operator, bottomNumber, resultNumber, graphics]);
-    this.drawAnswerBox(GAME_WIDTH / 2 - slotWidth / 2, answerY, slotWidth, slotHeight);
-    this.answerText.setPosition(GAME_WIDTH / 2, answerY);
-    this.updateAnswerText();
-  }
-
-  /** Draws newer multi-line problem types with a separate answer box below the prompt. */
-  private renderTextFormulaProblem(): void {
-    const equationY = CAPTURE_LAYOUT.problemFormula.y;
-    const prompt = formatProblem(this.problem);
-    const lineCount = prompt.split('\n').length;
-    const isTallPrompt = lineCount >= 4;
-    const promptY = isTallPrompt ? equationY + 2 : equationY - 10;
-    const answerY = isTallPrompt ? equationY + 90 : equationY + 78;
-    const slotWidth = isMissingDigitArithmeticProblem(this.problem) ? 58 : 104;
-    const slotHeight = isTallPrompt ? 52 : 60;
-    const promptText = this.add
-      .text(GAME_WIDTH / 2, promptY, prompt, {
-        fontFamily: FONT_FAMILY,
-        fontSize: isTallPrompt ? '24px' : '30px',
-        fontStyle: '900',
-        color: COLORS.ink,
-        align: 'center',
-        lineSpacing: isTallPrompt ? 0 : 6,
-      })
-      .setOrigin(0.5);
-    const scale = this.getFormulaFitScale(Math.max(promptText.width, slotWidth));
-
-    this.equationContainer.removeAll(true);
-    this.answerBox.clear();
-    this.activeAnswerBox.clear();
-    this.answerText.setFontSize(isMissingDigitArithmeticProblem(this.problem) ? 34 : isTallPrompt ? 28 : 30);
-    this.equationContainer.add(promptText);
-    promptText.setScale(scale);
-    this.drawAnswerBox(GAME_WIDTH / 2 - slotWidth / 2, answerY, slotWidth, slotHeight);
-    this.answerText.setPosition(GAME_WIDTH / 2, answerY);
-    this.updateAnswerText();
-  }
-
-  /** Draws regular horizontal integer and decimal equations with an inline answer box. */
-  private renderIntegerProblem(): void {
-    const equationY = CAPTURE_LAYOUT.problemFormula.y;
-    const slotWidth = isDecimalProblem(this.problem) ? 102 : CAPTURE_LAYOUT.problemFormula.slotWidth;
-    const slotHeight = CAPTURE_LAYOUT.problemFormula.slotHeight;
-    const textStyle = {
-      fontFamily: FONT_FAMILY,
-      fontSize: '42px',
-      fontStyle: '900',
-      color: COLORS.ink,
-    };
-    const leftText = isDecimalProblem(this.problem)
-      ? this.formatDecimalProblemValue(this.problem.left, this.problem.leftDecimalPlaces)
-      : String(this.problem.left);
-    const rightText = isDecimalProblem(this.problem)
-      ? this.formatDecimalProblemValue(this.problem.right, this.problem.rightDecimalPlaces)
-      : String(this.problem.right);
-    const resultText = isDecimalProblem(this.problem)
-      ? this.formatDecimalProblemValue(this.problem.result, this.problem.resultDecimalPlaces)
-      : String(this.problem.result);
-    const parts = [
-      this.problem.answerSlot === 'left' ? null : leftText,
-      ` ${this.problem.operator} `,
-      this.problem.answerSlot === 'right' ? null : rightText,
-      ' = ',
-      this.problem.answerSlot === 'result' ? null : resultText,
-    ];
-    this.equationContainer.removeAll(true);
-    this.answerBox.clear();
-    this.answerText.setFontSize(34);
-
-    const visibleParts = parts.map((part) => {
-      if (part === null) {
-        return { kind: 'slot' as const, width: slotWidth };
-      }
-
-      const text = this.add.text(0, equationY, part, textStyle).setOrigin(0, 0.5);
-      this.equationContainer.add(text);
-      return { kind: 'text' as const, width: text.width, text };
-    });
-    const totalWidth = visibleParts.reduce((sum, part) => sum + part.width, 0);
-    const scale = this.getFormulaFitScale(totalWidth);
-    const fittedSlotWidth = slotWidth * scale;
-    const fittedSlotHeight = slotHeight * scale;
-    const fittedTotalWidth = totalWidth * scale;
-    this.answerText.setFontSize(this.getFittedFontSize(34, scale, 22));
-    let cursorX = this.getFormulaStartX(fittedTotalWidth);
-
-    visibleParts.forEach((part) => {
-      if (part.kind === 'slot') {
-        this.drawAnswerBox(cursorX, equationY, fittedSlotWidth, fittedSlotHeight);
-        this.answerText.setPosition(cursorX + fittedSlotWidth / 2, equationY);
-        cursorX += fittedSlotWidth;
-        return;
-      }
-
-      part.text.setScale(scale);
-      part.text.setX(cursorX);
-      cursorX += part.width * scale;
+    layer.add([panel, monsterVisual, nameText]);
+    this.drawFocusedProgressGauge(layer);
+    this.tweens.add({
+      targets: layer,
+      alpha: 1,
+      duration: 220,
+      ease: 'Sine.easeOut',
     });
   }
 
-  /** 小数問題の表示用に、指定けた数で整えたあと余分な0を取り除きます。 */
-  private formatDecimalProblemValue(value: number, decimalPlaces: number | undefined): string {
-    const places = Math.max(0, Math.min(3, Math.floor(decimalPlaces ?? 1)));
-    return value
-      .toFixed(places)
-      .replace(/(\.\d*?)0+$/, '$1')
-      .replace(/\.$/, '');
-  }
-
-  /** 時計を読む問題を描き、左に時計、右に時分の答え欄を配置します。 */
-  private renderClockProblem(): void {
-    if (!isClockTimeProblem(this.problem)) {
+  /** Fades the correct-answer focus layer away before moving to the next step. */
+  private fadeOutGridExpressionCorrectFocus(onComplete: () => void): void {
+    const problemLayer = this.problemView.gridProblemLayer;
+    const focusLayer = this.gridProblemFocusLayer;
+    if (!problemLayer && !focusLayer) {
+      onComplete();
       return;
     }
 
-    const centerY = CAPTURE_LAYOUT.problemFormula.y + 30;
-    const clockRadius = 68;
-    const clockCenterX = 114;
-    const answerWidth = this.problem.answerSlot === 'result' && this.problem.right !== 0 ? 132 : 72;
-    const answerHeight = 62;
-    const labelStyle = {
-      fontFamily: FONT_FAMILY,
-      fontSize: '28px',
-      fontStyle: '900',
-      color: COLORS.ink,
-    };
+    if (problemLayer) {
+      this.tweens.killTweensOf(problemLayer);
+      this.tweens.add({
+        targets: problemLayer,
+        alpha: 0,
+        duration: 170,
+        ease: 'Sine.easeIn',
+      });
+    }
 
-    this.equationContainer.removeAll(true);
-    this.answerBox.clear();
-    this.answerText.setFontSize(this.problem.answerSlot === 'result' && this.problem.right !== 0 ? 24 : 34);
-    this.drawAnalogClock(
-      clockCenterX,
-      centerY,
-      clockRadius,
-      this.problem.left,
-      this.problem.right,
-      this.problem.minuteStep === 1,
+    if (!focusLayer) {
+      this.time.delayedCall(170, onComplete);
+      return;
+    }
+
+    this.tweens.killTweensOf(focusLayer);
+    this.tweens.add({
+      targets: focusLayer,
+      alpha: 0,
+      duration: 170,
+      ease: 'Sine.easeIn',
+      onComplete,
+    });
+  }
+
+  /** Draws the focused capture gauge using the current progress value. */
+  private drawFocusedProgressGauge(layer: Phaser.GameObjects.Container): void {
+    const ratio = Phaser.Math.Clamp(this.progress / this.monster.goalGauge, 0, 1);
+    const width = Math.max(1, CAPTURE_LAYOUT.progressBar.width * ratio);
+    const progressX = CAPTURE_LAYOUT.progressBar.x;
+    const progressY = CAPTURE_LAYOUT.progressBar.y;
+
+    const gauge = this.add.graphics();
+    gauge.fillStyle(Phaser.Display.Color.HexStringToColor('#d8e0e8').color, 1);
+    gauge.fillRoundedRect(
+      progressX,
+      progressY - CAPTURE_LAYOUT.progressBar.height / 2,
+      CAPTURE_LAYOUT.progressBar.width,
+      CAPTURE_LAYOUT.progressBar.height,
+      CAPTURE_LAYOUT.progressBar.height / 2,
+    );
+    gauge.fillStyle(Phaser.Display.Color.HexStringToColor(this.stage.accentColor).color, 1);
+    gauge.fillRoundedRect(
+      progressX,
+      progressY - CAPTURE_LAYOUT.progressBar.height / 2,
+      width,
+      CAPTURE_LAYOUT.progressBar.height,
+      CAPTURE_LAYOUT.progressBar.height / 2,
     );
 
-    const parts = this.getClockAnswerParts(answerWidth, centerY, labelStyle);
-    const totalWidth = parts.reduce((sum, part) => sum + part.width, 0);
-    let cursorX = Phaser.Math.Clamp(272 - totalWidth / 2, clockCenterX + clockRadius + 16, GAME_WIDTH - totalWidth - 22);
-    parts.forEach((part) => {
-      if (part.kind === 'slot') {
-        this.drawAnswerBox(cursorX, centerY, answerWidth, answerHeight);
-        this.answerText.setPosition(cursorX + answerWidth / 2, centerY);
-        cursorX += answerWidth;
-        return;
-      }
-
-      part.text.setX(cursorX);
-      cursorX += part.width;
-    });
-  }
-
-  /** 時計問題の答え部分を、入力欄と「時」「分」の文字部品に分解します。 */
-  private getClockAnswerParts(
-    answerWidth: number,
-    centerY: number,
-    labelStyle: Phaser.Types.GameObjects.Text.TextStyle,
-  ): Array<{ kind: 'slot'; width: number } | { kind: 'text'; width: number; text: Phaser.GameObjects.Text }> {
-    const rawParts = this.problem.answerSlot === 'left'
-      ? [
-          null,
-          '時',
-          ...(this.problem.right === 0 ? [] : [String(this.problem.right), '分']),
-        ]
-      : this.problem.answerSlot === 'right'
-        ? [
-            String(this.problem.left),
-            '時',
-            null,
-            '分',
-          ]
-        : [null, ...(this.problem.right === 0 ? ['時'] : [])];
-
-    return rawParts.map((part) => {
-      if (part === null) {
-        return { kind: 'slot' as const, width: answerWidth };
-      }
-
-      const text = this.add.text(0, centerY, part, labelStyle).setOrigin(0, 0.5);
-      this.equationContainer.add(text);
-      return { kind: 'text' as const, width: text.width, text };
-    });
-  }
-
-  /** アナログ時計を描きます。1分きざみ問題では、答えの分だけ赤い目印にします。 */
-  private drawAnalogClock(
-    centerX: number,
-    centerY: number,
-    radius: number,
-    hour: number,
-    minute: number,
-    showMinuteMarks: boolean,
-  ): void {
-    const graphics = this.add.graphics();
-    this.equationContainer.add(graphics);
-
-    const inkColor = Phaser.Display.Color.HexStringToColor(COLORS.ink).color;
-    const lineColor = Phaser.Display.Color.HexStringToColor(COLORS.line).color;
-    const panelColor = Phaser.Display.Color.HexStringToColor(COLORS.panel).color;
-    const blueColor = Phaser.Display.Color.HexStringToColor(COLORS.blue).color;
-    const targetMinuteColor = Phaser.Display.Color.HexStringToColor(COLORS.red).color;
-    graphics.fillStyle(lineColor, 0.14);
-    graphics.fillCircle(centerX + 3, centerY + 4, radius);
-    graphics.fillStyle(panelColor, 1);
-    graphics.fillCircle(centerX, centerY, radius);
-    graphics.lineStyle(4, lineColor, 1);
-    graphics.strokeCircle(centerX, centerY, radius);
-
-    if (showMinuteMarks) {
-      for (let mark = 0; mark < 60; mark += 1) {
-        if (mark % 5 === 0) {
-          continue;
-        }
-
-        const angle = (mark / 60) * Math.PI * 2 - Math.PI / 2;
-        const isTargetMinute = mark === minute;
-        const innerRadius = radius - (isTargetMinute ? 14 : 7);
-        const outerRadius = radius - 3;
-        graphics.lineStyle(isTargetMinute ? 4 : 1, isTargetMinute ? targetMinuteColor : lineColor, isTargetMinute ? 1 : 0.24);
-        graphics.lineBetween(
-          centerX + Math.cos(angle) * innerRadius,
-          centerY + Math.sin(angle) * innerRadius,
-          centerX + Math.cos(angle) * outerRadius,
-          centerY + Math.sin(angle) * outerRadius,
-        );
-      }
-    }
-
-    for (let mark = 0; mark < 60; mark += 5) {
-      const angle = (mark / 60) * Math.PI * 2 - Math.PI / 2;
-      const isQuarter = mark % 15 === 0;
-      const isTargetMinute = showMinuteMarks && mark === minute;
-      const innerRadius = radius - (isTargetMinute ? 18 : isQuarter ? 14 : 10);
-      const outerRadius = radius - 3;
-      graphics.lineStyle(
-        isTargetMinute ? 5 : isQuarter ? 3 : 2,
-        isTargetMinute ? targetMinuteColor : lineColor,
-        isTargetMinute ? 1 : isQuarter ? 0.9 : 0.55,
-      );
-      graphics.lineBetween(
-        centerX + Math.cos(angle) * innerRadius,
-        centerY + Math.sin(angle) * innerRadius,
-        centerX + Math.cos(angle) * outerRadius,
-        centerY + Math.sin(angle) * outerRadius,
-      );
-    }
-
-    for (let clockHour = 1; clockHour <= 12; clockHour += 1) {
-      const angle = (clockHour / 12) * Math.PI * 2 - Math.PI / 2;
-      const numberText = this.add.text(
-        centerX + Math.cos(angle) * (radius - 21),
-        centerY + Math.sin(angle) * (radius - 21),
-        String(clockHour),
-        {
-          fontFamily: FONT_FAMILY,
-          fontSize: clockHour >= 10 ? '12px' : '14px',
-          fontStyle: '900',
-          color: COLORS.ink,
-        },
-      ).setOrigin(0.5);
-      this.equationContainer.add(numberText);
-    }
-
-    const hourAngle = (((hour % 12) + minute / 60) / 12) * Math.PI * 2 - Math.PI / 2;
-    const minuteAngle = (minute / 60) * Math.PI * 2 - Math.PI / 2;
-    graphics.lineStyle(5, inkColor, 1);
-    graphics.lineBetween(
-      centerX,
-      centerY,
-      centerX + Math.cos(hourAngle) * (radius * 0.44),
-      centerY + Math.sin(hourAngle) * (radius * 0.44),
+    const ball = createCaptureBall(
+      this,
+      progressX + width,
+      progressY,
+      CAPTURE_LAYOUT.progressBar.ballRadius,
+      this.getCurrentBallVariant(),
     );
-    graphics.lineStyle(3, blueColor, 1);
-    graphics.lineBetween(
-      centerX,
-      centerY,
-      centerX + Math.cos(minuteAngle) * (radius * 0.7),
-      centerY + Math.sin(minuteAngle) * (radius * 0.7),
-    );
-    graphics.fillStyle(inkColor, 1);
-    graphics.fillCircle(centerX, centerY, 5);
-    graphics.fillStyle(panelColor, 1);
-    graphics.fillCircle(centerX, centerY, 2);
+    layer.add([gauge, ball]);
   }
 
-  /** 分数問題を描き、分子または分母の空欄へ答え欄を合わせます。 */
-  private renderFractionProblem(): void {
-    if (!isFractionProblem(this.problem)) {
-      return;
-    }
-
-    const leftDenominator = this.problem.leftDenominator ?? this.problem.denominator;
-    const rightDenominator = this.problem.rightDenominator ?? this.problem.denominator;
-    const resultDenominator = this.problem.resultDenominator ?? this.problem.denominator;
-    const isEquivalentFraction = this.problem.kind === 'equivalentFraction';
-    if (!leftDenominator || !rightDenominator || (!isEquivalentFraction && !resultDenominator)) {
-      return;
-    }
-
-    const equationY = CAPTURE_LAYOUT.problemFormula.y;
-    const numeratorY = equationY - 24;
-    const lineY = equationY + 1;
-    const denominatorY = equationY + 28;
-    const slotWidth = 58;
-    const slotHeight = 42;
-    const fractionPadding = 8;
-    const fractionStyle = {
-      fontFamily: FONT_FAMILY,
-      fontSize: '30px',
-      fontStyle: '900',
-      color: COLORS.ink,
-      align: 'center',
-    };
-    const operatorStyle = {
-      fontFamily: FONT_FAMILY,
-      fontSize: '34px',
-      fontStyle: '900',
-      color: COLORS.ink,
-    };
-
-    this.equationContainer.removeAll(true);
-    this.answerBox.clear();
-    this.answerText.setFontSize(30);
-
-    const lineGraphics = this.add.graphics();
-    this.equationContainer.add(lineGraphics);
-    const parts: FractionEquationPart[] = isEquivalentFraction ? [
-      this.createFractionEquationPart(
-        this.problem.left,
-        leftDenominator,
-        this.getFractionAnswerSlot('left'),
-        numeratorY,
-        denominatorY,
-        slotWidth,
-        fractionPadding,
-        fractionStyle,
-      ),
-      this.createFractionInlineText(' = ', equationY, operatorStyle),
-      this.createFractionEquationPart(
-        this.problem.right,
-        rightDenominator,
-        this.getFractionAnswerSlot('right'),
-        numeratorY,
-        denominatorY,
-        slotWidth,
-        fractionPadding,
-        fractionStyle,
-      ),
-    ] : [
-      this.createFractionEquationPart(
-        this.problem.left,
-        leftDenominator,
-        this.getFractionAnswerSlot('left'),
-        numeratorY,
-        denominatorY,
-        slotWidth,
-        fractionPadding,
-        fractionStyle,
-      ),
-      this.createFractionInlineText(` ${this.problem.operator} `, equationY, operatorStyle),
-      this.createFractionEquationPart(
-        this.problem.right,
-        rightDenominator,
-        this.getFractionAnswerSlot('right'),
-        numeratorY,
-        denominatorY,
-        slotWidth,
-        fractionPadding,
-        fractionStyle,
-      ),
-      this.createFractionInlineText(' = ', equationY, operatorStyle),
-      this.createFractionEquationPart(
-        this.problem.result,
-        resultDenominator ?? leftDenominator,
-        this.getFractionAnswerSlot('result'),
-        numeratorY,
-        denominatorY,
-        slotWidth,
-        fractionPadding,
-        fractionStyle,
-      ),
-    ];
-
-    const totalWidth = parts.reduce((sum, part) => sum + part.width, 0);
-    const scale = this.getFormulaFitScale(totalWidth);
-    const fittedSlotWidth = slotWidth * scale;
-    const fittedSlotHeight = slotHeight * scale;
-    const fittedTotalWidth = totalWidth * scale;
-    this.answerText.setFontSize(this.getFittedFontSize(30, scale, 20));
-    let cursorX = this.getFormulaStartX(fittedTotalWidth);
-    lineGraphics.lineStyle(Math.max(2, 3 * scale), Phaser.Display.Color.HexStringToColor(COLORS.ink).color, 1);
-
-    parts.forEach((part) => {
-      if (part.kind === 'text') {
-        part.text.setScale(scale);
-        part.text.setX(cursorX);
-        cursorX += part.width * scale;
-        return;
-      }
-
-      const fittedPartWidth = part.width * scale;
-      const centerX = cursorX + fittedPartWidth / 2;
-      part.numeratorText?.setScale(scale);
-      part.denominatorText?.setScale(scale);
-      part.numeratorText?.setPosition(centerX, numeratorY);
-      part.denominatorText?.setPosition(centerX, denominatorY);
-      lineGraphics.lineBetween(
-        cursorX + fractionPadding * scale,
-        lineY,
-        cursorX + fittedPartWidth - fractionPadding * scale,
-        lineY,
-      );
-
-      if (part.slot) {
-        const slotY = part.slot === 'numerator' ? numeratorY : denominatorY;
-        this.drawAnswerBox(centerX - fittedSlotWidth / 2, slotY, fittedSlotWidth, fittedSlotHeight);
-        this.answerText.setPosition(centerX, slotY);
-      }
-
-      cursorX += fittedPartWidth;
-    });
-  }
-
-  /** 指定された分数のどこが答え欄になるかを、分子・分母・なしで返します。 */
-  private getFractionAnswerSlot(part: 'left' | 'right' | 'result'): 'numerator' | 'denominator' | null {
-    if (this.problem.answerSlot === part) {
-      return 'numerator';
-    }
-
-    if (this.problem.answerSlot === `${part}Denominator`) {
-      return 'denominator';
-    }
-
-    return null;
-  }
-
-  /** 分数式の間に入る演算子や等号などの文字部品を作ります。 */
-  private createFractionInlineText(
-    text: string,
-    y: number,
-    style: Phaser.Types.GameObjects.Text.TextStyle,
-  ): Extract<FractionEquationPart, { kind: 'text' }> {
-    const textPart = this.add.text(0, y, text, style).setOrigin(0, 0.5);
-    this.equationContainer.add(textPart);
-    return { kind: 'text', width: textPart.width, text: textPart };
-  }
-
-  /** 分数一つぶんの部品を作り、空欄ではない分子・分母だけを文字で用意します。 */
-  private createFractionEquationPart(
-    numerator: number,
-    denominator: number,
-    slot: 'numerator' | 'denominator' | null,
-    numeratorY: number,
-    denominatorY: number,
-    slotWidth: number,
-    padding: number,
-    style: Phaser.Types.GameObjects.Text.TextStyle,
-  ): Extract<FractionEquationPart, { kind: 'fraction' }> {
-    const numeratorText = slot === 'numerator'
-      ? null
-      : this.add.text(0, numeratorY, String(numerator), style).setOrigin(0.5);
-    const denominatorText = slot === 'denominator'
-      ? null
-      : this.add.text(0, denominatorY, String(denominator), style).setOrigin(0.5);
-    const numeratorWidth = numeratorText?.width ?? slotWidth;
-    const denominatorWidth = denominatorText?.width ?? slotWidth;
-    const fractionWidth = Math.max(numeratorWidth, denominatorWidth, 34) + padding * 2;
-
-    if (numeratorText) {
-      this.equationContainer.add(numeratorText);
-    }
-    if (denominatorText) {
-      this.equationContainer.add(denominatorText);
-    }
-
-    return {
-      kind: 'fraction',
-      width: fractionWidth,
-      slot,
-      numeratorText,
-      denominatorText,
-    };
-  }
-
-  /** 入力欄の見た目を描き直します。式の穴の位置が変わるたびに呼ばれます。 */
-  private drawAnswerBox(x: number, y: number, width: number, height: number): void {
-    const top = y - height / 2;
-    this.answerBox.fillStyle(Phaser.Display.Color.HexStringToColor(COLORS.panel).color, 1);
-    this.answerBox.lineStyle(3, Phaser.Display.Color.HexStringToColor(COLORS.line).color, 1);
-    this.answerBox.fillRoundedRect(x, top, width, height, 14);
-    this.answerBox.strokeRoundedRect(x, top, width, height, 14);
-  }
-
-  /** 二枠回答の後半用テキストがなければ作ります。すでにある場合は再利用します。 */
-  private ensureRemainderAnswerText(): void {
-    if (this.remainderAnswerText) {
-      return;
-    }
-
-    this.remainderAnswerText = this.add
-      .text(CAPTURE_LAYOUT.answerText.x, CAPTURE_LAYOUT.answerText.y, '', {
-        fontFamily: FONT_FAMILY,
-        fontSize: '30px',
-        fontStyle: '900',
-        color: COLORS.ink,
-        align: 'center',
-      })
-      .setOrigin(0.5);
-  }
-
-  /** 二枠回答を使わない問題に戻すため、後半用テキストと位置情報を消します。 */
-  private clearRemainderAnswerText(): void {
-    this.remainderAnswerText?.destroy();
-    this.remainderAnswerText = undefined;
-    this.quotientAnswerBounds = null;
-    this.remainderAnswerBounds = null;
-    this.activeAnswerBox.clear();
-    this.answerText.setColor(COLORS.ink);
-  }
-
-  /** 二枠回答で、今入力している欄だけ青い枠で目立たせます。 */
-  private drawActiveAnswerHighlight(): void {
-    this.activeAnswerBox.clear();
-    if (!this.usesTwoPartAnswer()) {
-      return;
-    }
-
-    const bounds = this.activeDivisionAnswerPart === 'quotient'
-      ? this.quotientAnswerBounds
-      : this.remainderAnswerBounds;
-    if (!bounds) {
-      return;
-    }
-
-    const top = bounds.y - bounds.height / 2;
-    this.activeAnswerBox.lineStyle(4, Phaser.Display.Color.HexStringToColor(COLORS.blue).color, 0.95);
-    this.activeAnswerBox.strokeRoundedRect(bounds.x, top, bounds.width, bounds.height, 14);
-  }
-
-  /** 入力中の文字を答え欄へ反映し、二枠回答や時計表示の見た目も整えます。 */
+  /** Sends the current input to the view without moving gameplay state into it. */
   private updateAnswerText(): void {
-    if (usesChoiceAnswer(this.problem)) {
-      if (usesMultiSelectChoiceAnswer(this.problem) || this.problem.answerMode === 'choiceColumn') {
-        this.answerText.setText('');
-        return;
-      }
-
-      this.answerText.setText(this.getSelectedChoiceOptions()[0]?.label ?? '');
-      return;
-    }
-
-    if (this.usesTwoPartAnswer()) {
-      this.answerText.setText(this.answerInput);
-      this.remainderAnswerText?.setText(this.remainderAnswerInput);
-      this.answerText.setColor(this.activeDivisionAnswerPart === 'quotient' ? COLORS.blue : COLORS.ink);
-      this.remainderAnswerText?.setColor(this.activeDivisionAnswerPart === 'remainder' ? COLORS.blue : COLORS.ink);
-      this.drawActiveAnswerHighlight();
-      return;
-    }
-
-    if (
-      isClockTimeProblem(this.problem)
-      && this.problem.answerSlot === 'result'
-      && this.problem.right !== 0
-      && this.answerInput.length >= 3
-    ) {
-      this.answerText.setText(this.formatClockAnswerInput(this.answerInput));
-      return;
-    }
-
-    this.answerText.setText(this.answerInput);
+    this.problemView.updateAnswerText(this.getAnswerDisplayState());
   }
 
-  /** 時計の答え入力を、時刻として読める場合だけ「時」「分」つきに整えます。 */
-  private formatClockAnswerInput(input: string): string {
-    const value = Number(input);
-    if (!Number.isInteger(value)) {
-      return input;
-    }
-
-    const minute = value % 100;
-    const hour = Math.floor(value / 100);
-    if (hour < 1 || hour > 12 || minute < 0 || minute > 59) {
-      return input;
-    }
-
-    return `${hour}時${minute}分`;
+  /** Collects only the input values needed to display the answer fields. */
+  private getAnswerDisplayState(): CaptureAnswerDisplayState {
+    return {
+      first: this.answerInput,
+      second: this.remainderAnswerInput,
+      activePart: this.activeDivisionAnswerPart,
+      selectedChoiceLabel: this.getSelectedChoiceOptions()[0]?.label,
+    };
   }
 
   /** 捕獲ゲージと先端のボールを同じTweenで動かし、正解時の進みを滑らかに見せます。 */

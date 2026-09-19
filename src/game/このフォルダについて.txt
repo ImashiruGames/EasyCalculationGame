@@ -32,6 +32,9 @@ Phaserで動くゲーム部分を置く場所です。
 - sceneNavigation.ts
   Scene間の移動を助ける処理です。
 
+- sceneLifetime.ts
+  Scene終了時の一度だけの後始末、非同期処理の世代管理、タップとキーの一度だけの入力を扱います。
+
 - textPolicy.ts
   アプリ内文言の文字ルールを確認する処理です。
 

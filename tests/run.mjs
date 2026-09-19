@@ -4,6 +4,7 @@ import path from 'node:path';
 import test, { after, beforeEach } from 'node:test';
 import ts from 'typescript';
 import { createServer } from 'vite';
+import { registerRefactorTests } from './refactor.mjs';
 
 const STORAGE_KEY = 'one-digit-capture-game-save-v1';
 
@@ -86,6 +87,7 @@ const {
   formatProblemAnswer,
   formatProblem,
   getProblemAnswerPairJudgement,
+  isGridExpressionProblem,
   isProblemAnswerCorrect,
 } = mathProblems;
 const { getAnswerSpeedBonus } = speedBonus;
@@ -119,6 +121,7 @@ const {
   getStageStarRank,
   getTransferSummary,
   hasStageSpeedStar,
+  hasReadStageIntroStory,
   isStagePlayLimitDisabled,
   importTransferCode,
   getSelectedTitleBackground,
@@ -126,6 +129,7 @@ const {
   getTitleMonsterPlacements,
   loadSaveState,
   recordEncounterMonster,
+  recordStageIntroStoryRead,
   recordStageAverageAnswerTime,
   recordStagePlayEntry,
   recordStagePlayEntryUsingItem,
@@ -144,6 +148,8 @@ const { TITLE_MONSTER_MAX_SIZE } = layoutConfig;
 const { getDisallowedDisplayKanji } = textPolicy;
 const { createQrMatrix } = qrCode;
 const { parseStoryMathExpression } = mathExpression;
+
+await registerRefactorTests(server);
 
 function getLocalDateKey(now = Date.now()) {
   const date = new Date(now);
@@ -230,6 +236,24 @@ function normalizeRootTerm(coefficient, radicand) {
   };
 }
 
+/** Converts total clock minutes into a 12-hour clock hour for test checks. */
+function getClockHourFromTotalMinutes(totalMinutes) {
+  const hour = Math.floor((((totalMinutes % 720) + 720) % 720) / 60);
+  return hour === 0 ? 12 : hour;
+}
+
+/** Converts total clock minutes into the minute shown on a clock for test checks. */
+function getClockMinuteFromTotalMinutes(totalMinutes) {
+  return ((totalMinutes % 60) + 60) % 60;
+}
+
+/** Encodes total clock minutes the same way clock answer input does. */
+function encodeClockTimeFromTotalMinutes(totalMinutes) {
+  const hour = getClockHourFromTotalMinutes(totalMinutes);
+  const minute = getClockMinuteFromTotalMinutes(totalMinutes);
+  return minute === 0 ? hour : hour * 100 + minute;
+}
+
 function assertEquation(problem) {
   let expectedResult;
   if (problem.kind === 'clockTime') {
@@ -251,6 +275,20 @@ function assertEquation(problem) {
     }
     if (problem.minuteStep) {
       assert.equal(problem.result % problem.minuteStep, 0);
+    }
+  } else if (problem.kind === 'clockElapsedMinutes') {
+    const elapsedMinutes = problem.answerMode === 'clockElapsedHours' ? problem.result * 60 : problem.result;
+    expectedResult = problem.result;
+    assert.equal(problem.operator, '=');
+    assert.equal(problem.right, (problem.left + elapsedMinutes) % 720);
+    if (problem.minuteStep) {
+      assert.equal(elapsedMinutes % problem.minuteStep, 0);
+    }
+    if (problem.clockStartMinuteStep) {
+      assert.equal((problem.left % 60) % problem.clockStartMinuteStep, 0);
+    }
+    if (problem.clockRangeMode === 'sameHour') {
+      assert.equal(Math.floor(problem.left / 60), Math.floor(problem.right / 60));
     }
   } else if (problem.kind === 'decimal') {
     const resultPlaces = problem.resultDecimalPlaces ?? 1;
@@ -307,7 +345,7 @@ function assertEquation(problem) {
     assert.equal(problem.result, expectedResult);
   }
   assert.ok(problem.result >= 0, 'result should not be negative');
-  if (problem.kind === 'clockTime') {
+  if (problem.kind === 'clockTime' || (problem.kind === 'clockElapsedMinutes' && problem.answerMode === 'clockHourMinute')) {
     assert.ok(problem.answer >= 0 && problem.answer <= 2359, 'clock answer should fit the keypad input range');
   } else {
     assert.ok(problem.answer >= 0 && problem.answer <= 99, 'answer should fit the keypad input range');
@@ -325,17 +363,19 @@ function assertEquation(problem) {
     assert.equal(problem.resultDenominator, problem.leftDenominator * problem.right);
   }
 
-  const expectedAnswer = problem.answerSlot === 'left'
-    ? problem.left
-    : problem.answerSlot === 'right'
-      ? problem.right
-      : problem.answerSlot === 'leftDenominator'
-        ? problem.leftDenominator
-        : problem.answerSlot === 'rightDenominator'
-          ? problem.rightDenominator
-          : problem.answerSlot === 'resultDenominator'
-            ? problem.resultDenominator
-            : problem.result;
+  const expectedAnswer = problem.kind === 'clockElapsedMinutes' && problem.answerMode === 'clockHourMinute'
+    ? encodeClockTimeFromTotalMinutes(problem.right)
+    : problem.answerSlot === 'left'
+      ? problem.left
+      : problem.answerSlot === 'right'
+        ? problem.right
+        : problem.answerSlot === 'leftDenominator'
+          ? problem.leftDenominator
+          : problem.answerSlot === 'rightDenominator'
+            ? problem.rightDenominator
+            : problem.answerSlot === 'resultDenominator'
+              ? problem.resultDenominator
+              : problem.result;
   if (problem.kind === 'decimal') {
     assert.ok(Math.abs(problem.answer - expectedAnswer) < 1e-9);
   } else {
@@ -403,7 +443,7 @@ function isRubySupportedTextLiteral(filePath, node) {
 // Keeps manually approved existing UI literals out of the second-grade kanji audit.
 function isKnownManualKanjiException(filePath, text) {
   const relativePath = path.relative(process.cwd(), filePath).replaceAll('\\', '/');
-  return relativePath === 'src/game/scenes/capture/CaptureGameScene.ts'
+  return relativePath === 'src/game/ui/problem/CaptureProblemView.ts'
     && text === '\u306e\u5e73\u65b9\u6839=';
 }
 
@@ -716,6 +756,122 @@ const pairwiseProblemCases = [
       answerSlot: 'left',
       minuteStep: 1,
       answer: 12,
+    },
+  },
+  {
+    name: 'clock elapsed exact hour start',
+    randomValues: [0],
+    rule: {
+      kind: 'clockElapsedMinutes',
+      operator: 'equal',
+      answerSlot: 'result',
+      left: [540, 540],
+      right: [7, 7],
+      result: [7, 7],
+      minuteStep: 1,
+      clockStartMinuteStep: 60,
+      clockDisplayMode: 'analog',
+      clockRangeMode: 'sameHour',
+    },
+    expected: {
+      kind: 'clockElapsedMinutes',
+      left: 540,
+      operator: '=',
+      right: 547,
+      result: 7,
+      answerSlot: 'result',
+      minuteStep: 1,
+      clockStartMinuteStep: 60,
+      clockDisplayMode: 'analog',
+      clockRangeMode: 'sameHour',
+      answer: 7,
+    },
+  },
+  {
+    name: 'clock elapsed same hour skips crossing hour',
+    randomValues: [0],
+    rule: {
+      kind: 'clockElapsedMinutes',
+      operator: 'equal',
+      answerSlot: 'result',
+      left: [530, 540],
+      right: [20, 20],
+      result: [20, 20],
+      minuteStep: 10,
+      clockStartMinuteStep: 10,
+      clockRangeMode: 'sameHour',
+    },
+    expected: {
+      kind: 'clockElapsedMinutes',
+      left: 540,
+      operator: '=',
+      right: 560,
+      result: 20,
+      answerSlot: 'result',
+      minuteStep: 10,
+      clockStartMinuteStep: 10,
+      clockRangeMode: 'sameHour',
+      answer: 20,
+    },
+  },
+  {
+    name: 'clock elapsed text asks ending time',
+    randomValues: [0],
+    rule: {
+      kind: 'clockElapsedMinutes',
+      operator: 'equal',
+      answerSlot: 'result',
+      answerMode: 'clockHourMinute',
+      left: [545, 545],
+      right: [15, 15],
+      result: [0, 2359],
+      minuteStep: 5,
+      clockStartMinuteStep: 5,
+      clockDisplayMode: 'text',
+      clockRangeMode: 'sameHour',
+    },
+    expected: {
+      kind: 'clockElapsedMinutes',
+      left: 545,
+      operator: '=',
+      right: 560,
+      result: 15,
+      answerSlot: 'result',
+      minuteStep: 5,
+      answerMode: 'clockHourMinute',
+      clockStartMinuteStep: 5,
+      clockDisplayMode: 'text',
+      clockRangeMode: 'sameHour',
+      answer: 920,
+    },
+  },
+  {
+    name: 'clock elapsed hour answer',
+    randomValues: [0],
+    rule: {
+      kind: 'clockElapsedMinutes',
+      operator: 'equal',
+      answerSlot: 'result',
+      answerMode: 'clockElapsedHours',
+      left: [540, 540],
+      right: [120, 120],
+      result: [1, 4],
+      minuteStep: 60,
+      clockStartMinuteStep: 60,
+      clockDisplayMode: 'analog',
+    },
+    expected: {
+      kind: 'clockElapsedMinutes',
+      left: 540,
+      operator: '=',
+      right: 660,
+      result: 2,
+      answerSlot: 'result',
+      answerMode: 'clockElapsedHours',
+      minuteStep: 60,
+      clockStartMinuteStep: 60,
+      clockDisplayMode: 'analog',
+      answer: 2,
     },
   },
   {
@@ -1105,6 +1261,17 @@ for (const problemCase of pairwiseProblemCases) {
   });
 }
 
+test('stage g2-kakezan-kangae uses gridExpression problems', () => {
+  const stage = getStageById('g2-kakezan-kangae');
+  const problem = withMockedRandom([0], () => createProblem(stage.problemRule));
+
+  assert.equal(isGridExpressionProblem(problem), true);
+  assert.equal(problem.gridExpression.id, 'g2-kakezan-kangae-p001');
+  assert.deepEqual(problem.gridExpression.chars, ['picoleaf']);
+  assert.equal(problem.gridExpression.answer, 4);
+  assert.equal(formatProblem(problem), '絵を見て しきをつくろう\n3 × □ = 12');
+});
+
 test('問題生成: 禁則の複数空欄は候補なしとしてフォールバックする', () => {
   const problem = withMockedRandom(
     Array.from({ length: 13 }, () => 0),
@@ -1259,6 +1426,80 @@ test('問題表示: 回答欄だけを空欄として表示する', () => {
       minuteStep: 10,
     }),
     '1時間20分',
+  );
+  assert.equal(
+    formatProblem({
+      kind: 'clockElapsedMinutes',
+      left: 540,
+      operator: '=',
+      right: 550,
+      result: 10,
+      answer: 10,
+      answerSlot: 'result',
+      minuteStep: 5,
+      clockDisplayMode: 'analog',
+    }),
+    '時計 9時 → 時計 9時10分\n時間は □分',
+  );
+  assert.equal(
+    formatProblem({
+      kind: 'clockElapsedMinutes',
+      left: 540,
+      operator: '=',
+      right: 660,
+      result: 2,
+      answer: 2,
+      answerSlot: 'result',
+      answerMode: 'clockElapsedHours',
+      minuteStep: 60,
+      clockDisplayMode: 'analog',
+    }),
+    '時計 9時 → 時計 11時\n時間は □時間',
+  );
+  assert.equal(
+    formatProblemAnswer({
+      kind: 'clockElapsedMinutes',
+      left: 540,
+      operator: '=',
+      right: 660,
+      result: 2,
+      answer: 2,
+      answerSlot: 'result',
+      answerMode: 'clockElapsedHours',
+      minuteStep: 60,
+      clockDisplayMode: 'analog',
+    }),
+    '2時間',
+  );
+  assert.equal(
+    formatProblem({
+      kind: 'clockElapsedMinutes',
+      left: 545,
+      operator: '=',
+      right: 560,
+      result: 15,
+      answer: 920,
+      answerSlot: 'result',
+      answerMode: 'clockHourMinute',
+      minuteStep: 5,
+      clockDisplayMode: 'text',
+    }),
+    '9時5分から 15分後\n時こくは □時□分',
+  );
+  assert.equal(
+    formatProblemAnswer({
+      kind: 'clockElapsedMinutes',
+      left: 545,
+      operator: '=',
+      right: 560,
+      result: 15,
+      answer: 920,
+      answerSlot: 'result',
+      answerMode: 'clockHourMinute',
+      minuteStep: 5,
+      clockDisplayMode: 'text',
+    }),
+    '9時20分',
   );
   assert.equal(
     formatProblem({
@@ -1837,9 +2078,19 @@ test('時計ステージ: 時と分のどちらかだけを空欄にする', () 
   const fiveMinuteRules = getStageById('g2-tokei-gofungoto').problemRule;
   const tenMinuteStage = getStageById('g2-tokei-jippunnokei');
   const tenMinuteRules = tenMinuteStage.problemRule;
+  const exactElapsedRules = getStageById('g2-tokei-nanfunkan').problemRule;
+  const handMotionRules = getStageById('g2-tokei-harinougoki').problemRule;
+  const hourHandRules = getStageById('g2-tokei-mijikaihari').problemRule;
+  const afterTimeRules = getStageById('g2-tokei-nanfungo').problemRule;
+  const textAfterTimeRules = getStageById('g2-tokei-mojifungo').problemRule;
   assert.ok(Array.isArray(hourRules));
   assert.ok(Array.isArray(fiveMinuteRules));
   assert.ok(Array.isArray(tenMinuteRules));
+  assert.ok(Array.isArray(exactElapsedRules));
+  assert.ok(Array.isArray(handMotionRules));
+  assert.ok(Array.isArray(hourHandRules));
+  assert.ok(Array.isArray(afterTimeRules));
+  assert.ok(Array.isArray(textAfterTimeRules));
   assert.equal(hourRules[0].answerSlot, 'left');
   assert.deepEqual(fiveMinuteRules.map((rule) => rule.answerSlot), ['right', 'left']);
   assert.deepEqual(fiveMinuteRules[0].right, [5, 55]);
@@ -1855,6 +2106,21 @@ test('時計ステージ: 時と分のどちらかだけを空欄にする', () 
   assert.deepEqual(tenMinuteRules[1].result, []);
   assert.equal(tenMinuteRules[1].answerMode, 'clockHourMinute');
   assert.equal(tenMinuteRules[1].minuteStep, 10);
+  assert.equal(exactElapsedRules[0].kind, 'clockElapsedMinutes');
+  assert.deepEqual(exactElapsedRules[0].right, [1, 10]);
+  assert.deepEqual(exactElapsedRules[0].result, [1, 10]);
+  assert.equal(exactElapsedRules[0].minuteStep, 1);
+  assert.equal(exactElapsedRules[0].clockStartMinuteStep, 60);
+  assert.equal(exactElapsedRules[0].clockRangeMode, 'sameHour');
+  assert.deepEqual(handMotionRules.map((rule) => rule.right), [[15, 15], [30, 30]]);
+  assert.equal(hourHandRules[0].answerMode, 'clockElapsedHours');
+  assert.deepEqual(hourHandRules[0].right, [60, 240]);
+  assert.deepEqual(hourHandRules[0].result, [1, 4]);
+  assert.equal(hourHandRules[0].clockStartMinuteStep, 60);
+  assert.equal(afterTimeRules[0].answerMode, 'clockHourMinute');
+  assert.equal(afterTimeRules[0].clockDisplayMode, 'analog');
+  assert.equal(textAfterTimeRules[0].answerMode, 'clockHourMinute');
+  assert.equal(textAfterTimeRules[0].clockDisplayMode, 'text');
   const tenMinuteMonsterIds = tenMinuteStage.monsterIds.map((monsterEntry) => getStageMonsterId(monsterEntry));
   assert.ok(tenMinuteMonsterIds.length > 0);
   tenMinuteMonsterIds.forEach((monsterId) => assert.ok(getMonsterById(monsterId)));
@@ -2039,6 +2305,28 @@ test('セーブ: captures欠損でも復旧できる値は保持する', () => {
   assert.deepEqual(state.captures, {});
   assert.equal(state.coins, 45);
   assert.equal(state.items[SHOP_ITEM_IDS.rareBell], 2);
+});
+
+test('セーブ: ステージ解説ストーリー既読は欠損時に空配列へ戻る', () => {
+  window.localStorage.setItem(STORAGE_KEY, JSON.stringify({
+    version: 5,
+    coins: 12,
+  }));
+
+  const state = loadSaveState();
+  assert.deepEqual(state.readStageIntroStoryIds, []);
+  assert.equal(hasReadStageIntroStory(state, 'story-stage-g2-kakezan-kangae'), false);
+});
+
+test('セーブ: ステージ解説ストーリーを読了済みにできる', () => {
+  saveState(baseSaveState());
+
+  const firstState = recordStageIntroStoryRead('story-stage-g2-kakezan-kangae');
+  assert.ok(firstState);
+  assert.equal(hasReadStageIntroStory(loadSaveState(), 'story-stage-g2-kakezan-kangae'), true);
+
+  recordStageIntroStoryRead('story-stage-g2-kakezan-kangae');
+  assert.deepEqual(loadSaveState().readStageIntroStoryIds, ['story-stage-g2-kakezan-kangae']);
 });
 
 test('セーブ: 保存値は既知IDと正の有限数だけに正規化する', () => {
@@ -2616,7 +2904,8 @@ test('ログインボーナス: 未来日や存在しない日付は受け取り
   assert.equal(loadSaveState().dailyLogin.lastClaimedDate, null);
 });
 
-test('ログインボーナス: 日付が飛んだ場合は連続日数が1日に戻る', () => {
+// Checks that a missed day preserves progress toward the seventh reward.
+test('ログインボーナス: 日があいても通算の日数でごほうびがもらえる', () => {
   const now = new Date(2026, 4, 25, 9, 0, 0).getTime();
   const status = getDailyLoginBonusStatus(baseSaveState({
     dailyLogin: {
@@ -2628,8 +2917,10 @@ test('ログインボーナス: 日付が飛んだ場合は連続日数が1日�
 
   assert.equal(status.canClaim, true);
   assert.equal(status.streakDays, 1);
-  assert.equal(status.cycleDay, 1);
-  assert.equal(status.rewardCoins, 10);
+  assert.equal(status.totalClaimDays, 7);
+  assert.equal(status.cycleDay, 7);
+  assert.equal(status.rewardCoins, 60);
+  assert.equal(status.rewardItemId, SHOP_ITEM_IDS.rareBell);
 });
 
 test('プレイ制限: 10分窓の境界と上限回数を判定する', () => {

@@ -82,7 +82,7 @@ export function drawStagePlayLimitGauge(
     isDestroyed = true;
     timer.remove(false);
   });
-  scene.events.once(Phaser.Scenes.Events.SHUTDOWN, () => timer.remove(false));
+  // The scene Clock destroys timers on shutdown; the container handles early removal.
   return container;
 }
 
@@ -101,8 +101,8 @@ export function scheduleStagePlayLimitRefresh(
     }
 
     const delay = Math.min(Math.max(status.remainingMs + 100, 1000), 5000);
-    const timer = scene.time.delayedCall(delay, scheduleNextCheck);
-    scene.events.once(Phaser.Scenes.Events.SHUTDOWN, () => timer.remove(false));
+    // Keep only the next timer. Clock shutdown already cancels it.
+    scene.time.delayedCall(delay, scheduleNextCheck);
   };
 
   scheduleNextCheck();

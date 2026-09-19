@@ -1,5 +1,6 @@
 import * as Phaser from 'phaser';
 import { getStorySoundEffectById, storySoundEffects } from '../../data/storySoundEffects';
+import { onSceneExit } from '../sceneLifetime';
 
 const DEFAULT_STORY_SOUND_EFFECT_VOLUME = 0.72;
 
@@ -24,6 +25,16 @@ export function playStorySoundEffect(
   }
 
   const sound = scene.sound.add(effect.key, { volume });
+  let destroyed = false;
+  const release = onSceneExit(scene, () => {
+    if (!destroyed) {
+      sound.destroy();
+    }
+  });
+  sound.once('destroy', () => {
+    destroyed = true;
+    release();
+  });
   sound.once('complete', () => sound.destroy());
   if (!sound.play()) {
     sound.destroy();

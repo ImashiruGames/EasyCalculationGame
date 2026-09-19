@@ -10,6 +10,7 @@ import {
   stages,
 } from '../../../data/stages';
 import { getPracticeLevelLabel, practiceLevels } from '../../../data/practiceLevels';
+import { hasNewStageContent } from '../../../state/stageNotices';
 import { getStageAvailability, getStageUnlockDetails } from '../../../state/progression';
 import {
   getMonsterCaptureCount,
@@ -587,6 +588,9 @@ export class StageSelectScene extends Phaser.Scene {
     graphics.lineStyle(3, Phaser.Display.Color.HexStringToColor(category.accentColor).color, 1);
     graphics.fillRoundedRect(28, y - 58, 334, 116, 18);
     graphics.strokeRoundedRect(28, y - 58, 334, 116, 18);
+    if (categoryStages.some(hasNewStageContent)) {
+      this.drawNewContentBadge(340, y - 46);
+    }
 
     this.add
       .text(50, y - 34, category.name, {
@@ -623,6 +627,14 @@ export class StageSelectScene extends Phaser.Scene {
     });
   }
 
+  /** Places a compact new-content label along a card edge. */
+  private drawNewContentBadge(x: number, y: number): void {
+    this.add.text(x, y, 'new!', {
+      fontFamily: FONT_FAMILY, fontSize: '16px', fontStyle: '900',
+      color: '#ffffff', backgroundColor: '#d33e53', padding: { x: 6, y: 2 },
+    }).setOrigin(1, 0.5);
+  }
+
   /** 選んだジャンルのステージ一覧へ、同じScene内で移ります。 */
   private selectCategory(categoryId: string): void {
     this.selectedCategoryId = categoryId;
@@ -644,6 +656,9 @@ export class StageSelectScene extends Phaser.Scene {
     graphics.lineStyle(3, Phaser.Display.Color.HexStringToColor(stage.accentColor).color, alpha);
     graphics.fillRoundedRect(28, y - 72, 334, 146, 18);
     graphics.strokeRoundedRect(28, y - 72, 334, 146, 18);
+    if (hasNewStageContent(stage)) {
+      this.drawNewContentBadge(340, y - 72);
+    }
     if (isAvailable && stageStarRank >= 5) {
       this.drawCompleteStageCardSparkle(GAME_WIDTH / 2, y, 334, 146, canEnter ? 1 : 0.72);
     }

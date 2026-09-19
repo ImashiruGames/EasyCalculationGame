@@ -1,0 +1,1391 @@
+{
+  "version": 1,
+  "story": {
+    "id": "story-stage-g2-kakezan-kangae",
+    "name": "かけざんの基礎",
+    "pages": [
+      {
+        "text": "今日もこんにちは！",
+        "speaker": {
+          "kind": "actor",
+          "actorId": "imashiru"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 104,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          }
+        ]
+      },
+      {
+        "text": "さっそくですがクイズです",
+        "speaker": {
+          "kind": "actor",
+          "actorId": "imashiru"
+        },
+        "placements": [
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "left",
+            "x": 104,
+            "y": 430,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none"
+          }
+        ],
+        "soundEffectId": "wadaiko-don"
+      },
+      {
+        "text": "ここにピコリーフがいっぱいいるね",
+        "speaker": {
+          "kind": "actor",
+          "actorId": "imashiru"
+        },
+        "placements": [
+          {
+            "kind": "textBox",
+            "side": "left",
+            "x": 200.85859829646552,
+            "y": 272.74599928839916,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none",
+            "textBox": {
+              "width": 284,
+              "height": 221,
+              "fillColor": "#ffffff",
+              "strokeColor": "#47647d",
+              "lines": [
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 11,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "left"
+                },
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 46,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "center"
+                },
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 86,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "right"
+                },
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 121,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "left"
+                },
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 156,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "right"
+                }
+              ]
+            }
+          },
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "right",
+            "x": 96,
+            "y": 480,
+            "scale": 0.6,
+            "flipX": true,
+            "motion": "none",
+            "effect": "none"
+          }
+        ]
+      },
+      {
+        "text": "ピコリーフはなんひきいるでしょうか？",
+        "speaker": {
+          "kind": "actor",
+          "actorId": "imashiru"
+        },
+        "placements": [
+          {
+            "kind": "textBox",
+            "side": "left",
+            "x": 200.85859829646552,
+            "y": 272.74599928839916,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none",
+            "textBox": {
+              "width": 284,
+              "height": 221,
+              "fillColor": "#ffffff",
+              "strokeColor": "#47647d",
+              "lines": [
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 11,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "left"
+                },
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 46,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "center"
+                },
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 86,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "right"
+                },
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 121,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "left"
+                },
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 156,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "right"
+                }
+              ]
+            }
+          },
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "right",
+            "x": 96,
+            "y": 480,
+            "scale": 0.6,
+            "flipX": true,
+            "motion": "none",
+            "effect": "none"
+          }
+        ]
+      },
+      {
+        "text": "足し算だと\n2 + 2 + 2 + 2 + 2 で\n10[ruby:ぴき]匹[ruby]だね",
+        "speaker": {
+          "kind": "actor",
+          "actorId": "imashiru"
+        },
+        "placements": [
+          {
+            "kind": "textBox",
+            "side": "left",
+            "x": 200.85859829646552,
+            "y": 272.74599928839916,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none",
+            "textBox": {
+              "width": 284,
+              "height": 221,
+              "fillColor": "#ffffff",
+              "strokeColor": "#47647d",
+              "lines": [
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 11,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "left"
+                },
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 46,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "center"
+                },
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 86,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "right"
+                },
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 121,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "left"
+                },
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 156,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "right"
+                }
+              ]
+            }
+          },
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "right",
+            "x": 96,
+            "y": 480,
+            "scale": 0.6,
+            "flipX": true,
+            "motion": "none",
+            "effect": "none"
+          }
+        ]
+      },
+      {
+        "text": "これを「[color:red]かけざん[color]」で[ruby:あらわ]表[ruby]してみよう！",
+        "speaker": {
+          "kind": "actor",
+          "actorId": "imashiru"
+        },
+        "placements": [
+          {
+            "kind": "textBox",
+            "side": "left",
+            "x": 200.85859829646552,
+            "y": 272.74599928839916,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none",
+            "textBox": {
+              "width": 284,
+              "height": 221,
+              "fillColor": "#ffffff",
+              "strokeColor": "#47647d",
+              "lines": [
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 11,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "left"
+                },
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 46,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "center"
+                },
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 86,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "right"
+                },
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 121,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "left"
+                },
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 156,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "right"
+                }
+              ]
+            }
+          },
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "right",
+            "x": 96,
+            "y": 480,
+            "scale": 0.6,
+            "flipX": true,
+            "motion": "none",
+            "effect": "none"
+          }
+        ],
+        "soundEffectId": "hyoshigi-1"
+      },
+      {
+        "text": "「[color:green]２[ruby:ひき]匹[ruby][color]」のかたまりが「[color:blue]５つ[color]」あるのがわかるかな？",
+        "speaker": {
+          "kind": "actor",
+          "actorId": "imashiru"
+        },
+        "placements": [
+          {
+            "kind": "textBox",
+            "side": "left",
+            "x": 200.85859829646552,
+            "y": 272.74599928839916,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none",
+            "textBox": {
+              "width": 284,
+              "height": 221,
+              "fillColor": "#ffffff",
+              "strokeColor": "#47647d",
+              "lines": [
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 11,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "left"
+                },
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 46,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "center"
+                },
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 86,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "right"
+                },
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 121,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "left"
+                },
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 156,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "right"
+                }
+              ]
+            }
+          },
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "right",
+            "x": 96,
+            "y": 480,
+            "scale": 0.6,
+            "flipX": true,
+            "motion": "none",
+            "effect": "none"
+          }
+        ]
+      },
+      {
+        "text": "こういう、[color:red]おなじかたまり[color]をまとめて計算するときは[color:red]かけざん[color]を[ruby:つか]使[ruby]うといいよ！",
+        "speaker": {
+          "kind": "actor",
+          "actorId": "imashiru"
+        },
+        "placements": [
+          {
+            "kind": "textBox",
+            "side": "left",
+            "x": 200.85859829646552,
+            "y": 272.74599928839916,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none",
+            "textBox": {
+              "width": 284,
+              "height": 221,
+              "fillColor": "#ffffff",
+              "strokeColor": "#47647d",
+              "lines": [
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 11,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "left"
+                },
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 46,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "center"
+                },
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 86,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "right"
+                },
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 121,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "left"
+                },
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 156,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "right"
+                }
+              ]
+            }
+          },
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "right",
+            "x": 96,
+            "y": 480,
+            "scale": 0.6,
+            "flipX": true,
+            "motion": "none",
+            "effect": "none"
+          }
+        ],
+        "soundEffectId": "wadaiko-dodon"
+      },
+      {
+        "text": "「[color:green]２[ruby:ひき]匹[ruby][color]」のかたまりが「[color:blue]５つ[color]」あるから…",
+        "speaker": {
+          "kind": "actor",
+          "actorId": "imashiru"
+        },
+        "placements": [
+          {
+            "kind": "textBox",
+            "side": "left",
+            "x": 200.85859829646552,
+            "y": 272.74599928839916,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none",
+            "textBox": {
+              "width": 284,
+              "height": 221,
+              "fillColor": "#ffffff",
+              "strokeColor": "#47647d",
+              "lines": [
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 11,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "left"
+                },
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 46,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "center"
+                },
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 86,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "right"
+                },
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 121,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "left"
+                },
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 156,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "right"
+                }
+              ]
+            }
+          },
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "right",
+            "x": 96,
+            "y": 480,
+            "scale": 0.6,
+            "flipX": true,
+            "motion": "none",
+            "effect": "none"
+          }
+        ],
+        "soundEffectId": "drum-roll"
+      },
+      {
+        "text": "これは[color:green]2[color] [ruby:かける]×[ruby] [color:blue]5[color]ってかけるよ！",
+        "speaker": {
+          "kind": "actor",
+          "actorId": "imashiru"
+        },
+        "placements": [
+          {
+            "kind": "textBox",
+            "side": "left",
+            "x": 200.85859829646552,
+            "y": 272.74599928839916,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none",
+            "textBox": {
+              "width": 284,
+              "height": 221,
+              "fillColor": "#ffffff",
+              "strokeColor": "#47647d",
+              "lines": [
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 11,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "left"
+                },
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 46,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "center"
+                },
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 86,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "right"
+                },
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 121,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "left"
+                },
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 156,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "right"
+                },
+                {
+                  "text": "[color:red]2[color] × [color:green]5[color]",
+                  "x": 0,
+                  "y": 216,
+                  "fontSize": 30,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "right"
+                }
+              ]
+            }
+          },
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "right",
+            "x": 96,
+            "y": 480,
+            "scale": 0.6,
+            "flipX": true,
+            "motion": "none",
+            "effect": "none"
+          }
+        ],
+        "soundEffectId": "nyutsu-2"
+      },
+      {
+        "text": "とりあえずこれが\n[color:red]2 × 5[color]のイメージなことは[ruby:し]知[ruby]っててね",
+        "speaker": {
+          "kind": "actor",
+          "actorId": "imashiru"
+        },
+        "placements": [
+          {
+            "kind": "textBox",
+            "side": "left",
+            "x": 200.85859829646552,
+            "y": 272.74599928839916,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none",
+            "textBox": {
+              "width": 284,
+              "height": 221,
+              "fillColor": "#ffffff",
+              "strokeColor": "#47647d",
+              "lines": [
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 11,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "left"
+                },
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 46,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "center"
+                },
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 86,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "right"
+                },
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 121,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "left"
+                },
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 156,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "right"
+                },
+                {
+                  "text": "[color:red]2[color] × [color:green]5[color]",
+                  "x": 0,
+                  "y": 216,
+                  "fontSize": 30,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "right"
+                }
+              ]
+            }
+          },
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "right",
+            "x": 96,
+            "y": 480,
+            "scale": 0.6,
+            "flipX": true,
+            "motion": "none",
+            "effect": "none"
+          }
+        ],
+        "soundEffectId": "wadaiko-dodon"
+      },
+      {
+        "text": "ほかにも[ruby:たと]例[ruby]えば\nこれは、[color:green]5匹[color] のかたまりが [color:blue] 3つ[color] あるから",
+        "speaker": {
+          "kind": "actor",
+          "actorId": "imashiru"
+        },
+        "placements": [
+          {
+            "kind": "textBox",
+            "side": "left",
+            "x": 200.85859829646552,
+            "y": 272.74599928839916,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none",
+            "textBox": {
+              "width": 284,
+              "height": 221,
+              "fillColor": "#ffffff",
+              "strokeColor": "#47647d",
+              "lines": [
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ][name:ピコリーフ][name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 11,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "left"
+                },
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ][name:ピコリーフ][name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 86,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "right"
+                },
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ][name:ピコリーフ][name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 156,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "center"
+                }
+              ]
+            }
+          },
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "right",
+            "x": 96,
+            "y": 480,
+            "scale": 0.6,
+            "flipX": true,
+            "motion": "none",
+            "effect": "none"
+          }
+        ]
+      },
+      {
+        "text": "かけざんを使うとどう書けるでしょうか？\n（わかるかな？）",
+        "speaker": {
+          "kind": "actor",
+          "actorId": "imashiru"
+        },
+        "placements": [
+          {
+            "kind": "textBox",
+            "side": "left",
+            "x": 200.85859829646552,
+            "y": 272.74599928839916,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none",
+            "textBox": {
+              "width": 284,
+              "height": 221,
+              "fillColor": "#ffffff",
+              "strokeColor": "#47647d",
+              "lines": [
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ][name:ピコリーフ][name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 11,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "left"
+                },
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ][name:ピコリーフ][name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 86,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "right"
+                },
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ][name:ピコリーフ][name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 156,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "center"
+                }
+              ]
+            }
+          },
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "right",
+            "x": 96,
+            "y": 480,
+            "scale": 0.6,
+            "flipX": true,
+            "motion": "none",
+            "effect": "none"
+          }
+        ],
+        "soundEffectId": "question-1"
+      },
+      {
+        "text": "正解は…？？？？",
+        "speaker": {
+          "kind": "actor",
+          "actorId": "imashiru"
+        },
+        "placements": [
+          {
+            "kind": "textBox",
+            "side": "left",
+            "x": 200.85859829646552,
+            "y": 272.74599928839916,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none",
+            "textBox": {
+              "width": 284,
+              "height": 221,
+              "fillColor": "#ffffff",
+              "strokeColor": "#47647d",
+              "lines": [
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ][name:ピコリーフ][name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 11,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "left"
+                },
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ][name:ピコリーフ][name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 86,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "right"
+                },
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ][name:ピコリーフ][name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 156,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "center"
+                }
+              ]
+            }
+          },
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "right",
+            "x": 96,
+            "y": 480,
+            "scale": 0.6,
+            "flipX": true,
+            "motion": "none",
+            "effect": "none"
+          }
+        ],
+        "soundEffectId": "drum-roll"
+      },
+      {
+        "text": "[color:green]5[color] [ruby:かける]×[ruby] [color:blue]3[color]だね！ ",
+        "speaker": {
+          "kind": "actor",
+          "actorId": "imashiru"
+        },
+        "placements": [
+          {
+            "kind": "textBox",
+            "side": "left",
+            "x": 200.85859829646552,
+            "y": 272.74599928839916,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none",
+            "textBox": {
+              "width": 284,
+              "height": 221,
+              "fillColor": "#ffffff",
+              "strokeColor": "#47647d",
+              "lines": [
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ][name:ピコリーフ][name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 11,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "left"
+                },
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ][name:ピコリーフ][name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 86,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "right"
+                },
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ][name:ピコリーフ][name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 156,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "center"
+                },
+                {
+                  "text": "[color:red]5[color] × [color:green]3[color]",
+                  "x": 0,
+                  "y": 221,
+                  "fontSize": 34,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "right"
+                }
+              ]
+            }
+          },
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "right",
+            "x": 96,
+            "y": 480,
+            "scale": 0.6,
+            "flipX": true,
+            "motion": "none",
+            "effect": "none"
+          }
+        ],
+        "soundEffectId": "jan"
+      },
+      {
+        "text": "5匹のかたまりが3つあるから\n5×3って書くよ！",
+        "speaker": {
+          "kind": "actor",
+          "actorId": "imashiru"
+        },
+        "placements": [
+          {
+            "kind": "textBox",
+            "side": "left",
+            "x": 200.85859829646552,
+            "y": 272.74599928839916,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none",
+            "textBox": {
+              "width": 284,
+              "height": 221,
+              "fillColor": "#ffffff",
+              "strokeColor": "#47647d",
+              "lines": [
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ][name:ピコリーフ][name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 11,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "left"
+                },
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ][name:ピコリーフ][name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 86,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "right"
+                },
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ][name:ピコリーフ][name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 156,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "center"
+                },
+                {
+                  "text": "[color:red]5[color] × [color:green]3[color]",
+                  "x": 0,
+                  "y": 221,
+                  "fontSize": 34,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "right"
+                }
+              ]
+            }
+          },
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "right",
+            "x": 96,
+            "y": 480,
+            "scale": 0.6,
+            "flipX": true,
+            "motion": "none",
+            "effect": "none"
+          }
+        ]
+      },
+      {
+        "text": "[ruby:ほか]他[ruby]にもこれは、「4匹」のかたまりが「5つ」あるから\nこんな感じの式で書けるよ！",
+        "speaker": {
+          "kind": "actor",
+          "actorId": "imashiru"
+        },
+        "placements": [
+          {
+            "kind": "textBox",
+            "side": "left",
+            "x": 200.85859829646552,
+            "y": 272.74599928839916,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none",
+            "textBox": {
+              "width": 284,
+              "height": 221,
+              "fillColor": "#ffffff",
+              "strokeColor": "#47647d",
+              "lines": [
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ]\n[name:ピコリーフ][name:ピコリーフ]\n\n\n　[name:ピコリーフ][name:ピコリーフ]\n　[name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 11,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "left"
+                },
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ]　　\n[name:ピコリーフ][name:ピコリーフ]　　\n\n\n　[name:ピコリーフ][name:ピコリーフ]\n　[name:ピコリーフ][name:ピコリーフ]",
+                  "x": -65,
+                  "y": 11,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "right"
+                },
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ]\n[name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 11,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "right"
+                },
+                {
+                  "text": "[color:red]4[color] × [color:green]5[color]",
+                  "x": 0,
+                  "y": 221,
+                  "fontSize": 34,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "right"
+                }
+              ]
+            }
+          },
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "right",
+            "x": 96,
+            "y": 480,
+            "scale": 0.6,
+            "flipX": true,
+            "motion": "none",
+            "effect": "none"
+          }
+        ],
+        "soundEffectId": "wadaiko-don"
+      },
+      {
+        "text": "だいたいはつかめたかな？\nかけざんは「[color:red]同じかたまりがいくつある？[color]」って考えたらわかりやすいよ！",
+        "speaker": {
+          "kind": "actor",
+          "actorId": "imashiru"
+        },
+        "placements": [
+          {
+            "kind": "textBox",
+            "side": "left",
+            "x": 200.85859829646552,
+            "y": 272.74599928839916,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none",
+            "textBox": {
+              "width": 284,
+              "height": 221,
+              "fillColor": "#ffffff",
+              "strokeColor": "#47647d",
+              "lines": [
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ]\n[name:ピコリーフ][name:ピコリーフ]\n\n\n　[name:ピコリーフ][name:ピコリーフ]\n　[name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 11,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "left"
+                },
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ]　　\n[name:ピコリーフ][name:ピコリーフ]　　\n\n\n　[name:ピコリーフ][name:ピコリーフ]\n　[name:ピコリーフ][name:ピコリーフ]",
+                  "x": -65,
+                  "y": 11,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "right"
+                },
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ]\n[name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 11,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "right"
+                },
+                {
+                  "text": "[color:red]4[color] × [color:green]5[color]",
+                  "x": 0,
+                  "y": 221,
+                  "fontSize": 34,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "right"
+                }
+              ]
+            }
+          },
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "right",
+            "x": 96,
+            "y": 480,
+            "scale": 0.6,
+            "flipX": true,
+            "motion": "none",
+            "effect": "none"
+          }
+        ]
+      },
+      {
+        "text": "それじゃあ、かけざんモンスターを[ruby:あつ]集[ruby]める[ruby:たび]旅[ruby]にしゅっぱーつ！",
+        "speaker": {
+          "kind": "actor",
+          "actorId": "imashiru"
+        },
+        "placements": [
+          {
+            "kind": "textBox",
+            "side": "left",
+            "x": 200.85859829646552,
+            "y": 272.74599928839916,
+            "scale": 1,
+            "flipX": false,
+            "motion": "none",
+            "effect": "none",
+            "textBox": {
+              "width": 284,
+              "height": 221,
+              "fillColor": "#ffffff",
+              "strokeColor": "#47647d",
+              "lines": [
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ]\n[name:ピコリーフ][name:ピコリーフ]\n\n\n　[name:ピコリーフ][name:ピコリーフ]\n　[name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 11,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "left"
+                },
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ]　　\n[name:ピコリーフ][name:ピコリーフ]　　\n\n\n　[name:ピコリーフ][name:ピコリーフ]\n　[name:ピコリーフ][name:ピコリーフ]",
+                  "x": -65,
+                  "y": 11,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "right"
+                },
+                {
+                  "text": "[name:ピコリーフ][name:ピコリーフ]\n[name:ピコリーフ][name:ピコリーフ]",
+                  "x": 0,
+                  "y": 11,
+                  "fontSize": 18,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "right"
+                },
+                {
+                  "text": "[color:red]4[color] × [color:green]5[color]",
+                  "x": 0,
+                  "y": 221,
+                  "fontSize": 34,
+                  "bold": false,
+                  "color": "#263143",
+                  "align": "right"
+                }
+              ]
+            }
+          },
+          {
+            "kind": "actor",
+            "actorId": "imashiru",
+            "side": "right",
+            "x": 96,
+            "y": 480,
+            "scale": 0.6,
+            "flipX": true,
+            "motion": "bounce",
+            "effect": "none"
+          }
+        ],
+        "soundEffectId": "dondon-pafupafu"
+      }
+    ],
+    "updatedAt": 1781837364813
+  }
+}

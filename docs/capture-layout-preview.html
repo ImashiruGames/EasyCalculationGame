@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="ja">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Capture layout preview</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #eaf4ff; color: #243044; font: 14px sans-serif; }
+  header { padding: 8px; display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+  select { max-width: 46vw; } button, select { min-height: 32px; }
+  #game { margin: auto; width: min(390px, 100vw, calc((100svh - 100px) * 390 / 844)); aspect-ratio: 390 / 844; }
+  #status { margin: 8px auto; max-width: 900px; white-space: pre-wrap; }
+</style>
+<header>
+  <select id="case" aria-label="Case"></select>
+  <button id="previous">まえ</button><button id="next">つぎ</button>
+  <button id="fill">入力</button><button id="feedback">答え</button>
+  <label><input id="regions" type="checkbox">わく</label>
+  <button id="audit">All cases</button>
+</header>
+<div id="game"></div><pre id="status" role="status">Loading…</pre>
+<script type="module" src="/src/game/ui/problem/captureLayoutPreview.ts"></script>
+</html>

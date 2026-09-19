@@ -53,6 +53,9 @@ CSVから読み込むデータもここでTypeScriptから使える形にして�
 - titleBackgrounds.ts
   タイトル背景の定義です。
 
+- titleNotices.ts
+  タイトルのおしらせで出す文をならべています。
+
 - trainers.ts
   トレーナーCSVを読み、ゲーム内データへ変換する処理です。
 
@@ -62,3 +65,5 @@ CSVから読み込むデータもここでTypeScriptから使える形にして�
   CSV形式の元データを置いています。
 - stories
   エクスポートしたストーリーJSONを置く場所です。index.ts から story.id で探せます。
+- stageProblems
+  ステージごとの手作り方眼問題JSONを置く場所です。stageId と problemNo で探せます。

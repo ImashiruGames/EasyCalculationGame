@@ -1,0 +1,88 @@
+{
+  "problem": {
+    "id": "stage4_1-p002",
+    "stageId": "stage4_1",
+    "problemNo": 2,
+    "kind": "gridExpression",
+    "title": "絵を見て しきをつくろう",
+    "grid": {
+      "cols": 10,
+      "rows": 3
+    },
+    "chars": [
+      "picoleaf",
+      "mokotane"
+    ],
+    "objects": [
+      { "char": 0, "col": 0, "row": 0 },
+      { "char": 0, "col": 1, "row": 0 },
+      { "char": 0, "col": 0, "row": 1 },
+      { "char": 0, "col": 0, "row": 2 },
+      { "char": 0, "col": 2, "row": 0 },
+      { "char": 0, "col": 3, "row": 0 },
+      { "char": 0, "col": 2, "row": 1 },
+      { "char": 0, "col": 2, "row": 2 },
+      { "char": 0, "col": 4, "row": 0 },
+      { "char": 0, "col": 5, "row": 0 },
+      { "char": 0, "col": 4, "row": 1 },
+      { "char": 0, "col": 4, "row": 2 },
+      { "char": 0, "col": 6, "row": 0 },
+      { "char": 0, "col": 7, "row": 0 },
+      { "char": 0, "col": 6, "row": 1 },
+      { "char": 0, "col": 6, "row": 2 },
+      { "char": 0, "col": 8, "row": 0 },
+      { "char": 0, "col": 9, "row": 0 },
+      { "char": 0, "col": 8, "row": 1 },
+      { "char": 0, "col": 8, "row": 2 }
+    ],
+    "groups": [
+      {
+        "cells": [
+          { "col": 0, "row": 0 },
+          { "col": 1, "row": 0 },
+          { "col": 0, "row": 1 },
+          { "col": 0, "row": 2 }
+        ],
+        "label": "4こ"
+      },
+      {
+        "cells": [
+          { "col": 2, "row": 0 },
+          { "col": 3, "row": 0 },
+          { "col": 2, "row": 1 },
+          { "col": 2, "row": 2 }
+        ],
+        "label": "4こ"
+      },
+      {
+        "cells": [
+          { "col": 4, "row": 0 },
+          { "col": 5, "row": 0 },
+          { "col": 4, "row": 1 },
+          { "col": 4, "row": 2 }
+        ],
+        "label": "4こ"
+      },
+      {
+        "cells": [
+          { "col": 6, "row": 0 },
+          { "col": 7, "row": 0 },
+          { "col": 6, "row": 1 },
+          { "col": 6, "row": 2 }
+        ],
+        "label": "4こ"
+      },
+      {
+        "cells": [
+          { "col": 8, "row": 0 },
+          { "col": 9, "row": 0 },
+          { "col": 8, "row": 1 },
+          { "col": 8, "row": 2 }
+        ],
+        "label": "4こ"
+      }
+    ],
+    "expression": "4 × □ = 20",
+    "answer": 5
+  }
+}

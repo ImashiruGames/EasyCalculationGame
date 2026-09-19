@@ -1,9 +1,26 @@
-export type StoryCreatorActorMotion = 'none' | 'bounce' | 'sway' | 'twitch' | 'slide';
+import { getLocalStorage } from './browserStorage';
+export type StoryCreatorActorMotion =
+  | 'none'
+  | 'move'
+  | 'bounce'
+  | 'sway'
+  | 'twitch'
+  | 'slide'
+  | 'spin'
+  | 'pulse'
+  | 'blink'
+  | 'spinPulse';
 export type StoryCreatorActorEffect = 'none' | 'glow' | 'shrink' | 'grow' | 'silhouette';
 export type StoryCreatorSide = 'left' | 'right';
 export type StoryCreatorSpeakerKind = 'narration' | 'left' | 'right' | 'actor';
 export type StoryCreatorPlacementKind = 'actor' | 'textBox' | 'shape';
 export type StoryCreatorTextAlign = 'left' | 'center' | 'right';
+
+export interface StoryCreatorMoveMotion {
+  startX: number;
+  startY: number;
+  speed: number;
+}
 
 export interface StoryCreatorSpeaker {
   kind: StoryCreatorSpeakerKind;
@@ -58,6 +75,7 @@ export interface StoryCreatorPlacement {
   scale: number;
   flipX: boolean;
   motion: StoryCreatorActorMotion;
+  motionMove?: StoryCreatorMoveMotion;
   effect: StoryCreatorActorEffect;
   textBox?: StoryCreatorTextBox;
   shape?: StoryCreatorShape;
@@ -102,6 +120,7 @@ const MAX_DRAFT_COUNT = 20;
 const MAX_SCENE_TEMPLATE_COUNT = 30;
 const DEFAULT_TEXT_BOX_WIDTH = 164;
 const DEFAULT_TEXT_BOX_HEIGHT = 220;
+const DEFAULT_MOVE_MOTION: StoryCreatorMoveMotion = { startX: -86, startY: 0, speed: 160 };
 
 /** 空の解説ボックス用データを作ります。 */
 export function createDefaultStoryCreatorTextBox(): StoryCreatorTextBox {
@@ -133,6 +152,11 @@ export function createDefaultStoryCreatorTextBox(): StoryCreatorTextBox {
   };
 }
 
+/** Builds default custom move data. */
+export function createDefaultStoryCreatorMoveMotion(): StoryCreatorMoveMotion {
+  return { ...DEFAULT_MOVE_MOTION };
+}
+
 /** ストーリー配置を、入れ子の行データまで含めて複製します。 */
 /** さいしょにおく三点のずけいデータを作ります。 */
 export function createDefaultStoryCreatorShape(): StoryCreatorShape {
@@ -157,11 +181,13 @@ export function createDefaultStoryCreatorShape(): StoryCreatorShape {
   };
 }
 
+/** Copies nested motion, text, and shape data so edits stay within one draft. */
 export function cloneStoryCreatorPlacement(placement: StoryCreatorPlacement): StoryCreatorPlacement {
   const kind = placement.kind ?? (placement.textBox ? 'textBox' : placement.shape ? 'shape' : 'actor');
   return {
     ...placement,
     kind,
+    motionMove: placement.motionMove ? { ...placement.motionMove } : undefined,
     textBox: placement.textBox
       ? {
         ...placement.textBox,
@@ -411,15 +437,6 @@ function createStoryCreatorTemplateId(): string {
   return `scene-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
-/** localStorageを安全に取り出します。 */
-function getLocalStorage(): Storage | null {
-  try {
-    return typeof window === 'undefined' ? null : window.localStorage;
-  } catch {
-    return null;
-  }
-}
-
 /** 外部から読んだ下書きデータを使える形へ整えます。 */
 function normalizeDraft(value: unknown): StoryCreatorDraft | null {
   if (!isRecord(value)) {
@@ -553,6 +570,12 @@ function normalizePlacement(value: unknown): StoryCreatorPlacement | null {
     return null;
   }
 
+  const motion = getSafeMotion(value.motion);
+  const legacyMoveMotion = getLegacyMoveMotion(value.motion);
+  const motionMove = normalizeMoveMotion(
+    value.motionMove,
+    legacyMoveMotion ?? (motion === 'move' ? DEFAULT_MOVE_MOTION : undefined),
+  );
   const isTextBox = value.kind === 'textBox' || isRecord(value.textBox);
   const isShape = value.kind === 'shape' || isRecord(value.shape);
   const textBox = isTextBox ? normalizeTextBox(value.textBox) : undefined;
@@ -569,7 +592,8 @@ function normalizePlacement(value: unknown): StoryCreatorPlacement | null {
     y: typeof value.y === 'number' ? value.y : isShape ? 330 : isTextBox ? 330 : 430,
     scale: typeof value.scale === 'number' ? value.scale : 1,
     flipX: typeof value.flipX === 'boolean' ? value.flipX : false,
-    motion: getSafeMotion(value.motion),
+    motion,
+    ...(motionMove ? { motionMove } : {}),
     effect: getSafeEffect(value.effect),
     ...(textBox ? { textBox } : {}),
     ...(shape ? { shape } : {}),
@@ -672,6 +696,19 @@ function normalizeTextLine(value: unknown): StoryCreatorTextLine | null {
   };
 }
 
+/** Cleans custom move data from saved JSON. */
+function normalizeMoveMotion(value: unknown, fallback?: StoryCreatorMoveMotion): StoryCreatorMoveMotion | undefined {
+  if (!isRecord(value)) {
+    return fallback ? { ...fallback } : undefined;
+  }
+
+  return {
+    startX: clampNumber(value.startX, -360, 360, fallback?.startX ?? DEFAULT_MOVE_MOTION.startX),
+    startY: clampNumber(value.startY, -360, 360, fallback?.startY ?? DEFAULT_MOVE_MOTION.startY),
+    speed: clampNumber(value.speed, 40, 640, fallback?.speed ?? DEFAULT_MOVE_MOTION.speed),
+  };
+}
+
 /** 数値を指定範囲に収め、数値でない時は初期値を返します。 */
 function clampNumber(value: unknown, min: number, max: number, fallback: number): number {
   return typeof value === 'number'
@@ -700,11 +737,46 @@ function getSafeSide(value: unknown, x: unknown): StoryCreatorSide {
 
 /** 動きの指定が使える値か調べ、使えない時はなしにします。 */
 function getSafeMotion(value: unknown): StoryCreatorActorMotion {
-  if (value === 'bounce' || value === 'sway' || value === 'twitch' || value === 'slide') {
+  if (value === 'fromLeft' || value === 'fromRight' || value === 'fromUp' || value === 'fromDown') {
+    return 'move';
+  }
+
+  if (
+    value === 'move'
+    || value === 'bounce'
+    || value === 'sway'
+    || value === 'twitch'
+    || value === 'slide'
+    || value === 'spin'
+    || value === 'pulse'
+    || value === 'blink'
+    || value === 'spinPulse'
+  ) {
     return value;
   }
 
   return 'none';
+}
+
+/** Converts old entry presets to custom move data. */
+function getLegacyMoveMotion(value: unknown): StoryCreatorMoveMotion | undefined {
+  if (value === 'fromLeft') {
+    return { ...DEFAULT_MOVE_MOTION };
+  }
+
+  if (value === 'fromRight') {
+    return { ...DEFAULT_MOVE_MOTION, startX: 86 };
+  }
+
+  if (value === 'fromUp') {
+    return { ...DEFAULT_MOVE_MOTION, startX: 0, startY: -86 };
+  }
+
+  if (value === 'fromDown') {
+    return { ...DEFAULT_MOVE_MOTION, startX: 0, startY: 86 };
+  }
+
+  return undefined;
 }
 
 /** 行ぞろえの指定が使える値か調べ、使えない時は左にします。 */
@@ -728,4 +800,14 @@ function getSafeEffect(value: unknown): StoryCreatorActorEffect {
 /** unknown値がオブジェクトとして読めるか調べます。 */
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null;
+}
+
+/** Copies a draft including nested page data so editing cannot mutate another scene. */
+export function cloneStoryCreatorDraft(draft: StoryCreatorDraft): StoryCreatorDraft {
+  return {
+    id: draft.id,
+    name: draft.name,
+    updatedAt: draft.updatedAt,
+    pages: draft.pages.map(cloneStoryCreatorPage),
+  };
 }

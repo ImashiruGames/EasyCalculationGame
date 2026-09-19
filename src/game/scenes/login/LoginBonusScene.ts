@@ -14,6 +14,8 @@ import { DEBUG_ALWAYS_SHOW_LOGIN_BONUS_SCREEN, SHOW_LOGIN_BONUS_SCREEN } from '.
 import { APP_LAYOUT } from '../../layoutConfig';
 import { preloadMonsterImageAssetsByIds } from '../../assets/monsterImageAssets';
 import { SceneKeys } from '../../sceneKeys';
+import { onceSceneAdvance } from '../../sceneLifetime';
+import { stopTweensOnDestroy } from '../../ui/common/gameObjectLifecycle';
 import { createMonsterVisual } from '../../ui/creatures/monsterVisual';
 
 function colorToNumber(color: string): number {
@@ -174,7 +176,7 @@ export class LoginBonusScene extends Phaser.Scene {
     graphics.strokeRoundedRect(cardX + 10, cardY + 10, cardWidth - 20, cardHeight - 20, 55);
 
     this.add
-      .text(GAME_WIDTH / 2, cardY + 44, `れんぞく ${status.streakDays}日目`, {
+      .text(GAME_WIDTH / 2, cardY + 44, `通算 ${status.totalClaimDays}日目`, {
         fontFamily: FONT_FAMILY,
         fontSize: '20px',
         fontStyle: '900',
@@ -592,6 +594,9 @@ export class LoginBonusScene extends Phaser.Scene {
       ease: 'Sine.easeInOut',
     });
 
+    stopTweensOnDestroy(this, overlay);
+
+    /** Closes the reward after its first accepted input and opens the home prompt. */
     const closeOverlay = (): void => {
       if (!this.canContinue) {
         return;
@@ -613,9 +618,7 @@ export class LoginBonusScene extends Phaser.Scene {
 
     this.time.delayedCall(320, () => {
       this.canContinue = true;
-      this.input.once('pointerdown', closeOverlay);
-      this.input.keyboard?.once('keydown-ENTER', closeOverlay);
-      this.input.keyboard?.once('keydown-SPACE', closeOverlay);
+      onceSceneAdvance(this, closeOverlay);
     });
   }
 
@@ -646,9 +649,7 @@ export class LoginBonusScene extends Phaser.Scene {
 
   private enableTapToHome(): void {
     this.canContinue = true;
-    this.input.once('pointerdown', () => this.goHome());
-    this.input.keyboard?.once('keydown-ENTER', () => this.goHome());
-    this.input.keyboard?.once('keydown-SPACE', () => this.goHome());
+    onceSceneAdvance(this, () => this.goHome());
   }
 
   private goHome(): void {

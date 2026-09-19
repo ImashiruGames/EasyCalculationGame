@@ -19,7 +19,8 @@
     "dev-nolog": "vite --config vite/config.dev.mjs",
     "build-nolog": "vite build --config vite/config.prod.mjs",
     "dev-remodex": "vite --config vite/config.dev.mjs --host 0.0.0.0 --port 5173",
-    "test": "node --test tests/run.mjs"
+    "test": "node --test tests/run.mjs",
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "typescript": "~5.7.2",

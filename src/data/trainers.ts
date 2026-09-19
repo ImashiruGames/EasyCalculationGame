@@ -1,5 +1,7 @@
 import { ProblemRuleDefinition, TrainerDefinition } from '../game/types';
+import debugTrainersCsv from './csv/debug_trainers.csv?raw';
 import trainersCsv from './csv/trainers.csv?raw';
+import { appendDebugCsvRows } from './debugMode';
 import {
   optionalCsvValue,
   parseCsv,
@@ -19,7 +21,7 @@ function parseProblemRule(value: string): ProblemRuleDefinition {
   return trimmed as ProblemRuleDefinition;
 }
 
-export const trainers: TrainerDefinition[] = parseCsv(trainersCsv).map((row, index) => {
+export const trainers: TrainerDefinition[] = parseCsv(appendDebugCsvRows(trainersCsv, debugTrainersCsv)).map((row, index) => {
   const rowNumber = index + 2;
   const partnerMonsterIds = parseCsvList(row.partnerMonsterIds);
 

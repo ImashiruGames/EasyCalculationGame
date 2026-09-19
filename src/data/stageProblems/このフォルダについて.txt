@@ -1,0 +1,16 @@
+stageProblems フォルダについて
+
+ステージごとに手作りの方眼問題JSONを置く場所です。
+フォルダ名は stageId に合わせます。
+
+直下のファイル
+
+- index.ts
+  JSONを読み込み、stageId と problemNo から方眼問題を探せるようにします。
+
+直下のフォルダ
+
+- stage4_1
+  方眼問題のサンプルです。
+- g2-kakezan-kangae
+  かけ算の考えステージでつかう、手作りほうがんもんだいJSONがあります。

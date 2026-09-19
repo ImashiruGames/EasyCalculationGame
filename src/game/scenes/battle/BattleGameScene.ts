@@ -1,7 +1,13 @@
 import * as Phaser from 'phaser';
-import { BOSS_BATTLE_DISPLAY_NAME, getBossBattleAsTrainer, getBossBattleById, getBossBattleProblemRules } from '../../../data/bossBattles';
+import {
+  BOSS_BATTLE_DISPLAY_NAME,
+  getBossBattleAsTrainer,
+  getBossBattleById,
+  getBossBattleProblemRules,
+} from '../../../data/bossBattles';
 import { getMonsterById } from '../../../data/monsters';
 import { SHOP_ITEM_IDS } from '../../../data/shopItems';
+import { getStageProblemMonsterIdsForProblemRule } from '../../../data/stageProblems';
 import { getTrainerById, getTrainerPartnerMonsterIds, getTrainersByDifficulty } from '../../../data/trainers';
 import {
   addBattleBonusReward,
@@ -11,6 +17,10 @@ import {
   loadSaveState,
   recordBestStreakWins,
 } from '../../../state/save';
+import { getRewardBoxTextureKey, preloadBattleRewardAssets } from '../../assets/battleRewardAssets';
+import { preloadRankMedalAssets } from '../../assets/medalAssets';
+import { preloadMonsterImageAssetsByIds } from '../../assets/monsterImageAssets';
+import { preloadTrainerImageAsset } from '../../assets/trainerImageAssets';
 import {
   playBattleAttackSound,
   playBattleHitSound,
@@ -32,6 +42,7 @@ import {
   getProblemAnswerPairJudgement,
   isClockTimeProblem,
   isDecimalProblem,
+  isGridExpressionProblem,
   isProblemAnswerCorrect,
   usesClockMinuteConversionPairAnswer,
   usesOptionalSquareRootCoefficientInput,
@@ -44,19 +55,26 @@ import {
   usesSquareRootSimplifyAnswer,
   usesTwoPartAnswer,
 } from '../../problem/mathProblems';
-import { SceneKeys } from '../../sceneKeys';
 import { getAnswerSpeedBonus } from '../../problem/speedBonus';
-import { BattleMode, BattlePartySnapshot, BattleSceneData, BattleSelectSceneData, MathProblem, MonsterDefinition, ProblemRuleDefinition, StageId, TrainerDefinition } from '../../types';
+import { SceneKeys } from '../../sceneKeys';
+import {
+  BattleMode,
+  BattlePartySnapshot,
+  BattleSceneData,
+  BattleSelectSceneData,
+  MathProblem,
+  MonsterDefinition,
+  ProblemRuleDefinition,
+  StageId,
+  TrainerDefinition,
+} from '../../types';
+import { showRankUpOverlayIfNeeded } from '../../ui/achievements/rankUpOverlay';
 import { createButton, createSmallButton } from '../../ui/common/button';
 import { showGameMenu } from '../../ui/common/gameMenu';
 import { createMonsterVisual } from '../../ui/creatures/monsterVisual';
-import { drawNumberKeypad, NumberKeypadLabel, resolveNumberKeyInput } from '../../ui/problem/numberKeypad';
-import { showRankUpOverlayIfNeeded } from '../../ui/achievements/rankUpOverlay';
 import { createTrainerIntroVisual } from '../../ui/creatures/trainerVisual';
-import { getRewardBoxTextureKey, preloadBattleRewardAssets } from '../../assets/battleRewardAssets';
-import { preloadMonsterImageAssetsByIds } from '../../assets/monsterImageAssets';
-import { preloadRankMedalAssets } from '../../assets/medalAssets';
-import { preloadTrainerImageAsset } from '../../assets/trainerImageAssets';
+import { drawGridExpressionGrid } from '../../ui/problem/gridExpression';
+import { drawNumberKeypad, NumberKeypadLabel, resolveNumberKeyInput } from '../../ui/problem/numberKeypad';
 
 const GENKI_BREAD_HP_BONUS = 15;
 const OPPONENT_SOLVE_BAR_WIDTH = 188;
@@ -124,6 +142,8 @@ export class BattleGameScene extends Phaser.Scene {
   private problemText!: Phaser.GameObjects.Text;
   private answerText!: Phaser.GameObjects.Text;
   private feedbackText!: Phaser.GameObjects.Text;
+  private gridProblemLayer?: Phaser.GameObjects.Container;
+  private gridProblemAnswerText?: Phaser.GameObjects.Text;
   private genkiBreadUsed = false;
   private battleReward?: BattleRewardSummary;
   private battleMode: BattleMode = 'single';
@@ -237,6 +257,8 @@ export class BattleGameScene extends Phaser.Scene {
     preloadMonsterImageAssetsByIds(this, [
       ...this.opponentPartyStates.map((state) => state.monster.id),
       ...this.partyStates.map((state) => state.monster.id),
+      ...getStageProblemMonsterIdsForProblemRule(this.trainer.problemRule),
+      ...this.bossProblemRules.flatMap((problemRule) => getStageProblemMonsterIdsForProblemRule(problemRule)),
     ]);
     preloadBattleRewardAssets(this);
     preloadRankMedalAssets(this);
@@ -558,6 +580,7 @@ export class BattleGameScene extends Phaser.Scene {
         wordWrap: { width: 330, useAdvancedWrap: true },
       })
       .setOrigin(0.5);
+    this.feedbackText.setDepth(26);
   }
 
   private drawKeypad(): void {
@@ -1019,13 +1042,86 @@ export class BattleGameScene extends Phaser.Scene {
     this.isBusy = false;
     const problemText = formatProblem(this.problem);
     const problemLineCount = problemText.split('\n').length;
+    this.clearGridProblemLayer();
     this.problemText.setFontSize(this.getProblemFontSize(this.problem));
     this.problemText.setY(problemLineCount >= 4 ? 472 : problemLineCount >= 2 ? 480 : 488);
     this.answerText.setY(problemLineCount >= 4 ? 584 : problemLineCount >= 2 ? 566 : 538);
-    this.problemText.setText(problemText);
+    this.feedbackText.setY(574);
+    if (isGridExpressionProblem(this.problem)) {
+      this.problemText.setText('');
+      this.answerText.setText('');
+      this.feedbackText.setY(596);
+      this.drawGridExpressionProblem(this.problem);
+    } else {
+      this.problemText.setText(problemText);
+    }
     this.feedbackText.setText('');
     this.updateAnswerText();
     this.problemStartedAt = this.time.now;
+  }
+
+  /** Removes the grid problem overlay before drawing the next problem. */
+  private clearGridProblemLayer(): void {
+    this.gridProblemLayer?.destroy(true);
+    this.gridProblemLayer = undefined;
+    this.gridProblemAnswerText = undefined;
+  }
+
+  /** Draws a large translucent grid problem card above the battle monsters. */
+  private drawGridExpressionProblem(
+    problem: MathProblem & { kind: 'gridExpression'; gridExpression: NonNullable<MathProblem['gridExpression']> },
+  ): void {
+    const definition = problem.gridExpression;
+    const layer = this.add.container(0, 0).setDepth(24);
+    this.gridProblemLayer = layer;
+
+    const shade = this.add.rectangle(
+      GAME_WIDTH / 2,
+      426,
+      GAME_WIDTH,
+      348,
+      Phaser.Display.Color.HexStringToColor('#f1d7ad').color,
+      0.42,
+    );
+    const panel = this.add.graphics();
+    panel.fillStyle(Phaser.Display.Color.HexStringToColor('#fff2d8').color, 0.9);
+    panel.lineStyle(4, Phaser.Display.Color.HexStringToColor(this.trainer.accentColor).color, 0.92);
+    panel.fillRoundedRect(26, 268, 338, 320, 20);
+    panel.strokeRoundedRect(26, 268, 338, 320, 20);
+    layer.add([shade, panel]);
+
+    layer.add(this.add
+      .text(GAME_WIDTH / 2, 298, definition.title ?? '絵を見て しきをつくろう', {
+        fontFamily: FONT_FAMILY,
+        fontSize: '20px',
+        fontStyle: '900',
+        color: COLORS.ink,
+        align: 'center',
+      })
+      .setOrigin(0.5));
+
+    drawGridExpressionGrid(this, layer, definition, { top: 336, maxHeight: 168, monsterSize: 44, labelFontSize: 13 });
+
+    layer.add(this.add
+      .text(GAME_WIDTH / 2, 528, definition.expression, {
+        fontFamily: FONT_FAMILY,
+        fontSize: '34px',
+        fontStyle: '900',
+        color: COLORS.ink,
+        align: 'center',
+      })
+      .setOrigin(0.5));
+
+    this.gridProblemAnswerText = this.add
+      .text(GAME_WIDTH / 2, 568, 'こたえをいれよう', {
+        fontFamily: FONT_FAMILY,
+        fontSize: '20px',
+        fontStyle: '900',
+        color: COLORS.muted,
+        align: 'center',
+      })
+      .setOrigin(0.5);
+    layer.add(this.gridProblemAnswerText);
   }
 
   /** 問題文の長さに合わせて、画面内に収まる文字サイズを返します。 */
@@ -1049,6 +1145,12 @@ export class BattleGameScene extends Phaser.Scene {
   }
 
   private updateAnswerText(): void {
+    if (isGridExpressionProblem(this.problem)) {
+      this.answerText.setText('');
+      this.gridProblemAnswerText?.setText(this.answerInput.length > 0 ? `こたえ: ${this.answerInput}` : 'こたえをいれよう');
+      return;
+    }
+
     if (usesTwoPartAnswer(this.problem)) {
       this.answerText.setText(this.formatTwoPartAnswerInput());
       this.answerText.setColor(this.activeAnswerPart === 'first' ? COLORS.blue : COLORS.muted);

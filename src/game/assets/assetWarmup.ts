@@ -24,6 +24,8 @@ const queuedAssetKeys = new Set<string>();
 const warmupQueue: QueuedWarmupAsset[] = [];
 let isRunning = false;
 let timerId: ReturnType<typeof window.setTimeout> | null = null;
+let activeImage: HTMLImageElement | null = null;
+let generation = 0;
 
 /** 次に使いそうな画像を少しずつ先読みし、画面遷移時の待ち時間を減らします。 */
 export function scheduleImageAssetWarmup(
@@ -102,10 +104,16 @@ function warmNextAsset(): void {
   }
 
   const image = new Image();
+  activeImage = image;
+  const currentGeneration = generation;
   image.decoding = 'async';
 
   /** 成功・失敗どちらでも先読み済み扱いにして、キューを止めないようにします。 */
   const finish = (): void => {
+    if (currentGeneration !== generation) {
+      return;
+    }
+    activeImage = null;
     warmedAssetKeys.add(asset.key);
     scheduleNextWarmup(asset.gapMs);
   };
@@ -116,6 +124,25 @@ function warmNextAsset(): void {
   };
   image.onerror = finish;
   image.src = resolveAssetUrl(asset.path);
+}
+
+/** Cancels game-level warmup work without affecting ordinary scene transitions. */
+export function cancelImageAssetWarmup(): void {
+  generation += 1;
+  if (timerId !== null) {
+    window.clearTimeout(timerId);
+    timerId = null;
+  }
+  if (activeImage) {
+    activeImage.onload = null;
+    activeImage.onerror = null;
+    activeImage.removeAttribute('src');
+    activeImage = null;
+  }
+  warmupQueue.length = 0;
+  queuedAssetKeys.clear();
+  warmedAssetKeys.clear();
+  isRunning = false;
 }
 
 /** 相対パスを現在ページ基準のURLへ変換し、失敗時は元の文字列を使います。 */

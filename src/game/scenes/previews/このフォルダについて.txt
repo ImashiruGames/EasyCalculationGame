@@ -5,7 +5,19 @@ previews フォルダについて
 直下のファイル
 
 - DexPreviewScenes.ts
-  図鑑、ショップ、バトル入口など複数のプレビュー画面をまとめています。
+  既存のimportを保つため、各Sceneを再エクスポートします。
+
+- DexPreviewScene.ts
+  図鑑の一覧、詳細、進化やお話への入口です。
+
+- ShopPreviewScene.ts
+  ショップの一覧、購入とアイテム利用の画面です。
+
+- BattlePreviewScene.ts
+  従来のバトル入口画面と、その画面用の基底クラスです。
+
+- previewLayer.ts
+  描画で増えた表示物をコンテナにまとめる共通処理です。
 
 直下のフォルダ
 

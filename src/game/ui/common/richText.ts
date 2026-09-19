@@ -5,6 +5,7 @@ import { getTrainerImageAsset } from '../../assets/trainerImageAssets';
 import { COLORS, FONT_FAMILY } from '../../constants';
 import { createMonsterVisual } from '../creatures/monsterVisual';
 import { parseStoryMathExpression, StoryMathExpressionNode } from './mathExpression';
+import { stopTweensOnDestroy } from './gameObjectLifecycle';
 
 type RichTextAlign = 'left' | 'center' | 'right';
 type RichTextMotion = 'none' | 'bounce' | 'sway' | 'twitch' | 'slide';
@@ -138,6 +139,7 @@ export function createRichText(
   layoutRichTextRows(container, rows, options);
   const height = rows.reduce((sum, row, index) => sum + row.height + (index > 0 ? options.lineSpacing ?? 0 : 0), 0);
   container.setSize(options.width, height);
+  stopTweensOnDestroy(scene, container);
   return container;
 }
 

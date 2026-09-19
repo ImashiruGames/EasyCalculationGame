@@ -12,7 +12,7 @@ capture フォルダについて
   ステージ開始前の案内画面です。
 
 - CaptureGameScene.ts
-  計算問題を解いてモンスターを捕まえる本編画面です。
+  計算問題を解いてモンスターを捕まえる本編画面です。進行と入力を管理し、問題表示はui/problem/CaptureProblemView.ts、選択肢はproblem/choiceAnswers.tsに任せます。
 
 - ResultScene.ts
   練習結果と報酬を見せる画面です。

@@ -52,6 +52,17 @@ function normalizeMonsterIdList(value: unknown): string[] {
   )).filter((monsterId): monsterId is string => Boolean(monsterId))));
 }
 
+/** Keeps a unique list of non-empty string ids from saved data. */
+function normalizeStringIdList(value: unknown): string[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return Array.from(new Set(value
+    .map((id) => (typeof id === 'string' ? id.trim() : ''))
+    .filter((id) => id.length > 0)));
+}
+
 /** 汎用の個数レコードを、必要なら既知キーに絞って正の整数だけ残します。 */
 function normalizeNumberRecord(value: unknown, knownKeys?: ReadonlySet<string>): Record<string, number> {
   if (!value || typeof value !== 'object') {
@@ -249,6 +260,7 @@ export function normalizeSaveState(value: unknown): AppSaveState {
   const titleMonsterIds = normalizeTitleMonsterIds((value as Partial<AppSaveState>).titleMonsterIds);
   const ownedTitleBackgroundIds = normalizeTitleBackgroundIds((value as Partial<AppSaveState>).ownedTitleBackgroundIds);
   const unlockedDexStoryMonsterIds = normalizeMonsterIdList((value as Partial<AppSaveState>).unlockedDexStoryMonsterIds);
+  const readStageIntroStoryIds = normalizeStringIdList((value as Partial<AppSaveState>).readStageIntroStoryIds);
   const selectedTitleBackgroundId = normalizeSelectedTitleBackgroundId(
     (value as Partial<AppSaveState>).selectedTitleBackgroundId,
     ownedTitleBackgroundIds,
@@ -290,5 +302,6 @@ export function normalizeSaveState(value: unknown): AppSaveState {
     ownedTitleBackgroundIds,
     selectedTitleBackgroundId,
     unlockedDexStoryMonsterIds,
+    readStageIntroStoryIds,
   };
 }

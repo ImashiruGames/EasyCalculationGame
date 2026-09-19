@@ -43,10 +43,11 @@ const NUMBER_KEYPAD_ROWS: NumberKeypadLabel[][] = [
 ];
 
 /** 捕獲と対戦で共通利用する、0-9・けす・きめるの数字キーパッドを描画します。 */
-export function drawNumberKeypad(scene: Phaser.Scene, options: NumberKeypadOptions): void {
+export function drawNumberKeypad(scene: Phaser.Scene, options: NumberKeypadOptions): Phaser.GameObjects.Container {
+  const container = scene.add.container(0, 0);
   NUMBER_KEYPAD_ROWS.slice(0, 3).forEach((row, rowIndex) => {
     row.forEach((label, colIndex) => {
-      createButton(scene, {
+      container.add(createButton(scene, {
         x: options.startX + colIndex * options.colGap,
         y: options.startY + rowIndex * options.rowGap,
         width: options.keyWidth,
@@ -55,13 +56,13 @@ export function drawNumberKeypad(scene: Phaser.Scene, options: NumberKeypadOptio
         fontSize: label.length > 1 ? options.actionFontSize : options.digitFontSize,
         fillColor: label === 'きめる' ? COLORS.yellow : COLORS.panel,
         onClick: () => options.onKey(label),
-      });
+      }));
     });
   });
 
   if (!options.allowDecimalPoint) {
     NUMBER_KEYPAD_ROWS[3].forEach((label, colIndex) => {
-      createButton(scene, {
+      container.add(createButton(scene, {
         x: options.startX + colIndex * options.colGap,
         y: options.startY + 3 * options.rowGap,
         width: options.keyWidth,
@@ -70,9 +71,9 @@ export function drawNumberKeypad(scene: Phaser.Scene, options: NumberKeypadOptio
         fontSize: label.length > 1 ? options.actionFontSize : options.digitFontSize,
         fillColor: label === 'きめる' ? COLORS.yellow : COLORS.panel,
         onClick: () => options.onKey(label),
-      });
+      }));
     });
-    return;
+    return container;
   }
 
   const bottomY = options.startY + 3 * options.rowGap;
@@ -84,7 +85,7 @@ export function drawNumberKeypad(scene: Phaser.Scene, options: NumberKeypadOptio
     { label: 'きめる', x: centerX + 132, width: 76 },
   ];
   bottomButtons.forEach((button) => {
-    createButton(scene, {
+    container.add(createButton(scene, {
       x: button.x,
       y: bottomY,
       width: button.width,
@@ -93,8 +94,9 @@ export function drawNumberKeypad(scene: Phaser.Scene, options: NumberKeypadOptio
       fontSize: button.label.length > 1 ? options.actionFontSize : options.digitFontSize,
       fillColor: button.label === 'きめる' ? COLORS.yellow : COLORS.panel,
       onClick: () => options.onKey(button.label),
-    });
+    }));
   });
+  return container;
 }
 
 /** 数字キーパッド入力を、消去・小数点・決定・最大桁数のルールに沿って処理します。 */
@@ -102,14 +104,14 @@ export function resolveNumberKeyInput(
   label: NumberKeypadLabel,
   currentInput: string,
   maxDigits = 2,
-  options: { allowDecimalPoint?: boolean; decimalPlaces?: number } = {},
+  options: { allowDecimalPoint?: boolean; decimalPlaces?: number; onesFirst?: boolean } = {},
 ): NumberKeyInputResult {
   if (label === 'けす') {
-    return { type: 'input', value: currentInput.slice(0, -1) };
+    return { type: 'input', value: options.onesFirst ? currentInput.slice(1) : currentInput.slice(0, -1) };
   }
 
   if (label === '小数点') {
-    if (!options.allowDecimalPoint || (options.decimalPlaces ?? 0) <= 0 || currentInput.includes('.')) {
+    if (options.onesFirst || !options.allowDecimalPoint || (options.decimalPlaces ?? 0) <= 0 || currentInput.includes('.')) {
       return { type: 'none' };
     }
 
@@ -119,6 +121,13 @@ export function resolveNumberKeyInput(
 
   if (label === 'きめる') {
     return { type: 'submit' };
+  }
+
+  // Keep zeros already entered in lower places, including the two zeros in 100.
+  if (options.onesFirst) {
+    return currentInput.length < maxDigits
+      ? { type: 'input', value: label + currentInput }
+      : { type: 'none' };
   }
 
   const decimalIndex = currentInput.indexOf('.');

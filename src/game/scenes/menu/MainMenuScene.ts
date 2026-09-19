@@ -334,13 +334,13 @@ export class MainMenuScene extends Phaser.Scene {
     const panel = this.add.graphics();
     panel.fillStyle(Phaser.Display.Color.HexStringToColor(COLORS.panel).color, 1);
     panel.lineStyle(4, Phaser.Display.Color.HexStringToColor(COLORS.water).color, 1);
-    panel.fillRoundedRect(34, 158, 322, 438, 18);
-    panel.strokeRoundedRect(34, 158, 322, 438, 18);
+    panel.fillRoundedRect(34, 136, 322, 540, 18);
+    panel.strokeRoundedRect(34, 136, 322, 540, 18);
     overlay.add([shade, panel]);
 
     overlay.add(
       this.add
-        .text(GAME_WIDTH / 2, 204, 'デバッグ', {
+        .text(GAME_WIDTH / 2, 184, 'デバッグ', {
           fontFamily: FONT_FAMILY,
           fontSize: '26px',
           fontStyle: '900',
@@ -352,7 +352,7 @@ export class MainMenuScene extends Phaser.Scene {
 
     const debugStageButton = createButton(this, {
       x: GAME_WIDTH / 2,
-      y: 270,
+      y: 248,
       width: 240,
       height: 46,
       label: 'ステージ',
@@ -367,7 +367,7 @@ export class MainMenuScene extends Phaser.Scene {
 
     const unlockStagesButton = createButton(this, {
       x: GAME_WIDTH / 2,
-      y: 328,
+      y: 304,
       width: 240,
       height: 46,
       label: 'ステージぜんぶ',
@@ -380,7 +380,7 @@ export class MainMenuScene extends Phaser.Scene {
 
     const unlockMonstersButton = createButton(this, {
       x: GAME_WIDTH / 2,
-      y: 386,
+      y: 360,
       width: 240,
       height: 46,
       label: 'モンスターぜんぶ',
@@ -393,7 +393,7 @@ export class MainMenuScene extends Phaser.Scene {
 
     const coinButton = createButton(this, {
       x: GAME_WIDTH / 2,
-      y: 444,
+      y: 416,
       width: 240,
       height: 46,
       label: 'コイン999999',
@@ -404,9 +404,22 @@ export class MainMenuScene extends Phaser.Scene {
     });
     overlay.add(coinButton);
 
+    const gridEditorButton = createButton(this, {
+      x: GAME_WIDTH / 2,
+      y: 472,
+      width: 240,
+      height: 46,
+      label: 'ますしき',
+      fillColor: '#e0f8e9',
+      strokeColor: '#2f9f61',
+      fontSize: 18,
+      onClick: () => this.scene.start(SceneKeys.GridProblemEditor),
+    });
+    overlay.add(gridEditorButton);
+
     const bgmButton = createButton(this, {
       x: GAME_WIDTH / 2,
-      y: 502,
+      y: 528,
       width: 240,
       height: 46,
       label: 'BGMきく',
@@ -419,7 +432,7 @@ export class MainMenuScene extends Phaser.Scene {
 
     const closeButton = createButton(this, {
       x: GAME_WIDTH / 2,
-      y: 564,
+      y: 620,
       width: 124,
       height: 44,
       label: 'とじる',

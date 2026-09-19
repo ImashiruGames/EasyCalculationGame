@@ -74,6 +74,9 @@ export function showGameMenu(scene: Phaser.Scene): Phaser.GameObjects.Container 
 
   /** Rebuilds the BGM volume buttons for the current setting. */
   const drawBgmButtons = (): void => {
+    if (!overlay.active) {
+      return;
+    }
     bgmButtonLayer?.destroy(true);
     const selectedOption = getNearestBgmVolumeOption(getBgmVolume());
     bgmText.setText(`BGMのおと: ${selectedOption.label}`);

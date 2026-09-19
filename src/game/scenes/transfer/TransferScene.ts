@@ -10,6 +10,7 @@ import { startBgm } from '../../bgm';
 import { COLORS, FONT_FAMILY, GAME_HEIGHT, GAME_WIDTH } from '../../constants';
 import { createQrMatrix, QrMatrix } from '../../qrCode';
 import { SceneKeys } from '../../sceneKeys';
+import { createSceneLifetime, onSceneExit } from '../../sceneLifetime';
 import { createButton, createSmallButton } from '../../ui/common/button';
 
 interface TransferSceneData {
@@ -21,6 +22,8 @@ export class TransferScene extends Phaser.Scene {
   private message = '';
   private tone: 'ok' | 'error' = 'ok';
   private inputOverlay: HTMLDivElement | null = null;
+  private lifetime: AbortSignal;
+  private inputFocusTimer?: Phaser.Time.TimerEvent;
 
   constructor() {
     super(SceneKeys.Transfer);
@@ -33,8 +36,8 @@ export class TransferScene extends Phaser.Scene {
 
   create(): void {
     startBgm('home');
-    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.removeInputOverlay());
-    this.events.once(Phaser.Scenes.Events.DESTROY, () => this.removeInputOverlay());
+    this.lifetime = createSceneLifetime(this);
+    onSceneExit(this, () => this.removeInputOverlay());
     const saveState = loadSaveState();
     const transferCode = createTransferCode(saveState);
     const summary = getTransferSummary(saveState);
@@ -222,6 +225,7 @@ export class TransferScene extends Phaser.Scene {
   }
 
   private async copyTransferCode(transferCode: string): Promise<void> {
+    const lifetime = this.lifetime;
     let copied = false;
     try {
       if (navigator.clipboard?.writeText) {
@@ -230,6 +234,10 @@ export class TransferScene extends Phaser.Scene {
       }
     } catch {
       copied = false;
+    }
+
+    if (lifetime.aborted) {
+      return;
     }
 
     if (!copied) {
@@ -357,7 +365,11 @@ export class TransferScene extends Phaser.Scene {
     overlay.append(panel);
     document.body.append(overlay);
     this.inputOverlay = overlay;
-    window.setTimeout(() => input.focus(), 0);
+    this.inputFocusTimer = this.time.delayedCall(0, () => {
+      if (this.inputOverlay === overlay) {
+        input.focus();
+      }
+    });
   }
 
   private createOverlayButton(label: string, background: string, color: string): HTMLButtonElement {
@@ -377,6 +389,8 @@ export class TransferScene extends Phaser.Scene {
   }
 
   private removeInputOverlay(): void {
+    this.inputFocusTimer?.remove(false);
+    this.inputFocusTimer = undefined;
     this.inputOverlay?.remove();
     this.inputOverlay = null;
   }

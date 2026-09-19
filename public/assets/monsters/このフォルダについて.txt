@@ -5,6 +5,10 @@ src/game/assets/monsterImageAssets.ts などから参照されます。
 
 直下のファイル
 
+- mirimiriseijin.webp / centimonkey.webp
+  長さのステージと図鑑で使う、ミリミリ星人とセンチモンキーの画像です。
+  元の画像は assets/monsters にあります。
+
 - *.png
   モンスター本番画像です。ファイル名を src/data/csv/monsters.csv の imageFileName に書くと読み込まれます。
   例: achichin.png、ganpiro.png、zubagiri.png、sagarun.png、zerogardx.png。

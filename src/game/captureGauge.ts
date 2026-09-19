@@ -1,5 +1,7 @@
 const TARGET_CAPTURE_CORRECT_ANSWERS = 5;
 const BASE_GOAL_GAUGE = 100;
+// ゲージのたまりをまとめて 1.0 ばいにします。
+const CAPTURE_GAUGE_GAIN_MULTIPLIER = 1;
 
 /** 基準ゲージ量100ならだいたい5問正解で捕獲に届く、1問あたりの基本ゲージ量を返します。 */
 function getBaseCaptureGaugeGain(): number {
@@ -22,5 +24,10 @@ export function getCaptureGaugeGain(
   const safeSpeedMultiplier = Number.isFinite(speedMultiplier) && speedMultiplier > 0 ? speedMultiplier : 1;
   const safeItemMultiplier = Number.isFinite(itemMultiplier) && itemMultiplier > 0 ? itemMultiplier : 1;
 
-  return getSafeCaptureGaugeGain(stageGaugeGain) * safeSpeedMultiplier * safeItemMultiplier;
+  return (
+    getSafeCaptureGaugeGain(stageGaugeGain) *
+    CAPTURE_GAUGE_GAIN_MULTIPLIER *
+    safeSpeedMultiplier *
+    safeItemMultiplier
+  );
 }

@@ -497,6 +497,8 @@ let stepIndex = 0;
 let unlockListenerAttached = false;
 let visibilityListenerAttached = false;
 let wasPlayingBeforeHidden = false;
+let unlockListener: (() => void) | null = null;
+let visibilityListener: (() => void) | null = null;
 let bgmVolume = loadStoredBgmVolume();
 const stageCapturePatternByTrack = new Map<`capture:${StageId}`, BgmPattern>();
 
@@ -567,6 +569,9 @@ function updateActiveBgmVolume(): void {
 
 /** BGMと効果音で共有するAudioContextを、使える環境なら作成して返します。 */
 export function getSharedAudioContext(): AudioContext | null {
+  if (typeof window === 'undefined') {
+    return null;
+  }
   const audioWindow = window as AudioWindow;
   const AudioContextClass = audioWindow.AudioContext ?? audioWindow.webkitAudioContext;
   if (!AudioContextClass) {
@@ -652,7 +657,7 @@ function attachUnlockListener(): void {
     }
 
     void context.resume().then(() => {
-      if (requestedTrack) {
+      if (context === audioContext && requestedTrack) {
         startBgm(requestedTrack);
       }
     }).catch(() => {
@@ -660,6 +665,7 @@ function attachUnlockListener(): void {
     });
   };
 
+  unlockListener = unlock;
   window.addEventListener('pointerdown', unlock, { passive: true });
   window.addEventListener('keydown', unlock);
 }
@@ -671,7 +677,7 @@ function attachVisibilityListener(): void {
   }
 
   visibilityListenerAttached = true;
-  document.addEventListener('visibilitychange', () => {
+  visibilityListener = () => {
     if (document.visibilityState === 'hidden') {
       wasPlayingBeforeHidden = schedulerId !== null;
       stopActiveBgm();
@@ -692,9 +698,14 @@ function attachVisibilityListener(): void {
     }
 
     void context.resume()
-      .then(() => startBgm(trackToResume))
+      .then(() => {
+        if (context === audioContext && requestedTrack === trackToResume && document.visibilityState !== 'hidden') {
+          startBgm(trackToResume);
+        }
+      })
       .catch(() => undefined);
-  });
+  };
+  document.addEventListener('visibilitychange', visibilityListener);
 }
 
 /** シーンごとのBGMを切り替えます。ブラウザ制限中は、最初のタップ後に鳴り始めます。 */
@@ -762,6 +773,28 @@ function stopActiveBgm(): void {
 export function stopBgm(): void {
   requestedTrack = null;
   stopActiveBgm();
+}
+
+/** Releases page-level audio resources when the game is destroyed or replaced by HMR. */
+export function disposeAudio(): void {
+  stopBgm();
+  if (unlockListener) {
+    window.removeEventListener('pointerdown', unlockListener);
+    window.removeEventListener('keydown', unlockListener);
+  }
+  if (visibilityListener) {
+    document.removeEventListener('visibilitychange', visibilityListener);
+  }
+  unlockListener = null;
+  visibilityListener = null;
+  unlockListenerAttached = false;
+  visibilityListenerAttached = false;
+  wasPlayingBeforeHidden = false;
+  const context = audioContext;
+  audioContext = null;
+  if (context && context.state !== 'closed') {
+    void context.close().catch(() => undefined);
+  }
 }
 
 /** 少し先のBGMステップをまとめて予約し、音切れを防ぎます。 */
@@ -842,6 +875,10 @@ function scheduleNote(
 
   oscillator.connect(gain);
   gain.connect(destination);
+  oscillator.onended = () => {
+    oscillator.disconnect();
+    gain.disconnect();
+  };
   oscillator.start(startTime);
   oscillator.stop(startTime + duration + 0.03);
 }

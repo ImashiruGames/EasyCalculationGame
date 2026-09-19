@@ -93,6 +93,17 @@ export const LOGIN_BONUS_CHARACTER_PLACEMENTS: Array<VisualPlacement & { monster
   { monsterId: 'yukipon', x: 304, y: 680, size: 64 },
 ];
 
+/** Screen regions shared by capture renderers and the authoring preview. */
+const CAPTURE_REGIONS = {
+  question: { x: 16, y: 252, width: 358, height: 204 },
+  choiceQuestion: { x: 16, y: 252, width: 358, height: 168 },
+  keypad: { x: 24, y: 464, width: 342, height: 280 },
+  choices: { x: 28, y: 432, width: 334, height: 248 },
+  choiceActions: { x: 28, y: 690, width: 334, height: 56 },
+  feedback: { x: 24, y: 760, width: 342, height: 72 },
+  gridQuestion: { x: 26, y: 90, width: 338, height: 354 },
+} as const;
+
 export const APP_LAYOUT = {
   title: {
     loadingText: { x: SCREEN_CENTER.x, y: 392 },
@@ -275,7 +286,7 @@ export const APP_LAYOUT = {
   stageBackdrop: {
     imageDepth: -40,
     panelDepth: -30,
-    captureReadabilityPanel: { x: 18, y: 254, width: GAME_WIDTH - 36, height: 548, radius: 28 },
+    captureReadabilityPanel: { x: 18, y: 250, width: GAME_WIDTH - 36, height: 584, radius: 28 },
     introHeaderPanel: { x: 20, y: 82, width: GAME_WIDTH - 40, height: 178, radius: 28 },
     introMonsterPanel: { x: 20, y: 276, width: GAME_WIDTH - 40, height: 340, radius: 28 },
   },
@@ -306,6 +317,7 @@ export const APP_LAYOUT = {
   },
 
   captureGame: {
+    regions: CAPTURE_REGIONS,
     headerBackButton: { x: 42, y: 42 },
     headerMenuButton: { x: 348, y: 42 },
     headerTitle: { x: SCREEN_CENTER.x, y: 42, wrapWidth: 230 },
@@ -315,20 +327,20 @@ export const APP_LAYOUT = {
     monsterName: { x: 64, y: 104 },
     itemText: { x: 306, y: 104 },
     progressBar: { x: 66, y: 222, width: 258, height: 12, ballRadius: 10 },
-    answerText: { x: 0, y: 292 },
-    feedbackText: { x: SCREEN_CENTER.x, y: 768 },
+    answerText: { x: 0, y: CAPTURE_REGIONS.question.y + 68 },
+    feedbackText: { x: SCREEN_CENTER.x, y: CAPTURE_REGIONS.feedback.y + CAPTURE_REGIONS.feedback.height / 2 },
     keypad: {
       startX: 82,
-      startY: 440,
+      startY: CAPTURE_REGIONS.keypad.y + 32,
       colGap: 112,
-      rowGap: 82,
+      rowGap: (CAPTURE_REGIONS.keypad.height - 64) / 3,
       keyWidth: 88,
       keyHeight: 64,
       digitFontSize: 28,
       actionFontSize: 18,
     },
     problemFormula: {
-      y: 292,
+      y: CAPTURE_REGIONS.question.y + 68,
       slotWidth: 74,
       slotHeight: 68,
       minLeftX: 28,

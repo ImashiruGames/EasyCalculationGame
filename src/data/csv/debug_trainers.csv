@@ -1,0 +1,2 @@
+id,name,title,stageId,difficultyLevel,hp,problemRule,partnerMonsterId,partnerMonsterIds,rewardCoins,rewardCandyAttribute,rewardCandyAmount,accentColor,paletteCap,paletteShirt,paletteShadow,paletteBackground
+trainer-grid-editor,マス,ますしき,stage4_1,1,80,"{""kind"":""gridExpression"",""operator"":""equal"",""stageProblemStageId"":""stage4_1"",""left"":[0,0],""right"":[0,0],""result"":[0,0]}",picoleaf,picoleaf|mokotane,10,くさ,0,#ffd766,#ffd766,#fff8da,#b98d25,#fff9df

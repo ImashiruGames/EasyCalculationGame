@@ -25,6 +25,11 @@ const embeddedStoryTriggers: EmbeddedStoryTrigger[] = [
     targetId: 'godchiri',
     storyId: 'story-dex-godchiri',
   },
+  {
+    kind: 'stageIntro',
+    targetId: 'g2-kakezan-kangae',
+    storyId: 'story-stage-g2-kakezan-kangae',
+  },
 ];
 
 const storyJsonModules = import.meta.glob<EmbeddedStoryJson>('./*.json', {

@@ -31,8 +31,10 @@ export type ProblemAnswerSlot =
   | 'resultDenominator';
 export type ProblemAnswerMode =
   | 'single'
+  | 'measurementPair'
   | 'quotientRemainder'
   | 'clockHourMinute'
+  | 'clockElapsedHours'
   | 'squareRootPair'
   | 'squareRootSimplify'
   | 'squareRootExpression'
@@ -42,11 +44,16 @@ export type ProblemAnswerMode =
   | 'choiceRow'
   | 'choiceColumn'
   | 'multiSelect';
+export type ClockDisplayMode = 'analog' | 'text';
+export type ClockRangeMode = 'any' | 'sameHour';
 export type ProblemExpressionKind =
   | 'integer'
+  | 'measurement'
   | 'integerDivision'
+  | 'gridExpression'
   | 'squareRoot'
   | 'clockTime'
+  | 'clockElapsedMinutes'
   | 'clockMinuteConversion'
   | 'decimal'
   | 'shapeArea'
@@ -98,11 +105,64 @@ export interface SquareRootComparisonTerm {
   value: number;
 }
 
+export interface GridExpressionGridDefinition {
+  cols: number;
+  rows: number;
+}
+
+export interface GridExpressionObjectDefinition {
+  char: number;
+  col: number;
+  row: number;
+}
+
+export interface GridExpressionGroupCellDefinition {
+  col: number;
+  row: number;
+}
+
+export interface GridExpressionGroupDefinition {
+  col?: number;
+  row?: number;
+  cols?: number;
+  rows?: number;
+  cells?: GridExpressionGroupCellDefinition[];
+  label?: string;
+}
+
+export interface GridExpressionProblemDefinition {
+  id: string;
+  stageId: StageId;
+  problemNo: number;
+  kind: 'gridExpression';
+  title?: string;
+  grid: GridExpressionGridDefinition;
+  chars: string[];
+  objects: GridExpressionObjectDefinition[];
+  groups?: GridExpressionGroupDefinition[];
+  expression: string;
+  answer: number;
+}
+
+export type MeasurementMode = 'reading' | 'compare' | 'convert' | 'mixedConvert' | 'sameArithmetic' | 'mixedSimpleArithmetic' | 'mixedArithmetic';
+
+export interface MeasurementProblemDisplay {
+  prompt: string;
+  expression: string;
+  answerUnits: string[];
+  answerLabel: string;
+  hint?: string;
+  choices?: Array<{ label: string; value: number }>;
+}
+
 export interface ConfigurableProblemRule {
+  measurementMode?: MeasurementMode;
   kind?: ProblemExpressionKind;
   operator: ProblemOperatorInput;
   answerSlot?: ProblemAnswerSlot;
   answerMode?: ProblemAnswerMode;
+  stageProblemStageId?: StageId;
+  stageProblemNo?: number;
   left: ProblemNumberRange;
   right: ProblemNumberRange;
   result: ProblemNumberRange;
@@ -118,6 +178,9 @@ export interface ConfigurableProblemRule {
   leftDecimalPlaces?: number;
   rightDecimalPlaces?: number;
   resultDecimalPlaces?: number;
+  clockStartMinuteStep?: number;
+  clockDisplayMode?: ClockDisplayMode;
+  clockRangeMode?: ClockRangeMode;
 }
 
 export type ProblemRuleDefinition = ProblemRule | ConfigurableProblemRule | ConfigurableProblemRule[];
@@ -133,6 +196,7 @@ type MonsterShape =
   | 'coal';
 
 export interface StageDefinition {
+  newContentVersion?: string;
   id: StageId;
   order: number;
   stageCategoryId: string;
@@ -150,6 +214,7 @@ export interface StageDefinition {
   unlockConditions?: StageUnlockCondition[];
   comingSoon?: boolean;
   playLimitDisabled?: boolean;
+  fixedEncounterRates?: boolean;
 }
 
 export interface StageMonsterEncounter {
@@ -289,6 +354,7 @@ export interface MonsterDefinition {
 }
 
 export interface MathProblem {
+  measurement?: MeasurementProblemDisplay;
   kind?: ProblemExpressionKind;
   left: number;
   operator: ProblemOperator;
@@ -307,10 +373,14 @@ export interface MathProblem {
   rootRightRadicand?: number;
   rootComparisonTerms?: SquareRootComparisonTerm[];
   hiddenDigitSlot?: ProblemHiddenDigitSlot;
+  gridExpression?: GridExpressionProblemDefinition;
   minuteStep?: number;
   leftDecimalPlaces?: number;
   rightDecimalPlaces?: number;
   resultDecimalPlaces?: number;
+  clockStartMinuteStep?: number;
+  clockDisplayMode?: ClockDisplayMode;
+  clockRangeMode?: ClockRangeMode;
 }
 
 export interface AppSaveState {
@@ -336,6 +406,7 @@ export interface AppSaveState {
   ownedTitleBackgroundIds: string[];
   selectedTitleBackgroundId: string;
   unlockedDexStoryMonsterIds: string[];
+  readStageIntroStoryIds: string[];
 }
 
 export interface TitleMonsterPlacementState {
